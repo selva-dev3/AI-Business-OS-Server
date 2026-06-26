@@ -1,0 +1,22 @@
+2026-06-26 15:44:59 [ERROR]: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async connectDB (/home/selva/Downloads/projects/AI Business Os/server/src/config/db.js:7:18)
+    at async startServer (/home/selva/Downloads/projects/AI Business Os/server/src/app.js:86:3)
+2026-06-26 15:47:21 [ERROR]: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async connectDB (/home/selva/Downloads/projects/AI Business Os/server/src/config/db.js:7:18)
+    at async startServer (/home/selva/Downloads/projects/AI Business Os/server/src/app.js:86:3)
+2026-06-26 15:53:06 [ERROR]: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async connectDB (/home/selva/Downloads/projects/AI Business Os/server/src/config/db.js:7:18)
+    at async startServer (/home/selva/Downloads/projects/AI Business Os/server/src/app.js:86:3)
+2026-06-26 16:13:21 [ERROR]: Invalid email or password
+Error: Invalid email or password
+    at Object.login (/home/selva/Downloads/projects/AI Business Os/server/src/services/auth.service.js:73:11)
+    at async login (/home/selva/Downloads/projects/AI Business Os/server/src/controllers/auth.controller.js:16:20)

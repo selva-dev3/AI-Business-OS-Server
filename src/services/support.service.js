@@ -1,0 +1,553 @@
+const Ticket = require('../models/Ticket');
+const TicketReply = require('../models/TicketReply');
+const TicketCategory = require('../models/TicketCategory');
+const Activity = require('../models/Activity');
+const AppError = require('../utils/appError');
+const mongoose = require('mongoose');
+const User = require('../models/User');
+const { generateCode, paginateQuery, buildMeta } = require('../utils/helpers');
+
+const toObjectId = (id) => mongoose.Types.ObjectId.createFromHexString(id);
+
+const getNextTicketNumber = async (companyId) => {
+  const lastTicket = await Ticket.findOne({ companyId }).sort({ createdAt: -1 }).select('ticketNumber');
+  const lastNum = lastTicket ? parseInt(lastTicket.ticketNumber.split('-').pop(), 10) || 0 : 0;
+  return generateCode('TCK', lastNum + 1);
+};
+
+const calculateSLADeadline = async (categoryId, priority) => {
+  if (!categoryId) {
+    const slaMap = { LOW: 72, MEDIUM: 48, HIGH: 24, CRITICAL: 8 };
+    const hours = slaMap[priority] || 48;
+    return new Date(Date.now() + hours * 60 * 60 * 1000);
+  }
+
+  const category = await TicketCategory.findById(categoryId);
+  if (category && category.slaHours) {
+    return new Date(Date.now() + category.slaHours * 60 * 60 * 1000);
+  }
+
+  return null;
+};
+
+const logActivity = async ({ ticketId, companyId, userId, action, details }) => {
+  return Activity.create({
+    type: 'NOTE',
+    subject: `Ticket ${action}`,
+    description: typeof details === 'string' ? details : JSON.stringify(details),
+    companyId,
+    createdBy: userId,
+  });
+};
+
+const list = async (companyId, query = {}) => {
+  const { status, priority, categoryId, assigneeId, reporterId, fromDate, toDate, search, page = 1, limit = 20 } = query;
+  const filter = { companyId };
+
+  if (status) filter.status = status;
+  if (priority) filter.priority = priority;
+  if (categoryId) filter.categoryId = categoryId;
+  if (assigneeId) filter.assigneeId = assigneeId;
+  if (reporterId) filter.reporterId = reporterId;
+  if (fromDate || toDate) {
+    filter.createdAt = {};
+    if (fromDate) filter.createdAt.$gte = new Date(fromDate);
+    if (toDate) filter.createdAt.$lte = new Date(toDate);
+  }
+  if (search) {
+    const regex = new RegExp(search, 'i');
+    filter.$or = [
+      { title: regex },
+      { ticketNumber: regex },
+      { description: regex },
+    ];
+  }
+
+  const { skip, limit: lim, page: p } = paginateQuery(query.page || page, query.limit || limit);
+  const [tickets, total] = await Promise.all([
+    Ticket.find(filter)
+      .populate('categoryId', 'name color')
+      .populate('reporterId', 'name email avatar')
+      .populate('assigneeId', 'name email avatar')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(lim),
+    Ticket.countDocuments(filter),
+  ]);
+
+  return { data: tickets, meta: buildMeta(total, p, lim) };
+};
+
+const create = async (companyId, userId, data) => {
+  const ticketNumber = await getNextTicketNumber(companyId);
+  const slaDeadline = await calculateSLADeadline(data.categoryId, data.priority);
+
+  const ticket = await Ticket.create({
+    ...data,
+    ticketNumber,
+    slaDeadline,
+    companyId,
+    reporterId: userId,
+  });
+
+  return Ticket.findById(ticket._id)
+    .populate('categoryId', 'name color')
+    .populate('reporterId', 'name email avatar');
+};
+
+const getById = async (companyId, ticketId) => {
+  const ticket = await Ticket.findOne({ _id: ticketId, companyId })
+    .populate('categoryId', 'name color slaHours')
+    .populate('reporterId', 'name email avatar')
+    .populate('assigneeId', 'name email avatar');
+
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+
+  const [replies, activities] = await Promise.all([
+    TicketReply.find({ ticketId }).populate('userId', 'name email avatar').sort({ createdAt: 1 }),
+    Activity.find({ companyId, $or: [{ 'ticketId': ticketId }, { description: new RegExp(ticketId, 'i') }] })
+      .sort({ createdAt: -1 }).limit(50),
+  ]);
+
+  return { ...ticket.toJSON(), replies, activities };
+};
+
+const update = async (companyId, ticketId, data) => {
+  const ticket = await Ticket.findOneAndUpdate(
+    { _id: ticketId, companyId },
+    { $set: data },
+    { new: true, runValidators: true }
+  )
+    .populate('categoryId', 'name color')
+    .populate('reporterId', 'name email avatar')
+    .populate('assigneeId', 'name email avatar');
+
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+  return ticket;
+};
+
+const remove = async (companyId, ticketId) => {
+  const ticket = await Ticket.findOneAndDelete({ _id: ticketId, companyId });
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+  await TicketReply.deleteMany({ ticketId });
+  return { success: true };
+};
+
+const reply = async (companyId, userId, ticketId, data) => {
+  const ticket = await Ticket.findOne({ _id: ticketId, companyId });
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+
+  if (!ticket.firstResponseAt && !data.isInternal) {
+    await Ticket.findByIdAndUpdate(ticketId, { firstResponseAt: new Date() });
+  }
+
+  const replyDoc = await TicketReply.create({
+    ...data,
+    ticketId,
+    userId,
+  });
+
+  return replyDoc.populate('userId', 'name email avatar');
+};
+
+const assign = async (companyId, userId, ticketId, assigneeId) => {
+  const ticket = await Ticket.findOneAndUpdate(
+    { _id: ticketId, companyId },
+    { assigneeId, status: 'ASSIGNED' },
+    { new: true, runValidators: true }
+  )
+    .populate('assigneeId', 'name email avatar')
+    .populate('reporterId', 'name email avatar');
+
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+
+  await logActivity({
+    ticketId,
+    companyId,
+    userId,
+    action: 'ASSIGNED',
+    details: `Ticket assigned to user ${assigneeId}`,
+  });
+
+  return ticket;
+};
+
+const changeStatus = async (companyId, userId, ticketId, status, resolution) => {
+  const updateData = { status };
+  if (resolution) updateData.resolution = resolution;
+  if (status === 'RESOLVED') updateData.resolvedAt = new Date();
+  if (status === 'CLOSED') updateData.closedAt = new Date();
+
+  const ticket = await Ticket.findOneAndUpdate(
+    { _id: ticketId, companyId },
+    { $set: updateData },
+    { new: true, runValidators: true }
+  )
+    .populate('assigneeId', 'name email avatar')
+    .populate('reporterId', 'name email avatar');
+
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+
+  await logActivity({
+    ticketId,
+    companyId,
+    userId,
+    action: `STATUS_CHANGED_TO_${status}`,
+    details: `Status changed to ${status}${resolution ? `: ${resolution}` : ''}`,
+  });
+
+  return ticket;
+};
+
+const changePriority = async (companyId, userId, ticketId, priority) => {
+  const ticket = await Ticket.findOneAndUpdate(
+    { _id: ticketId, companyId },
+    { priority },
+    { new: true, runValidators: true }
+  )
+    .populate('assigneeId', 'name email avatar')
+    .populate('reporterId', 'name email avatar');
+
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+
+  await logActivity({
+    ticketId,
+    companyId,
+    userId,
+    action: 'PRIORITY_CHANGED',
+    details: `Priority changed to ${priority}`,
+  });
+
+  return ticket;
+};
+
+const close = async (companyId, userId, ticketId, resolution) => {
+  const updateData = { status: 'CLOSED', closedAt: new Date() };
+  if (resolution) updateData.resolution = resolution;
+
+  const ticket = await Ticket.findOneAndUpdate(
+    { _id: ticketId, companyId },
+    { $set: updateData },
+    { new: true, runValidators: true }
+  )
+    .populate('assigneeId', 'name email avatar')
+    .populate('reporterId', 'name email avatar');
+
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+
+  await logActivity({
+    ticketId,
+    companyId,
+    userId,
+    action: 'CLOSED',
+    details: `Ticket closed${resolution ? `: ${resolution}` : ''}`,
+  });
+
+  return ticket;
+};
+
+const getAISummary = async (companyId, ticketId) => {
+  const ticket = await Ticket.findOne({ _id: ticketId, companyId })
+    .populate('categoryId', 'name')
+    .populate('reporterId', 'name email')
+    .populate('assigneeId', 'name email');
+
+  if (!ticket) throw new AppError(404, 'NOT_FOUND', 'Ticket not found');
+
+  const replies = await TicketReply.find({ ticketId })
+    .populate('userId', 'name email')
+    .sort({ createdAt: 1 });
+
+  const internalNotes = replies.filter(r => r.isInternal);
+  const publicReplies = replies.filter(r => !r.isInternal);
+
+  const summary = {
+    overview: {
+      ticketNumber: ticket.ticketNumber,
+      title: ticket.title,
+      status: ticket.status,
+      priority: ticket.priority,
+      category: ticket.categoryId?.name || 'Uncategorized',
+      reporter: ticket.reporterId?.name || 'Unknown',
+      assignee: ticket.assigneeId?.name || 'Unassigned',
+      created: ticket.createdAt,
+      slaDeadline: ticket.slaDeadline,
+      slaBreached: ticket.slaDeadline && new Date() > ticket.slaDeadline,
+    },
+    conversation: {
+      totalReplies: replies.length,
+      publicReplies: publicReplies.length,
+      internalNotes: internalNotes.length,
+      lastActivity: replies.length > 0 ? replies[replies.length - 1].createdAt : ticket.createdAt,
+    },
+    metrics: {
+      responseTime: ticket.firstResponseAt
+        ? Math.round((new Date(ticket.firstResponseAt) - new Date(ticket.createdAt)) / (1000 * 60))
+        : null,
+      resolutionTime: ticket.resolvedAt
+        ? Math.round((new Date(ticket.resolvedAt) - new Date(ticket.createdAt)) / (1000 * 60 * 60))
+        : null,
+    },
+  };
+
+  return summary;
+};
+
+const listCategories = async (companyId) => {
+  return TicketCategory.find({ companyId }).sort({ name: 1 });
+};
+
+const createCategory = async (companyId, data) => {
+  const existing = await TicketCategory.findOne({ companyId, name: data.name });
+  if (existing) throw new AppError(409, 'CONFLICT', 'Category name already exists for this company');
+
+  const category = await TicketCategory.create({ ...data, companyId });
+  return category;
+};
+
+const updateCategory = async (companyId, categoryId, data) => {
+  const category = await TicketCategory.findOneAndUpdate(
+    { _id: categoryId, companyId },
+    { $set: data },
+    { new: true, runValidators: true }
+  );
+  if (!category) throw new AppError(404, 'NOT_FOUND', 'Category not found');
+  return category;
+};
+
+const removeCategory = async (companyId, categoryId) => {
+  const ticketsUsing = await Ticket.countDocuments({ companyId, categoryId });
+  if (ticketsUsing > 0) {
+    throw new AppError(400, 'BAD_REQUEST', `Cannot delete category: ${ticketsUsing} ticket(s) are using it`);
+  }
+
+  const category = await TicketCategory.findOneAndDelete({ _id: categoryId, companyId });
+  if (!category) throw new AppError(404, 'NOT_FOUND', 'Category not found');
+  return { success: true };
+};
+
+const getSummary = async (companyId) => {
+  const [totals, byPriority, byCategory, slaStats] = await Promise.all([
+    Ticket.aggregate([
+      { $match: { companyId: toObjectId(companyId) } },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: 1 },
+          open: { $sum: { $cond: [{ $in: ['$status', ['OPEN', 'ASSIGNED', 'IN_PROGRESS']] }, 1, 0] } },
+          resolved: { $sum: { $cond: [{ $eq: ['$status', 'RESOLVED'] }, 1, 0] } },
+          closed: { $sum: { $cond: [{ $eq: ['$status', 'CLOSED'] }, 1, 0] } },
+        },
+      },
+    ]),
+    Ticket.aggregate([
+      { $match: { companyId: toObjectId(companyId) } },
+      { $group: { _id: '$priority', count: { $sum: 1 } } },
+    ]),
+    Ticket.aggregate([
+      { $match: { companyId: toObjectId(companyId) } },
+      { $group: { _id: '$categoryId', count: { $sum: 1 } } },
+    ]),
+    Ticket.aggregate([
+      { $match: { companyId: toObjectId(companyId), slaDeadline: { $ne: null } } },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: 1 },
+          breached: {
+            $sum: {
+              $cond: [
+                { $or: [{ $and: [{ $ne: ['$resolvedAt', null] }, { $gt: ['$resolvedAt', '$slaDeadline'] }] }, { $and: [{ $eq: ['$resolvedAt', null] }, { $lt: ['$slaDeadline', new Date()] }] }] },
+                1,
+                0,
+              ],
+            },
+          },
+          avgResolutionMins: { $avg: { $cond: [{ $ne: ['$resolvedAt', null] }, { $divide: [{ $subtract: ['$resolvedAt', '$createdAt'] }, 60000] }, null] } },
+        },
+      },
+    ]),
+  ]);
+
+  const total = totals[0] || { total: 0, open: 0, resolved: 0, closed: 0 };
+  const sla = slaStats[0] || { total: 0, breached: 0, avgResolutionMins: null };
+
+  return {
+    totals: {
+      total: total.total,
+      open: total.open,
+      resolved: total.resolved,
+      closed: total.closed,
+    },
+    byPriority: byPriority.reduce((acc, p) => ({ ...acc, [p._id]: p.count }), {}),
+    byCategory: byCategory.reduce((acc, c) => ({ ...acc, [c._id]: c.count }), {}),
+    sla: {
+      total: sla.total,
+      breached: sla.breached,
+      complianceRate: sla.total > 0 ? Math.round(((sla.total - sla.breached) / sla.total) * 100) : null,
+      avgResolutionMins: sla.avgResolutionMins ? Math.round(sla.avgResolutionMins) : null,
+    },
+  };
+};
+
+const getSLA = async (companyId) => {
+  const [slaData, byPriority, byCategory] = await Promise.all([
+    Ticket.aggregate([
+      {
+        $match: {
+          companyId: toObjectId(companyId),
+          slaDeadline: { $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: 1 },
+          breached: {
+            $sum: {
+              $cond: [
+                { $or: [{ $and: [{ $ne: ['$resolvedAt', null] }, { $gt: ['$resolvedAt', '$slaDeadline'] }] }, { $and: [{ $eq: ['$resolvedAt', null] }, { $lt: ['$slaDeadline', new Date()] }] }] },
+                1,
+                0,
+              ],
+            },
+          },
+          met: {
+            $sum: {
+              $cond: [
+                { $or: [{ $and: [{ $ne: ['$resolvedAt', null] }, { $lte: ['$resolvedAt', '$slaDeadline'] }] }, { $and: [{ $eq: ['$resolvedAt', null] }, { $gte: ['$slaDeadline', new Date()] }] }] },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
+    ]),
+    Ticket.aggregate([
+      {
+        $match: {
+          companyId: toObjectId(companyId),
+          slaDeadline: { $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: '$priority',
+          total: { $sum: 1 },
+          breached: {
+            $sum: {
+              $cond: [
+                { $or: [{ $and: [{ $ne: ['$resolvedAt', null] }, { $gt: ['$resolvedAt', '$slaDeadline'] }] }, { $and: [{ $eq: ['$resolvedAt', null] }, { $lt: ['$slaDeadline', new Date()] }] }] },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
+    ]),
+    Ticket.aggregate([
+      {
+        $match: {
+          companyId: toObjectId(companyId),
+          slaDeadline: { $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: '$categoryId',
+          total: { $sum: 1 },
+          breached: {
+            $sum: {
+              $cond: [
+                { $or: [{ $and: [{ $ne: ['$resolvedAt', null] }, { $gt: ['$resolvedAt', '$slaDeadline'] }] }, { $and: [{ $eq: ['$resolvedAt', null] }, { $lt: ['$slaDeadline', new Date()] }] }] },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
+    ]),
+  ]);
+
+  const overall = slaData[0] || { total: 0, breached: 0, met: 0 };
+
+  return {
+    overall: {
+      total: overall.total,
+      breached: overall.breached,
+      met: overall.met,
+      complianceRate: overall.total > 0 ? Math.round((overall.met / overall.total) * 100) : null,
+    },
+    byPriority: byPriority.map(p => ({
+      priority: p._id,
+      total: p.total,
+      breached: p.breached,
+      complianceRate: p.total > 0 ? Math.round(((p.total - p.breached) / p.total) * 100) : null,
+    })),
+    byCategory: byCategory.map(c => ({
+      categoryId: c._id,
+      total: c.total,
+      breached: c.breached,
+      complianceRate: c.total > 0 ? Math.round(((c.total - c.breached) / c.total) * 100) : null,
+    })),
+  };
+};
+
+const getAgentPerformance = async (companyId) => {
+  const performance = await Ticket.aggregate([
+    { $match: { companyId: toObjectId(companyId), assigneeId: { $ne: null } } },
+    {
+      $group: {
+        _id: '$assigneeId',
+        totalTickets: { $sum: 1 },
+        openTickets: { $sum: { $cond: [{ $in: ['$status', ['OPEN', 'ASSIGNED', 'IN_PROGRESS']] }, 1, 0] } },
+        resolvedTickets: { $sum: { $cond: [{ $eq: ['$status', 'RESOLVED'] }, 1, 0] } },
+        closedTickets: { $sum: { $cond: [{ $eq: ['$status', 'CLOSED'] }, 1, 0] } },
+        avgResolutionMins: { $avg: { $cond: [{ $ne: ['$resolvedAt', null] }, { $divide: [{ $subtract: ['$resolvedAt', '$createdAt'] }, 60000] }, null] } },
+        firstResponseMins: { $avg: { $cond: [{ $ne: ['$firstResponseAt', null] }, { $divide: [{ $subtract: ['$firstResponseAt', '$createdAt'] }, 60000] }, null] } },
+      },
+    },
+    { $sort: { totalTickets: -1 } },
+  ]);
+
+  const userIds = performance.map(p => p._id);
+  const users = await User.find({ _id: { $in: userIds } }).select('name email avatar');
+
+  const userMap = users.reduce((acc, u) => ({ ...acc, [u._id.toString()]: { name: u.name, email: u.email, avatar: u.avatar } }), {});
+
+  return performance.map(p => ({
+    agent: userMap[p._id.toString()] || { name: 'Unknown', email: null, avatar: null },
+    metrics: {
+      totalTickets: p.totalTickets,
+      openTickets: p.openTickets,
+      resolvedTickets: p.resolvedTickets,
+      closedTickets: p.closedTickets,
+      avgResolutionHours: p.avgResolutionMins ? Math.round(p.avgResolutionMins / 60 * 100) / 100 : null,
+      avgFirstResponseMins: p.firstResponseMins ? Math.round(p.firstResponseMins) : null,
+    },
+  }));
+};
+
+module.exports = {
+  list,
+  create,
+  getById,
+  update,
+  remove,
+  reply,
+  assign,
+  changeStatus,
+  changePriority,
+  close,
+  getAISummary,
+  listCategories,
+  createCategory,
+  updateCategory,
+  removeCategory,
+  getSummary,
+  getSLA,
+  getAgentPerformance,
+};
