@@ -89,3 +89,27 @@ Error: Invalid email or password
 2026-06-26 16:14:07 [INFO]: ::1 - - [26/Jun/2026:10:44:07 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-26 16:14:19 [INFO]: ::1 - - [26/Jun/2026:10:44:19 +0000] "HEAD /api-docs/ HTTP/1.1" 200 3147 "-" "curl/8.5.0"
 2026-06-26 16:14:50 [INFO]: ::1 - - [26/Jun/2026:10:44:50 +0000] "POST /api/v1/auth/change-password HTTP/1.1" 200 157 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-26 16:18:42 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-26 16:19:37 [INFO]: ::1 - - [26/Jun/2026:10:49:37 +0000] "POST /auth/login HTTP/1.1" 404 205 "-" "curl/8.5.0"
+2026-06-26 16:26:50 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-26 16:26:50 [INFO]: Server running on port 5000 in development mode
+2026-06-26 16:26:50 [INFO]: API Documentation: http://localhost:5000/api-docs
+2026-06-26 16:30:37 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-26 16:30:37 [INFO]: 🚀 Server running on http://localhost:5000
+2026-06-26 16:30:37 [INFO]: 📄 Swagger: http://localhost:5000/api-docs
+2026-06-26 16:30:37 [INFO]: ❤️ Health: http://localhost:5000/health
+2026-06-26 16:30:54 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-26 16:30:54 [INFO]: Server running on port 5000 in development mode
+2026-06-26 16:30:54 [INFO]: API Documentation: http://localhost:5000/api-docs
+2026-06-26 16:31:21 [INFO]: MongoDB connected: ac-jyefah8-shard-00-02.5rs7mwd.mongodb.net
+2026-06-26 16:31:21 [INFO]: 🚀 Server running on http://localhost:5000
+2026-06-26 16:31:21 [INFO]: 📄 Swagger: http://localhost:5000/api-docs
+2026-06-26 16:31:21 [INFO]: ❤️ Health: http://localhost:5000/health
+2026-06-26 16:31:30 [INFO]: MongoDB connected: ac-jyefah8-shard-00-02.5rs7mwd.mongodb.net
+2026-06-26 16:31:33 [INFO]: ::1 - - [26/Jun/2026:11:01:33 +0000] "GET /api-docs/ HTTP/1.1" 200 3141 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-26 16:31:33 [INFO]: ::1 - - [26/Jun/2026:11:01:33 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-26 16:31:33 [INFO]: ::1 - - [26/Jun/2026:11:01:33 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-26 16:31:33 [INFO]: ::1 - - [26/Jun/2026:11:01:33 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-26 16:31:33 [INFO]: ::1 - - [26/Jun/2026:11:01:33 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-26 16:31:35 [INFO]: ::1 - - [26/Jun/2026:11:01:35 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-26 16:31:49 [INFO]: ::1 - - [26/Jun/2026:11:01:49 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 7680 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"

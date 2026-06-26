@@ -6,7 +6,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.PORT, 10) || 5000,
-  mongodbUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/ai-business-os',
+  mongodbUri: process.env.MONGODB_URI || 'mongodb+srv://selvakumar152000_db_user:selva@cluster0.5rs7mwd.mongodb.net/?appName=Cluster0',
   jwt: {
     secret: process.env.JWT_SECRET || 'default-jwt-secret',
     refreshSecret: process.env.JWT_REFRESH_SECRET || 'default-refresh-secret',
