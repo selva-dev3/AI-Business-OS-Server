@@ -16,6 +16,7 @@ const analyticsRoutes = require('./analytics.routes');
 const settingsRoutes = require('./settings.routes');
 const notificationRoutes = require('./notification.routes');
 const aiRoutes = require('./ai.routes');
+const dashboardRoutes = require('./dashboard.routes');
 
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
@@ -32,6 +33,7 @@ router.use('/analytics', analyticsRoutes);
 router.use('/settings', settingsRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/ai', aiRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 router.get('/health', (req, res) => {
   res.json({

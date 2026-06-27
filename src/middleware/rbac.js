@@ -17,7 +17,7 @@ const checkPermission = (module, action) => {
 
     const permissions = role.permissions || [];
     const hasPermission = permissions.some(
-      p => p.module === module && p.action === action
+      p => p.module.toUpperCase() === module.toUpperCase() && p.action.toUpperCase() === action.toUpperCase()
     );
 
     if (!hasPermission) {
@@ -45,7 +45,7 @@ const checkScope = (module, action) => {
 
     const permissions = role.permissions || [];
     const permission = permissions.find(
-      p => p.module === module && p.action === action
+      p => p.module.toUpperCase() === module.toUpperCase() && p.action.toUpperCase() === action.toUpperCase()
     );
 
     if (!permission) {

@@ -116,14 +116,84 @@ const getDashboard = async (companyId, from, to) => {
 
 // ─── EMPLOYEES ────────────────────────────────────────────────────────────────────
 
+const transformEmployee = (emp) => {
+  if (!emp) return null;
+  const result = { ...emp };
+
+  if (result._id) {
+    result.id = result._id.toString();
+  }
+
+  if (result.status) {
+    result.status = result.status.toLowerCase();
+  }
+
+  if (result.employmentType) {
+    result.employmentType = result.employmentType.toLowerCase();
+  }
+
+  if (result.joiningDate) {
+    try {
+      result.dateOfJoining = new Date(result.joiningDate).toISOString().split('T')[0];
+    } catch (e) {
+      result.dateOfJoining = result.joiningDate;
+    }
+  }
+
+  if (result.designationId) {
+    if (typeof result.designationId === 'object') {
+      result.designation = result.designationId.name || '';
+      result.designationId = result.designationId._id ? result.designationId._id.toString() : result.designationId;
+    } else {
+      result.designationId = result.designationId.toString();
+    }
+  }
+
+  if (result.departmentId) {
+    if (typeof result.departmentId === 'object') {
+      result.department = {
+        id: result.departmentId._id ? result.departmentId._id.toString() : '',
+        name: result.departmentId.name || '',
+      };
+      result.departmentId = result.departmentId._id ? result.departmentId._id.toString() : '';
+    } else {
+      result.departmentId = result.departmentId.toString();
+    }
+  }
+
+  if (result.reportingManagerId) {
+    if (typeof result.reportingManagerId === 'object') {
+      result.manager = {
+        id: result.reportingManagerId._id ? result.reportingManagerId._id.toString() : '',
+        firstName: result.reportingManagerId.firstName || '',
+        lastName: result.reportingManagerId.lastName || '',
+      };
+      result.managerId = result.reportingManagerId._id ? result.reportingManagerId._id.toString() : '';
+    } else {
+      result.managerId = result.reportingManagerId.toString();
+    }
+  }
+
+  if (result.address) {
+    result.street = result.address.street || '';
+    result.city = result.address.city || '';
+    result.state = result.address.state || '';
+    result.country = result.address.country || '';
+    result.zipCode = result.address.zip || '';
+    result.address = result.address.street || '';
+  }
+
+  return result;
+};
+
 const listEmployees = async (companyId, query) => {
   const { page, limit, skip } = paginateQuery(query.page, query.limit);
   const filter = { companyId };
 
-  if (query.status) filter.status = query.status;
+  if (query.status) filter.status = query.status.toUpperCase();
   if (query.departmentId) filter.departmentId = query.departmentId;
   if (query.designationId) filter.designationId = query.designationId;
-  if (query.employmentType) filter.employmentType = query.employmentType;
+  if (query.employmentType) filter.employmentType = query.employmentType.toUpperCase();
   if (query.search) {
     Object.assign(filter, buildSearchQuery(query.search, ['firstName', 'lastName', 'email', 'employeeCode']));
   }
@@ -142,20 +212,153 @@ const listEmployees = async (companyId, query) => {
     Employee.countDocuments(filter),
   ]);
 
-  return { employees, meta: buildMeta(total, page, limit) };
+  return { employees: employees.map(transformEmployee), meta: buildMeta(total, page, limit) };
 };
 
-const createEmployee = async (companyId, data) => {
+const normalizeEmployeeData = async (companyId, inputData) => {
+  const data = { ...inputData };
+
+  // 1. Convert gender to uppercase MALE/FEMALE/OTHER
+  if (data.gender) {
+    data.gender = data.gender.toUpperCase();
+    if (!['MALE', 'FEMALE', 'OTHER'].includes(data.gender)) {
+      data.gender = undefined;
+    }
+  }
+
+  // 2. Convert employmentType to uppercase
+  if (data.employmentType) {
+    data.employmentType = data.employmentType.toUpperCase();
+    if (!['FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN'].includes(data.employmentType)) {
+      data.employmentType = 'FULL_TIME';
+    }
+  }
+
+  // 3. Map status to uppercase ACTIVE/INACTIVE/TERMINATED
+  if (data.status) {
+    data.status = data.status.toUpperCase();
+    if (data.status === 'ON_LEAVE') {
+      data.status = 'ACTIVE';
+    }
+    if (!['ACTIVE', 'INACTIVE', 'TERMINATED'].includes(data.status)) {
+      data.status = 'ACTIVE';
+    }
+  }
+
+  // 4. Map joiningDate / dateOfJoining
+  if (!data.joiningDate && data.dateOfJoining) {
+    data.joiningDate = data.dateOfJoining;
+  }
+  delete data.dateOfJoining;
+
+  // 5. Structure address
+  if (typeof data.address === 'string' || data.city || data.state || data.country || data.zipCode || data.zip) {
+    data.address = {
+      street: typeof data.address === 'string' ? data.address : (data.address?.street || ''),
+      city: data.city || data.address?.city || '',
+      state: data.state || data.address?.state || '',
+      country: data.country || data.address?.country || '',
+      zip: data.zipCode || data.zip || data.address?.zip || '',
+    };
+    // Delete flat fields
+    delete data.city;
+    delete data.state;
+    delete data.country;
+    delete data.zipCode;
+    delete data.zip;
+  }
+
+  // 6. Map managerId to reportingManagerId
+  if (data.managerId && !data.reportingManagerId) {
+    data.reportingManagerId = data.managerId;
+  }
+  delete data.managerId;
+
+  // 7. Validate and map ObjectIds
+  const isValidObjectId = (id) => typeof id === 'string' && /^[0-9a-fA-F]{24}$/.test(id);
+
+  // Check department mapping for mock department IDs
+  const deptMapping = {
+    'dept-1': { name: 'Engineering', code: 'ENG' },
+    'dept-2': { name: 'Product & Design', code: 'PROD' },
+    'dept-3': { name: 'Sales & Marketing', code: 'SALES' },
+    'dept-4': { name: 'Human Resources', code: 'HR' },
+    'dept-5': { name: 'Finance & Legal', code: 'FIN' },
+    'dept-6': { name: 'Customer Support', code: 'SUPPORT' },
+  };
+
+  if (data.departmentId) {
+    if (!isValidObjectId(data.departmentId)) {
+      const deptInfo = deptMapping[data.departmentId];
+      if (deptInfo) {
+        let dept = await Department.findOne({ code: deptInfo.code, companyId });
+        if (!dept) {
+          dept = await Department.create({
+            name: deptInfo.name,
+            code: deptInfo.code,
+            companyId,
+            description: `${deptInfo.name} Department`,
+          });
+        }
+        data.departmentId = dept._id;
+      } else {
+        delete data.departmentId;
+      }
+    }
+  }
+
+  // Check designation (accept designationName string, look up or create)
+  if (data.designation && !data.designationId) {
+    let desig = await Designation.findOne({ name: data.designation, companyId });
+    if (!desig) {
+      desig = await Designation.create({
+        name: data.designation,
+        companyId,
+        level: 1,
+        description: `${data.designation} Designation`,
+      });
+    }
+    data.designationId = desig._id;
+  }
+  delete data.designation;
+
+  if (data.designationId && !isValidObjectId(data.designationId)) {
+    delete data.designationId;
+  }
+
+  if (data.branchId && !isValidObjectId(data.branchId)) {
+    delete data.branchId;
+  }
+
+  if (data.reportingManagerId && !isValidObjectId(data.reportingManagerId)) {
+    delete data.reportingManagerId;
+  }
+
+  return data;
+};
+
+const createEmployee = async (companyId, rawData) => {
+  const data = await normalizeEmployeeData(companyId, rawData);
+
   const existing = await Employee.findOne({ email: data.email });
   if (existing) throw new AppError(409, 'CONFLICT', 'Employee with this email already exists');
 
-  if (data.employeeCode) {
+  if (!data.employeeCode) {
+    const count = await Employee.countDocuments({ companyId });
+    data.employeeCode = `EMP-${(count + 1).toString().padStart(4, '0')}`;
+  } else {
     const codeExists = await Employee.findOne({ employeeCode: data.employeeCode, companyId });
     if (codeExists) throw new AppError(409, 'CONFLICT', 'Employee code already exists');
   }
 
   const employee = await Employee.create({ ...data, companyId });
-  return employee;
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated.toObject());
 };
 
 const getEmployeeById = async (companyId, id) => {
@@ -166,10 +369,12 @@ const getEmployeeById = async (companyId, id) => {
     .populate('reportingManagerId', 'firstName lastName employeeCode')
     .populate('userId', 'email');
   if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
-  return employee;
+  return transformEmployee(employee.toObject());
 };
 
-const updateEmployee = async (companyId, id, data) => {
+const updateEmployee = async (companyId, id, rawData) => {
+  const data = await normalizeEmployeeData(companyId, rawData);
+
   if (data.email) {
     const existing = await Employee.findOne({ email: data.email, _id: { $ne: id } });
     if (existing) throw new AppError(409, 'CONFLICT', 'Email already in use');
@@ -179,7 +384,13 @@ const updateEmployee = async (companyId, id, data) => {
     runValidators: true,
   });
   if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
-  return employee;
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated.toObject());
 };
 
 const removeEmployee = async (companyId, id) => {
@@ -189,7 +400,13 @@ const removeEmployee = async (companyId, id) => {
     { new: true }
   );
   if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
-  return employee;
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated.toObject());
 };
 
 const activateEmployee = async (companyId, id) => {
@@ -199,7 +416,13 @@ const activateEmployee = async (companyId, id) => {
     { new: true }
   );
   if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
-  return employee;
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated.toObject());
 };
 
 const bulkImportEmployees = async (companyId, employeesData) => {

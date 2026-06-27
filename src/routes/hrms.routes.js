@@ -46,20 +46,51 @@ router.use(authenticate);
  * @swagger
  * /hrms/dashboard:
  *   get:
- *     summary: Get dashboard data for Dashboard
+ *     summary: Get HRMS dashboard overview
+ *     description: Returns aggregate metrics for the HRMS dashboard including headcount, attendance summary, pending leaves, and payroll stats.
  *     tags: [HRMS]
  *     security: [{ bearerAuth: [] }]
  *     responses:
  *       200:
- *         description: Success response
+ *         description: Dashboard data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
  *       400:
  *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get(
   '/dashboard',
-  checkPermission('hrms', 'read'),
+  checkPermission('EMPLOYEES', 'read'),
   ctrl.getDashboard
 );
 
@@ -68,20 +99,86 @@ router.get(
  * @swagger
  * /hrms/employees/export:
  *   get:
- *     summary: Export Employees Export
+ *     summary: Export employees to file
+ *     description: Exports employee records in the specified format (CSV, Excel, PDF). Supports filtering by department, status, and date range.
  *     tags: [HRMS]
  *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: query
+ *         name: format
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [csv, xlsx, pdf]
+ *         description: Export format (defaults to csv)
+ *       - in: query
+ *         name: departmentId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by department ID
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [active, inactive, terminated]
+ *         description: Filter by employment status
+ *       - in: query
+ *         name: fromDate
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter records created on or after this date (YYYY-MM-DD)
+ *       - in: query
+ *         name: toDate
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter records created on or before this date (YYYY-MM-DD)
  *     responses:
  *       200:
- *         description: Success response
+ *         description: File download or export URL
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
  *       400:
  *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get(
   '/employees/export',
-  checkPermission('hrms', 'read'),
+  checkPermission('EMPLOYEES', 'read'),
   ctrl.exportEmployees
 );
 
@@ -89,20 +186,76 @@ router.get(
  * @swagger
  * /hrms/employees/bulk-import:
  *   post:
- *     summary: Bulk import Employees Bulk-import
+ *     summary: Bulk import employees from file
+ *     description: Upload a CSV or Excel file to bulk create or update employees. The file is processed as multipart/form-data.
  *     tags: [HRMS]
  *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: CSV or Excel file containing employee records
  *     responses:
  *       200:
- *         description: Success response
+ *         description: Bulk import processed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
  *       400:
  *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       409:
+ *         description: Conflict - duplicate records found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       422:
+ *         description: Unprocessable entity - file format or data validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post(
   '/employees/bulk-import',
-  checkPermission('hrms', 'create'),
+  checkPermission('EMPLOYEES', 'create'),
   ctrl.bulkImportEmployees
 );
 
@@ -110,20 +263,92 @@ router.post(
  * @swagger
  * /hrms/employees:
  *   get:
- *     summary: Get Employees
+ *     summary: List all employees
+ *     description: Retrieve a paginated list of employees with optional search, sorting, and filtering by status or department.
  *     tags: [HRMS]
  *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Number of records per page
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Search query to filter by name, email, or employee code
+ *       - in: query
+ *         name: sort
+ *         required: false
+ *         schema:
+ *           type: string
+ *           default: createdAt
+ *         description: Field to sort by (prefix with - for descending)
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [active, inactive, terminated]
+ *         description: Filter by employment status
+ *       - in: query
+ *         name: departmentId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by department ID
  *     responses:
  *       200:
- *         description: Success response
+ *         description: Paginated list of employees
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaginatedResponse'
  *       400:
  *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get(
   '/employees',
-  checkPermission('hrms', 'read'),
+  checkPermission('EMPLOYEES', 'read'),
   ctrl.listEmployees
 );
 
@@ -131,20 +356,69 @@ router.get(
  * @swagger
  * /hrms/employees:
  *   post:
- *     summary: Create Employees
+ *     summary: Create a new employee
+ *     description: Create a new employee record with personal, professional, and compensation details.
  *     tags: [HRMS]
  *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateEmployeeRequest'
  *     responses:
- *       200:
- *         description: Success response
+ *       201:
+ *         description: Employee created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
  *       400:
  *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       409:
+ *         description: Conflict - duplicate email or employee code
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       422:
+ *         description: Unprocessable entity - validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post(
   '/employees',
-  checkPermission('hrms', 'create'),
+  checkPermission('EMPLOYEES', 'create'),
   validate(createEmployeeSchema),
   auditLog('hrms', 'CREATE', 'Employee'),
   ctrl.createEmployee
@@ -154,7 +428,8 @@ router.post(
  * @swagger
  * /hrms/employees/{id}:
  *   get:
- *     summary: Get Employees
+ *     summary: Get employee by ID
+ *     description: Retrieve a single employee record by its unique ID, including department, designation, and salary structure details.
  *     tags: [HRMS]
  *     security: [{ bearerAuth: [] }]
  *     parameters:
@@ -163,18 +438,54 @@ router.post(
  *         required: true
  *         schema:
  *           type: string
- *         description: The id parameter
+ *         description: Unique identifier of the employee
  *     responses:
  *       200:
- *         description: Success response
+ *         description: Employee record retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
  *       400:
  *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       404:
+ *         description: Employee not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get(
   '/employees/:id',
-  checkPermission('hrms', 'read'),
+  checkPermission('EMPLOYEES', 'read'),
   ctrl.getEmployeeById
 );
 
@@ -182,7 +493,8 @@ router.get(
  * @swagger
  * /hrms/employees/{id}:
  *   patch:
- *     summary: Update Employees
+ *     summary: Update an existing employee
+ *     description: Update one or more fields of an existing employee record. Partial updates are supported.
  *     tags: [HRMS]
  *     security: [{ bearerAuth: [] }]
  *     parameters:
@@ -191,18 +503,72 @@ router.get(
  *         required: true
  *         schema:
  *           type: string
- *         description: The id parameter
+ *         description: Unique identifier of the employee to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateEmployeeRequest'
  *     responses:
  *       200:
- *         description: Success response
+ *         description: Employee updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
  *       400:
  *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       404:
+ *         description: Employee not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       409:
+ *         description: Conflict - duplicate email or employee code
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       422:
+ *         description: Unprocessable entity - validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch(
   '/employees/:id',
-  checkPermission('hrms', 'update'),
+  checkPermission('EMPLOYEES', 'update'),
   validate(updateEmployeeSchema),
   auditLog('hrms', 'UPDATE', 'Employee'),
   ctrl.updateEmployee
@@ -212,7 +578,8 @@ router.patch(
  * @swagger
  * /hrms/employees/{id}:
  *   delete:
- *     summary: Delete Employees
+ *     summary: Delete an employee
+ *     description: Permanently remove an employee record from the system. This action may be restricted based on business rules.
  *     tags: [HRMS]
  *     security: [{ bearerAuth: [] }]
  *     parameters:
@@ -221,18 +588,60 @@ router.patch(
  *         required: true
  *         schema:
  *           type: string
- *         description: The id parameter
+ *         description: Unique identifier of the employee to delete
  *     responses:
  *       200:
- *         description: Success response
+ *         description: Employee deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
  *       400:
  *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       404:
+ *         description: Employee not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       409:
+ *         description: Conflict - employee has active associations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.delete(
   '/employees/:id',
-  checkPermission('hrms', 'delete'),
+  checkPermission('EMPLOYEES', 'delete'),
   auditLog('hrms', 'DELETE', 'Employee'),
   ctrl.removeEmployee
 );
@@ -261,7 +670,7 @@ router.delete(
  */
 router.post(
   '/employees/:id/activate',
-  checkPermission('hrms', 'update'),
+  checkPermission('EMPLOYEES', 'update'),
   auditLog('hrms', 'UPDATE', 'Employee'),
   ctrl.activateEmployee
 );
@@ -284,7 +693,7 @@ router.post(
  */
 router.get(
   '/departments',
-  checkPermission('hrms', 'read'),
+  checkPermission('DEPARTMENTS', 'read'),
   ctrl.listDepartments
 );
 
@@ -305,7 +714,7 @@ router.get(
  */
 router.post(
   '/departments',
-  checkPermission('hrms', 'create'),
+  checkPermission('DEPARTMENTS', 'create'),
   validate(createDepartmentSchema),
   auditLog('hrms', 'CREATE', 'Department'),
   ctrl.createDepartment
@@ -335,7 +744,7 @@ router.post(
  */
 router.patch(
   '/departments/:id',
-  checkPermission('hrms', 'update'),
+  checkPermission('DEPARTMENTS', 'update'),
   validate(updateDepartmentSchema),
   auditLog('hrms', 'UPDATE', 'Department'),
   ctrl.updateDepartment
@@ -365,7 +774,7 @@ router.patch(
  */
 router.delete(
   '/departments/:id',
-  checkPermission('hrms', 'delete'),
+  checkPermission('DEPARTMENTS', 'delete'),
   auditLog('hrms', 'DELETE', 'Department'),
   ctrl.removeDepartment
 );
@@ -394,7 +803,7 @@ router.delete(
  */
 router.get(
   '/departments/:id/employees',
-  checkPermission('hrms', 'read'),
+  checkPermission('DEPARTMENTS', 'read'),
   ctrl.listDepartmentEmployees
 );
 
@@ -520,7 +929,7 @@ router.delete(
  */
 router.get(
   '/attendance/summary',
-  checkPermission('hrms', 'read'),
+  checkPermission('ATTENDANCE', 'read'),
   ctrl.getAttendanceSummary
 );
 
@@ -541,7 +950,7 @@ router.get(
  */
 router.get(
   '/attendance/export',
-  checkPermission('hrms', 'read'),
+  checkPermission('ATTENDANCE', 'read'),
   ctrl.exportAttendance
 );
 
@@ -562,7 +971,7 @@ router.get(
  */
 router.post(
   '/attendance/bulk',
-  checkPermission('hrms', 'create'),
+  checkPermission('ATTENDANCE', 'create'),
   validate(bulkAttendanceSchema),
   auditLog('hrms', 'CREATE', 'Attendance'),
   ctrl.bulkCreateAttendance
@@ -585,7 +994,7 @@ router.post(
  */
 router.get(
   '/attendance',
-  checkPermission('hrms', 'read'),
+  checkPermission('ATTENDANCE', 'read'),
   ctrl.listAttendance
 );
 
@@ -606,7 +1015,7 @@ router.get(
  */
 router.post(
   '/attendance',
-  checkPermission('hrms', 'create'),
+  checkPermission('ATTENDANCE', 'create'),
   validate(createAttendanceSchema),
   auditLog('hrms', 'CREATE', 'Attendance'),
   ctrl.createAttendance
@@ -636,7 +1045,7 @@ router.post(
  */
 router.patch(
   '/attendance/:id',
-  checkPermission('hrms', 'update'),
+  checkPermission('ATTENDANCE', 'update'),
   validate(updateAttendanceSchema),
   auditLog('hrms', 'UPDATE', 'Attendance'),
   ctrl.updateAttendance
@@ -660,7 +1069,7 @@ router.patch(
  */
 router.get(
   '/leave-types',
-  checkPermission('hrms', 'read'),
+  checkPermission('LEAVES', 'read'),
   ctrl.listLeaveTypes
 );
 
@@ -681,7 +1090,7 @@ router.get(
  */
 router.post(
   '/leave-types',
-  checkPermission('hrms', 'create'),
+  checkPermission('LEAVES', 'create'),
   validate(createLeaveTypeSchema),
   auditLog('hrms', 'CREATE', 'LeaveType'),
   ctrl.createLeaveType
@@ -711,7 +1120,7 @@ router.post(
  */
 router.patch(
   '/leave-types/:id',
-  checkPermission('hrms', 'update'),
+  checkPermission('LEAVES', 'update'),
   validate(updateLeaveTypeSchema),
   auditLog('hrms', 'UPDATE', 'LeaveType'),
   ctrl.updateLeaveType
@@ -741,7 +1150,7 @@ router.patch(
  */
 router.delete(
   '/leave-types/:id',
-  checkPermission('hrms', 'delete'),
+  checkPermission('LEAVES', 'delete'),
   auditLog('hrms', 'DELETE', 'LeaveType'),
   ctrl.removeLeaveType
 );
@@ -764,7 +1173,7 @@ router.delete(
  */
 router.get(
   '/leave-balance',
-  checkPermission('hrms', 'read'),
+  checkPermission('LEAVES', 'read'),
   ctrl.getLeaveBalance
 );
 
@@ -785,7 +1194,7 @@ router.get(
  */
 router.get(
   '/leave-calendar',
-  checkPermission('hrms', 'read'),
+  checkPermission('LEAVES', 'read'),
   ctrl.getLeaveCalendar
 );
 
@@ -806,7 +1215,7 @@ router.get(
  */
 router.get(
   '/leave-requests',
-  checkPermission('hrms', 'read'),
+  checkPermission('LEAVES', 'read'),
   ctrl.listLeaveRequests
 );
 
@@ -827,7 +1236,7 @@ router.get(
  */
 router.post(
   '/leave-requests',
-  checkPermission('hrms', 'create'),
+  checkPermission('LEAVES', 'create'),
   validate(createLeaveRequestSchema),
   auditLog('hrms', 'CREATE', 'LeaveRequest'),
   ctrl.createLeaveRequest
@@ -857,7 +1266,7 @@ router.post(
  */
 router.get(
   '/leave-requests/:id',
-  checkPermission('hrms', 'read'),
+  checkPermission('LEAVES', 'read'),
   ctrl.getLeaveRequestById
 );
 
@@ -885,7 +1294,7 @@ router.get(
  */
 router.patch(
   '/leave-requests/:id/approve',
-  checkPermission('hrms', 'update'),
+  checkPermission('LEAVES', 'update'),
   validate(approveRejectLeaveSchema),
   auditLog('hrms', 'UPDATE', 'LeaveRequest'),
   ctrl.approveLeaveRequest
@@ -915,7 +1324,7 @@ router.patch(
  */
 router.patch(
   '/leave-requests/:id/reject',
-  checkPermission('hrms', 'update'),
+  checkPermission('LEAVES', 'update'),
   validate(approveRejectLeaveSchema),
   auditLog('hrms', 'UPDATE', 'LeaveRequest'),
   ctrl.rejectLeaveRequest
@@ -945,7 +1354,7 @@ router.patch(
  */
 router.delete(
   '/leave-requests/:id',
-  checkPermission('hrms', 'delete'),
+  checkPermission('LEAVES', 'delete'),
   auditLog('hrms', 'DELETE', 'LeaveRequest'),
   ctrl.removeLeaveRequest
 );
@@ -968,7 +1377,7 @@ router.delete(
  */
 router.get(
   '/holidays',
-  checkPermission('hrms', 'read'),
+  checkPermission('HOLIDAYS', 'read'),
   ctrl.listHolidays
 );
 
@@ -989,7 +1398,7 @@ router.get(
  */
 router.post(
   '/holidays',
-  checkPermission('hrms', 'create'),
+  checkPermission('HOLIDAYS', 'create'),
   validate(createHolidaySchema),
   auditLog('hrms', 'CREATE', 'Holiday'),
   ctrl.createHoliday
@@ -1019,7 +1428,7 @@ router.post(
  */
 router.patch(
   '/holidays/:id',
-  checkPermission('hrms', 'update'),
+  checkPermission('HOLIDAYS', 'update'),
   validate(updateHolidaySchema),
   auditLog('hrms', 'UPDATE', 'Holiday'),
   ctrl.updateHoliday
@@ -1049,7 +1458,7 @@ router.patch(
  */
 router.delete(
   '/holidays/:id',
-  checkPermission('hrms', 'delete'),
+  checkPermission('HOLIDAYS', 'delete'),
   auditLog('hrms', 'DELETE', 'Holiday'),
   ctrl.removeHoliday
 );
@@ -1072,7 +1481,7 @@ router.delete(
  */
 router.get(
   '/payroll',
-  checkPermission('hrms', 'read'),
+  checkPermission('PAYROLL', 'read'),
   ctrl.listPayroll
 );
 
@@ -1093,7 +1502,7 @@ router.get(
  */
 router.post(
   '/payroll/run',
-  checkPermission('hrms', 'create'),
+  checkPermission('PAYROLL', 'create'),
   validate(runPayrollSchema),
   auditLog('hrms', 'CREATE', 'Payroll'),
   ctrl.runPayroll
@@ -1123,7 +1532,7 @@ router.post(
  */
 router.get(
   '/payroll/payslips/:id',
-  checkPermission('hrms', 'read'),
+  checkPermission('PAYROLL', 'read'),
   ctrl.getPayslip
 );
 
@@ -1144,7 +1553,7 @@ router.get(
  */
 router.post(
   '/payroll/payslips/export',
-  checkPermission('hrms', 'read'),
+  checkPermission('PAYROLL', 'read'),
   ctrl.exportPayslips
 );
 
@@ -1172,7 +1581,7 @@ router.post(
  */
 router.get(
   '/payroll/:runId',
-  checkPermission('hrms', 'read'),
+  checkPermission('PAYROLL', 'read'),
   ctrl.getPayrollById
 );
 
@@ -1276,7 +1685,7 @@ router.patch(
  */
 router.get(
   '/assets',
-  checkPermission('hrms', 'read'),
+  checkPermission('ASSETS', 'read'),
   ctrl.listAssets
 );
 
@@ -1297,7 +1706,7 @@ router.get(
  */
 router.post(
   '/assets',
-  checkPermission('hrms', 'create'),
+  checkPermission('ASSETS', 'create'),
   validate(createAssetSchema),
   auditLog('hrms', 'CREATE', 'Asset'),
   ctrl.createAsset
@@ -1327,7 +1736,7 @@ router.post(
  */
 router.patch(
   '/assets/:id',
-  checkPermission('hrms', 'update'),
+  checkPermission('ASSETS', 'update'),
   validate(updateAssetSchema),
   auditLog('hrms', 'UPDATE', 'Asset'),
   ctrl.updateAsset
@@ -1357,7 +1766,7 @@ router.patch(
  */
 router.delete(
   '/assets/:id',
-  checkPermission('hrms', 'delete'),
+  checkPermission('ASSETS', 'delete'),
   auditLog('hrms', 'DELETE', 'Asset'),
   ctrl.removeAsset
 );
@@ -1386,7 +1795,7 @@ router.delete(
  */
 router.post(
   '/assets/:id/assign',
-  checkPermission('hrms', 'update'),
+  checkPermission('ASSETS', 'update'),
   validate(assignAssetSchema),
   auditLog('hrms', 'UPDATE', 'Asset'),
   ctrl.assignAsset
@@ -1416,7 +1825,7 @@ router.post(
  */
 router.post(
   '/assets/:id/return',
-  checkPermission('hrms', 'update'),
+  checkPermission('ASSETS', 'update'),
   validate(returnAssetSchema),
   auditLog('hrms', 'UPDATE', 'Asset'),
   ctrl.returnAsset
@@ -1440,7 +1849,7 @@ router.post(
  */
 router.get(
   '/reports/attendance',
-  checkPermission('hrms', 'read'),
+  checkPermission('REPORTS', 'read'),
   ctrl.getAttendanceReport
 );
 
@@ -1461,7 +1870,7 @@ router.get(
  */
 router.get(
   '/reports/leave',
-  checkPermission('hrms', 'read'),
+  checkPermission('REPORTS', 'read'),
   ctrl.getLeaveReport
 );
 
@@ -1482,7 +1891,7 @@ router.get(
  */
 router.get(
   '/reports/payroll',
-  checkPermission('hrms', 'read'),
+  checkPermission('REPORTS', 'read'),
   ctrl.getPayrollReport
 );
 
@@ -1503,7 +1912,7 @@ router.get(
  */
 router.get(
   '/reports/headcount',
-  checkPermission('hrms', 'read'),
+  checkPermission('REPORTS', 'read'),
   ctrl.getHeadcountReport
 );
 
@@ -1524,7 +1933,7 @@ router.get(
  */
 router.get(
   '/reports/attrition',
-  checkPermission('hrms', 'read'),
+  checkPermission('REPORTS', 'read'),
   ctrl.getAttritionReport
 );
 
