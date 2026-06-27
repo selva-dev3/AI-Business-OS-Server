@@ -880,3 +880,128 @@ Error: Invalid email or password
 2026-06-27 15:33:28 [INFO]: Server running on http://localhost:5000
 2026-06-27 15:33:28 [INFO]: Swagger: http://localhost:5000/api-docs
 2026-06-27 15:33:28 [INFO]: Health: http://localhost:5000/health
+2026-06-27 15:33:39 [INFO]: ::1 - - [27/Jun/2026:10:03:39 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:33:39 [INFO]: ::1 - - [27/Jun/2026:10:03:39 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:33:39 [INFO]: ::1 - - [27/Jun/2026:10:03:39 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:33:39 [INFO]: ::1 - - [27/Jun/2026:10:03:39 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 200 176420 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:33:39 [INFO]: ::1 - - [27/Jun/2026:10:03:39 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:37:27 [INFO]: ::1 - - [27/Jun/2026:10:07:27 +0000] "GET /api/v1/auth/me HTTP/1.1" 401 205 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:37:27 [INFO]: ::1 - - [27/Jun/2026:10:07:27 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 401 237 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:37:27 [INFO]: ::1 - - [27/Jun/2026:10:07:27 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:37:27 [INFO]: ::1 - - [27/Jun/2026:10:07:27 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:37:27 [INFO]: ::1 - - [27/Jun/2026:10:07:27 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 771 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:37:35 [INFO]: ::1 - - [27/Jun/2026:10:07:35 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:43:25 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 15:43:25 [INFO]: Server running on http://localhost:5000
+2026-06-27 15:43:25 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 15:43:25 [INFO]: Health: http://localhost:5000/health
+2026-06-27 15:44:38 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 15:45:21 [INFO]: MongoDB connected: ac-jyefah8-shard-00-02.5rs7mwd.mongodb.net
+2026-06-27 15:49:08 [INFO]: ::1 - - [27/Jun/2026:10:19:08 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:51:56 [INFO]: ::1 - - [27/Jun/2026:10:21:56 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:51:57 [INFO]: ::1 - - [27/Jun/2026:10:21:57 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:51:59 [INFO]: ::1 - - [27/Jun/2026:10:21:59 +0000] "GET /api-docs/ HTTP/1.1" 200 3141 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:52:03 [INFO]: ::1 - - [27/Jun/2026:10:22:03 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:53:15 [INFO]: ::1 - - [27/Jun/2026:10:23:15 +0000] "GET /api/v1/auth/me HTTP/1.1" 401 205 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:53:15 [INFO]: ::1 - - [27/Jun/2026:10:23:15 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:53:15 [INFO]: ::1 - - [27/Jun/2026:10:23:15 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:53:15 [INFO]: ::1 - - [27/Jun/2026:10:23:15 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:53:15 [INFO]: ::1 - - [27/Jun/2026:10:23:15 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:56:48 [INFO]: ::1 - - [27/Jun/2026:10:26:48 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:56:48 [INFO]: ::1 - - [27/Jun/2026:10:26:48 +0000] "GET /api/v1/dashboard/activity?limit=10 HTTP/1.1" 200 774 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:56:54 [INFO]: ::1 - - [27/Jun/2026:10:26:54 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:56:54 [INFO]: ::1 - - [27/Jun/2026:10:26:54 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 15:56:59 [INFO]: ::1 - - [27/Jun/2026:10:26:59 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:01:07 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 16:01:07 [INFO]: Server running on http://localhost:5000
+2026-06-27 16:01:07 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 16:01:07 [INFO]: Health: http://localhost:5000/health
+2026-06-27 16:01:40 [INFO]: ::1 - - [27/Jun/2026:10:31:40 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:03:57 [ERROR]: Cast to ObjectId failed for value "runs" (type string) at path "_id" for model "Payroll"
+CastError: Cast to ObjectId failed for value "runs" (type string) at path "_id" for model "Payroll"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getPayrollById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1119:19)
+2026-06-27 16:03:57 [INFO]: ::1 - - [27/Jun/2026:10:33:57 +0000] "GET /api/v1/hrms/payroll/runs HTTP/1.1" 400 211 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:03:57 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Payroll"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Payroll"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getPayrollById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1119:19)
+2026-06-27 16:03:57 [INFO]: ::1 - - [27/Jun/2026:10:33:57 +0000] "GET /api/v1/hrms/payroll/summary HTTP/1.1" 400 217 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:03:58 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Payroll"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Payroll"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getPayrollById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1119:19)
+2026-06-27 16:03:58 [INFO]: ::1 - - [27/Jun/2026:10:33:58 +0000] "GET /api/v1/hrms/payroll/summary HTTP/1.1" 400 217 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:03:58 [ERROR]: Cast to ObjectId failed for value "runs" (type string) at path "_id" for model "Payroll"
+CastError: Cast to ObjectId failed for value "runs" (type string) at path "_id" for model "Payroll"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getPayrollById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1119:19)
+2026-06-27 16:03:58 [INFO]: ::1 - - [27/Jun/2026:10:33:58 +0000] "GET /api/v1/hrms/payroll/runs HTTP/1.1" 400 211 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:04:01 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Payroll"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Payroll"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getPayrollById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1119:19)
+2026-06-27 16:04:01 [INFO]: ::1 - - [27/Jun/2026:10:34:01 +0000] "GET /api/v1/hrms/payroll/summary HTTP/1.1" 400 217 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:04:01 [ERROR]: Cast to ObjectId failed for value "runs" (type string) at path "_id" for model "Payroll"
+CastError: Cast to ObjectId failed for value "runs" (type string) at path "_id" for model "Payroll"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getPayrollById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1119:19)
+2026-06-27 16:04:01 [INFO]: ::1 - - [27/Jun/2026:10:34:01 +0000] "GET /api/v1/hrms/payroll/runs HTTP/1.1" 400 211 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:05:36 [INFO]: ::1 - - [27/Jun/2026:10:35:36 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 771 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:08:23 [INFO]: ::1 - - [27/Jun/2026:10:38:23 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:08:23 [INFO]: ::1 - - [27/Jun/2026:10:38:23 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:08:23 [INFO]: ::1 - - [27/Jun/2026:10:38:23 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:09:03 [INFO]: ::1 - - [27/Jun/2026:10:39:03 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:09:03 [INFO]: ::1 - - [27/Jun/2026:10:39:03 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:12:03 [INFO]: ::1 - - [27/Jun/2026:10:42:03 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 200 376 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:15:19 [INFO]: ::1 - - [27/Jun/2026:10:45:19 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1384 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:15:48 [INFO]: ::1 - - [27/Jun/2026:10:45:48 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 771 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:17:57 [INFO]: ::1 - - [27/Jun/2026:10:47:57 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 200 376 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
