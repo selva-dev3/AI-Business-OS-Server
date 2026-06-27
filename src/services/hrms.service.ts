@@ -11,6 +11,20 @@ import Payslip from '../models/Payslip';
 import SalaryStructure from '../models/SalaryStructure';
 import Asset from '../models/Asset';
 import AssetAssignment from '../models/AssetAssignment';
+import RegularizationRequest from '../models/RegularizationRequest';
+import PerformanceGoal from '../models/PerformanceGoal';
+import PerformanceAppraisal from '../models/PerformanceAppraisal';
+import PerformanceFeedback from '../models/PerformanceFeedback';
+import TrainingCourse from '../models/TrainingCourse';
+import TrainingEnrollment from '../models/TrainingEnrollment';
+import TrainingCertification from '../models/TrainingCertification';
+import TransferRequest from '../models/TransferRequest';
+import Promotion from '../models/Promotion';
+import EmployeeHistory from '../models/EmployeeHistory';
+import ExitResignation from '../models/ExitResignation';
+import ExitChecklist from '../models/ExitChecklist';
+import ExitClearance from '../models/ExitClearance';
+import ExitSettlement from '../models/ExitSettlement';
 import mongoose from 'mongoose';
 import AppError from '../utils/appError';
 import { paginateQuery, buildMeta, buildSearchQuery, calculateWorkingHours, calculateDaysBetween } from '../utils/helpers';
@@ -447,6 +461,24 @@ const removeEmployee = async (companyId: string, id: string) => {
     .populate('reportingManagerId', 'firstName lastName employeeCode')
     .populate('userId', 'email');
   return transformEmployee(populated!.toObject() as unknown as Record<string, unknown>);
+};
+
+const hardDeleteEmployee = async (companyId: string, id: string) => {
+  const employee = await Employee.findOne({ _id: id, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  if (employee.status === 'ACTIVE') {
+    throw new AppError(400, 'BAD_REQUEST', 'Cannot permanently delete an active employee. Deactivate first.');
+  }
+  await Promise.all([
+    Attendance.deleteMany({ employeeId: id }),
+    LeaveRequest.deleteMany({ employeeId: id }),
+    LeaveBalance.deleteMany({ employeeId: id }),
+    Payslip.deleteMany({ employeeId: id }),
+    SalaryStructure.deleteMany({ employeeId: id }),
+    AssetAssignment.deleteMany({ employeeId: id }),
+  ]);
+  await Employee.findOneAndDelete({ _id: id, companyId });
+  return { message: 'Employee permanently deleted', employeeId: id };
 };
 
 const activateEmployee = async (companyId: string, id: string) => {
@@ -1496,6 +1528,642 @@ const getAttritionReport = async (companyId: string, query: QueryParams) => {
   };
 };
 
+// ─── EMPLOYEE FULL UPDATE (PUT) ─────────────────────────────────────────────
+
+const fullUpdateEmployee = async (companyId: string, id: string, rawData: Record<string, unknown>) => {
+  const data = await normalizeEmployeeData(companyId, rawData);
+  if (data.email) {
+    const existing = await Employee.findOne({ email: data.email as string, _id: { $ne: id } });
+    if (existing) throw new AppError(409, 'CONFLICT', 'Email already in use');
+  }
+  const employee = await Employee.findOneAndUpdate({ _id: id, companyId }, data, {
+    new: true,
+    runValidators: true,
+    overwrite: true,
+  });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated!.toObject() as unknown as Record<string, unknown>);
+};
+
+// ─── EMPLOYEE PROFILE ────────────────────────────────────────────────────────
+
+const getEmployeeProfile = async (companyId: string, id: string) => {
+  const employee = await Employee.findOne({ _id: id, companyId })
+    .select('personalEmail phone alternatePhone dob gender bloodGroup maritalStatus avatar address emergencyContact bankDetails panNumber aadharNumber')
+    .lean();
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  return employee;
+};
+
+const updateEmployeeProfile = async (companyId: string, id: string, data: Record<string, unknown>) => {
+  const upd: Record<string, unknown> = {};
+  const personalFields = ['personalEmail', 'phone', 'alternatePhone', 'dob', 'gender', 'bloodGroup', 'maritalStatus', 'avatar', 'panNumber', 'aadharNumber'];
+  personalFields.forEach(f => { if (data[f] !== undefined) upd[f] = data[f]; });
+
+  if (data.gender) upd.gender = (data.gender as string).toUpperCase();
+
+  if (data.address && typeof data.address === 'object') {
+    upd.address = data.address;
+  } else if (typeof data.address === 'string') {
+    upd.address = { street: data.address, city: '', state: '', country: '', zip: '' };
+  }
+
+  if (data.emergencyContact) upd.emergencyContact = data.emergencyContact;
+  if (data.bankDetails) upd.bankDetails = data.bankDetails;
+
+  const employee = await Employee.findOneAndUpdate({ _id: id, companyId }, upd, {
+    new: true,
+    runValidators: true,
+  });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  return employee;
+};
+
+// ─── EMPLOYEE STATUS ─────────────────────────────────────────────────────────
+
+const updateEmployeeStatus = async (companyId: string, id: string, data: Record<string, unknown>) => {
+  const upd: Record<string, unknown> = { status: (data.status as string).toUpperCase() };
+  if (data.exitDate) upd.exitDate = new Date(data.exitDate as string);
+  if (data.exitReason) upd.exitReason = data.exitReason;
+
+  const employee = await Employee.findOneAndUpdate({ _id: id, companyId }, upd, {
+    new: true,
+    runValidators: true,
+  });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  await EmployeeHistory.create({
+    employeeId: id,
+    companyId,
+    changeType: 'STATUS_CHANGE',
+    newValue: upd.status as string,
+    effectiveDate: new Date(),
+    reason: (data.exitReason as string) || undefined,
+  });
+
+  return employee;
+};
+
+// ─── EMPLOYEE HISTORY ────────────────────────────────────────────────────────
+
+const getEmployeeHistory = async (companyId: string, id: string) => {
+  return EmployeeHistory.find({ employeeId: id, companyId })
+    .populate('changedBy', 'firstName lastName email')
+    .populate('oldDepartmentId', 'name')
+    .populate('newDepartmentId', 'name')
+    .populate('oldDesignationId', 'name')
+    .populate('newDesignationId', 'name')
+    .sort({ createdAt: -1 })
+    .lean();
+};
+
+// ─── ATTENDANCE CHECKIN ──────────────────────────────────────────────────────
+
+const checkin = async (companyId: string, data: Record<string, unknown>) => {
+  const today = data.date ? new Date(data.date as string) : new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayEnd = new Date(today);
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const existing = await Attendance.findOne({
+    employeeId: data.employeeId,
+    companyId,
+    date: { $gte: today, $lte: todayEnd },
+  });
+
+  if (existing) {
+    if (existing.checkIn) throw new AppError(409, 'CONFLICT', 'Already checked in today');
+    existing.checkIn = data.checkIn ? new Date(data.checkIn as string) : new Date();
+    existing.source = (data.source as string) || 'APP';
+    if (data.notes) existing.notes = data.notes as string;
+    existing.status = 'PRESENT';
+    await existing.save();
+    return existing;
+  }
+
+  const checkInTime = data.checkIn ? new Date(data.checkIn as string) : new Date();
+  const record = await Attendance.create({
+    employeeId: data.employeeId,
+    companyId,
+    date: today,
+    checkIn: checkInTime,
+    source: (data.source as string) || 'APP',
+    notes: data.notes,
+    status: 'PRESENT',
+  });
+  return record;
+};
+
+// ─── ATTENDANCE CHECKOUT ─────────────────────────────────────────────────────
+
+const checkout = async (companyId: string, data: Record<string, unknown>) => {
+  const today = data.date ? new Date(data.date as string) : new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayEnd = new Date(today);
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const record = await Attendance.findOne({
+    employeeId: data.employeeId,
+    companyId,
+    date: { $gte: today, $lte: todayEnd },
+  });
+
+  if (!record) throw new AppError(404, 'NOT_FOUND', 'No check-in found for today');
+  if (record.checkOut) throw new AppError(409, 'CONFLICT', 'Already checked out today');
+
+  record.checkOut = data.checkOut ? new Date(data.checkOut as string) : new Date();
+  record.workingHours = calculateWorkingHours(record.checkIn, record.checkOut);
+  if (data.notes) record.notes = data.notes as string;
+  await record.save();
+  return record;
+};
+
+// ─── ATTENDANCE REGULARIZE ───────────────────────────────────────────────────
+
+const createRegularization = async (companyId: string, data: Record<string, unknown>) => {
+  const existing = await RegularizationRequest.findOne({
+    employeeId: data.employeeId,
+    date: data.date,
+    status: 'PENDING',
+  });
+  if (existing) throw new AppError(409, 'CONFLICT', 'A pending regularization request already exists for this date');
+
+  return RegularizationRequest.create({ ...data, companyId });
+};
+
+const approveRejectRegularization = async (companyId: string, id: string, data: Record<string, unknown>) => {
+  const req = await RegularizationRequest.findOne({ _id: id, companyId, status: 'PENDING' });
+  if (!req) throw new AppError(404, 'NOT_FOUND', 'Regularization request not found or already processed');
+
+  req.status = data.status as string;
+  req.comments = (data.comments as string) || req.comments;
+
+  if (data.status === 'APPROVED') {
+    const existing = await Attendance.findOne({ employeeId: req.employeeId, date: req.date });
+    if (existing) {
+      if (req.checkIn) existing.checkIn = req.checkIn;
+      if (req.checkOut) existing.checkOut = req.checkOut;
+      if (existing.checkIn && existing.checkOut) {
+        existing.workingHours = calculateWorkingHours(existing.checkIn, existing.checkOut);
+      }
+      await existing.save();
+    } else {
+      await Attendance.create({
+        employeeId: req.employeeId,
+        companyId,
+        date: req.date,
+        checkIn: req.checkIn,
+        checkOut: req.checkOut,
+        status: req.checkIn ? 'PRESENT' : 'ABSENT',
+        source: 'MANUAL',
+        notes: `Regularized: ${req.reason}`,
+      });
+    }
+    req.approvedAt = new Date();
+  }
+
+  await req.save();
+  return req;
+};
+
+// ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
+
+const getEmployeePayslips = async (companyId: string, employeeId: string) => {
+  return Payslip.find({ employeeId, companyId })
+    .populate({
+      path: 'payrollId',
+      select: 'month year status',
+    })
+    .sort({ createdAt: -1 })
+    .lean();
+};
+
+const getPayslipByMonthYear = async (companyId: string, month: string, year: string) => {
+  const payroll = await Payroll.findOne({ companyId, month: parseInt(month), year: parseInt(year) });
+  if (!payroll) throw new AppError(404, 'NOT_FOUND', 'Payroll not found for this period');
+
+  const payslips = await Payslip.find({ payrollId: payroll._id, companyId })
+    .populate('employeeId', 'firstName lastName employeeCode departmentId')
+    .lean();
+
+  return { payroll, payslips };
+};
+
+const getEmployeeTaxDetails = async (companyId: string, employeeId: string) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId }).lean();
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  const ss = await SalaryStructure.findOne({ employeeId, companyId }).lean();
+  if (!ss) throw new AppError(404, 'NOT_FOUND', 'Salary structure not found');
+
+  const currentYear = new Date().getFullYear();
+  const payslips = await Payslip.find({
+    employeeId,
+    companyId,
+    createdAt: {
+      $gte: new Date(currentYear, 0, 1),
+      $lte: new Date(currentYear, 11, 31, 23, 59, 59, 999),
+    },
+  }).lean();
+
+  const totalGrossYTD = payslips.reduce((sum, p) => sum + (p.grossSalary || 0), 0);
+  const totalDeductionsYTD = payslips.reduce((sum, p) => sum + (p.pf || 0) + (p.esi || 0) + (p.tds || 0), 0);
+  const totalNetYTD = payslips.reduce((sum, p) => sum + (p.netSalary || 0), 0);
+
+  return {
+    employeeId,
+    panNumber: employee.panNumber,
+    monthlyGross: ss.grossSalary,
+    monthlyNet: ss.netSalary,
+    annualGross: ss.grossSalary * 12,
+    annualNet: ss.netSalary * 12,
+    ytdGross: totalGrossYTD,
+    ytdDeductions: totalDeductionsYTD,
+    ytdNet: totalNetYTD,
+    pfPerMonth: ss.pf || 0,
+    esiPerMonth: ss.esi || 0,
+  };
+};
+
+const getEmployeeDeductions = async (companyId: string, employeeId: string) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId }).lean();
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  const ss = await SalaryStructure.findOne({ employeeId, companyId }).lean();
+  if (!ss) throw new AppError(404, 'NOT_FOUND', 'Salary structure not found');
+
+  const payslips = await Payslip.find({ employeeId, companyId })
+    .sort({ createdAt: -1 })
+    .limit(12)
+    .lean();
+
+  const deductionSummary = {
+    pf: { perMonth: ss.pf || 0, annual: (ss.pf || 0) * 12 },
+    esi: { perMonth: ss.esi || 0, annual: (ss.esi || 0) * 12 },
+    tds: { perMonth: 0, annual: 0 },
+    customDeductions: (ss.deductions as Array<{ name: string; amount: number }> || []).map(d => ({
+      name: d.name,
+      perMonth: d.amount,
+      annual: d.amount * 12,
+    })),
+    recentPayslips: payslips.map(p => ({
+      period: p.createdAt,
+      grossSalary: p.grossSalary,
+      pf: p.pf,
+      esi: p.esi,
+      tds: p.tds,
+      deductions: p.deductions,
+      netSalary: p.netSalary,
+    })),
+  };
+
+  // Calculate average TDS from recent payslips
+  const tdsValues = payslips.map(p => p.tds || 0).filter(v => v > 0);
+  if (tdsValues.length > 0) {
+    const avgTds = tdsValues.reduce((a, b) => a + b, 0) / tdsValues.length;
+    deductionSummary.tds.perMonth = Math.round(avgTds * 100) / 100;
+    deductionSummary.tds.annual = Math.round(avgTds * 12 * 100) / 100;
+  }
+
+  return deductionSummary;
+};
+
+// ─── DOCUMENTS — REQUEST LETTER ──────────────────────────────────────────────
+
+const requestLetter = async (companyId: string, employeeId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId })
+    .populate('departmentId', 'name')
+    .populate('designationId', 'name')
+    .lean();
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  const letterContent = (data.content as string) || '';
+  const letterType = data.type as string;
+
+  return {
+    employeeId,
+    type: letterType,
+    content: letterContent,
+    notes: data.notes,
+    generatedAt: new Date().toISOString(),
+    message: `${letterType} letter request submitted successfully`,
+  };
+};
+
+// ─── PERFORMANCE GOALS ────────────────────────────────────────────────────────
+
+const listPerformanceGoals = async (companyId: string, employeeId: string, query: QueryParams) => {
+  const { page, limit, skip } = paginateQuery(query.page, Number(query.limit));
+  const filter: Record<string, unknown> = { employeeId, companyId };
+  if (query.status) filter.status = query.status;
+
+  const [goals, total] = await Promise.all([
+    PerformanceGoal.find(filter)
+      .populate('createdBy', 'firstName lastName email')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    PerformanceGoal.countDocuments(filter),
+  ]);
+
+  return { goals, meta: buildMeta(total, page, limit) };
+};
+
+const createPerformanceGoal = async (companyId: string, data: Record<string, unknown>, userId: string) => {
+  return PerformanceGoal.create({ ...data, companyId, createdBy: userId });
+};
+
+const updatePerformanceGoal = async (companyId: string, id: string, data: Record<string, unknown>) => {
+  const goal = await PerformanceGoal.findOneAndUpdate({ _id: id, companyId }, data, {
+    new: true,
+    runValidators: true,
+  });
+  if (!goal) throw new AppError(404, 'NOT_FOUND', 'Performance goal not found');
+  return goal;
+};
+
+// ─── PERFORMANCE APPRAISAL ───────────────────────────────────────────────────
+
+const submitAppraisal = async (companyId: string, data: Record<string, unknown>, userId: string) => {
+  return PerformanceAppraisal.create({ ...data, companyId, reviewerId: userId, reviewDate: new Date(), status: 'SUBMITTED' });
+};
+
+const getAppraisalHistory = async (companyId: string, employeeId: string) => {
+  return PerformanceAppraisal.find({ employeeId, companyId })
+    .populate('reviewerId', 'firstName lastName email')
+    .sort({ createdAt: -1 })
+    .lean();
+};
+
+// ─── PERFORMANCE FEEDBACK ────────────────────────────────────────────────────
+
+const submitFeedback = async (companyId: string, data: Record<string, unknown>, userId: string) => {
+  return PerformanceFeedback.create({ ...data, companyId, fromEmployeeId: userId, submittedAt: new Date() });
+};
+
+// ─── TRAINING COURSES ────────────────────────────────────────────────────────
+
+const listTrainingCourses = async (companyId: string, query: QueryParams) => {
+  const { page, limit, skip } = paginateQuery(query.page, Number(query.limit));
+  const filter: Record<string, unknown> = { companyId };
+  if (query.status) filter.status = query.status;
+  if (query.category) filter.category = query.category;
+
+  const [courses, total] = await Promise.all([
+    TrainingCourse.find(filter)
+      .sort({ startDate: 1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    TrainingCourse.countDocuments(filter),
+  ]);
+
+  return { courses, meta: buildMeta(total, page, limit) };
+};
+
+// ─── TRAINING ENROLLMENT ─────────────────────────────────────────────────────
+
+const enrollCourse = async (companyId: string, data: Record<string, unknown>) => {
+  const existing = await TrainingEnrollment.findOne({
+    courseId: data.courseId,
+    employeeId: data.employeeId,
+  });
+  if (existing) throw new AppError(409, 'CONFLICT', 'Already enrolled in this course');
+
+  const course = await TrainingCourse.findOne({ _id: data.courseId, companyId });
+  if (!course) throw new AppError(404, 'NOT_FOUND', 'Course not found');
+
+  if (course.maxParticipants) {
+    const enrolledCount = await TrainingEnrollment.countDocuments({
+      courseId: data.courseId,
+      status: { $in: ['ENROLLED', 'IN_PROGRESS'] },
+    });
+    if (enrolledCount >= course.maxParticipants) {
+      throw new AppError(400, 'BAD_REQUEST', 'Course has reached maximum participants');
+    }
+  }
+
+  return TrainingEnrollment.create({
+    ...data,
+    companyId,
+    enrolledAt: new Date(),
+    status: 'ENROLLED',
+  });
+};
+
+const completeCourse = async (companyId: string, enrollmentId: string, data: Record<string, unknown>) => {
+  const enrollment = await TrainingEnrollment.findOne({ _id: enrollmentId, companyId });
+  if (!enrollment) throw new AppError(404, 'NOT_FOUND', 'Enrollment not found');
+
+  enrollment.status = 'COMPLETED';
+  enrollment.completionDate = new Date();
+  if (data.score !== undefined) enrollment.score = data.score as number;
+  if (data.feedback) enrollment.feedback = data.feedback as string;
+  await enrollment.save();
+
+  return enrollment;
+};
+
+// ─── TRAINING HISTORY & CERTIFICATIONS ──────────────────────────────────────
+
+const getTrainingHistory = async (companyId: string, employeeId: string) => {
+  return TrainingEnrollment.find({ employeeId, companyId })
+    .populate('courseId', 'title provider category duration')
+    .sort({ enrolledAt: -1 })
+    .lean();
+};
+
+const getTrainingCertifications = async (companyId: string, employeeId: string) => {
+  return TrainingCertification.find({ employeeId, companyId })
+    .populate('courseId', 'title provider')
+    .sort({ issueDate: -1 })
+    .lean();
+};
+
+// ─── TRANSFER REQUESTS ───────────────────────────────────────────────────────
+
+const createTransferRequest = async (companyId: string, data: Record<string, unknown>, userId: string) => {
+  const employee = await Employee.findOne({ _id: data.employeeId, companyId }).lean();
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  return TransferRequest.create({
+    ...data,
+    companyId,
+    fromDepartmentId: employee.departmentId,
+    fromDesignationId: employee.designationId,
+    fromBranchId: employee.branchId,
+    requestedBy: userId,
+    status: 'PENDING',
+  });
+};
+
+const approveRejectTransfer = async (companyId: string, id: string, data: Record<string, unknown>, userId: string) => {
+  const transfer = await TransferRequest.findOne({ _id: id, companyId, status: 'PENDING' });
+  if (!transfer) throw new AppError(404, 'NOT_FOUND', 'Transfer request not found or already processed');
+
+  transfer.status = data.status as string;
+  transfer.approvedBy = userId as any;
+  transfer.approvedAt = new Date();
+  transfer.comments = (data.comments as string) || transfer.comments;
+
+  if (data.status === 'APPROVED') {
+    const upd: Record<string, unknown> = {};
+    if (transfer.toDepartmentId) {
+      upd.departmentId = transfer.toDepartmentId;
+      await EmployeeHistory.create({
+        employeeId: transfer.employeeId,
+        companyId,
+        changeType: 'DEPARTMENT_CHANGE',
+        oldDepartmentId: transfer.fromDepartmentId,
+        newDepartmentId: transfer.toDepartmentId,
+        effectiveDate: transfer.effectiveDate || new Date(),
+        changedBy: userId,
+        reason: `Transfer: ${transfer.reason}`,
+      });
+    }
+    if (transfer.toDesignationId) {
+      upd.designationId = transfer.toDesignationId;
+      await EmployeeHistory.create({
+        employeeId: transfer.employeeId,
+        companyId,
+        changeType: 'DESIGNATION_CHANGE',
+        oldDesignationId: transfer.fromDesignationId,
+        newDesignationId: transfer.toDesignationId,
+        effectiveDate: transfer.effectiveDate || new Date(),
+        changedBy: userId,
+        reason: `Transfer: ${transfer.reason}`,
+      });
+    }
+    if (transfer.toBranchId) upd.branchId = transfer.toBranchId;
+    if (Object.keys(upd).length > 0) {
+      await Employee.updateOne({ _id: transfer.employeeId }, upd);
+    }
+  }
+
+  await transfer.save();
+  return transfer;
+};
+
+// ─── PROMOTIONS ──────────────────────────────────────────────────────────────
+
+const createPromotion = async (companyId: string, data: Record<string, unknown>, userId: string) => {
+  const employee = await Employee.findOne({ _id: data.employeeId, companyId }).lean();
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  const promotion = await Promotion.create({
+    ...data,
+    companyId,
+    fromDesignationId: employee.designationId,
+    fromDepartmentId: employee.departmentId,
+    fromSalary: 0,
+    createdBy: userId,
+    status: 'PENDING',
+  });
+
+  return promotion;
+};
+
+// ─── EXIT RESIGNATION ────────────────────────────────────────────────────────
+
+const submitResignation = async (companyId: string, employeeId: string, data: Record<string, unknown>) => {
+  const existing = await ExitResignation.findOne({ employeeId, companyId, status: 'PENDING' });
+  if (existing) throw new AppError(409, 'CONFLICT', 'A pending resignation already exists');
+
+  const resignation = await ExitResignation.create({
+    ...data,
+    employeeId,
+    companyId,
+    status: 'PENDING',
+  });
+
+  return resignation;
+};
+
+// ─── EXIT CHECKLIST ──────────────────────────────────────────────────────────
+
+const getExitChecklist = async (companyId: string, employeeId: string) => {
+  let checklist = await ExitChecklist.findOne({ employeeId, companyId }).lean();
+  if (!checklist) {
+    const departments = await Department.find({ companyId, isActive: true }).lean();
+    const tasks = departments.map(d => ({
+      task: `${d.name} clearance`,
+      assignedTo: d._id,
+      isCompleted: false,
+      comments: '',
+    }));
+    const created = await ExitChecklist.create({ employeeId, companyId, tasks, status: 'PENDING' });
+    checklist = created.toObject() as ReturnType<typeof created.toObject>;
+  }
+  return checklist;
+};
+
+// ─── EXIT CLEARANCE ──────────────────────────────────────────────────────────
+
+const updateClearance = async (companyId: string, employeeId: string, departmentId: string, data: Record<string, unknown>, userId: string) => {
+  let clearance = await ExitClearance.findOne({ employeeId, departmentId, companyId });
+  if (!clearance) {
+    clearance = await ExitClearance.create({
+      employeeId,
+      companyId,
+      departmentId,
+      clearanceBy: userId,
+      status: data.status as string,
+      comments: (data.comments as string) || '',
+      clearedAt: data.status === 'CLEARED' ? new Date() : undefined,
+    });
+  } else {
+    clearance.status = data.status as string;
+    clearance.comments = (data.comments as string) || clearance.comments;
+    clearance.clearanceBy = userId as any;
+    clearance.clearedAt = data.status === 'CLEARED' ? new Date() : undefined;
+    await clearance.save();
+  }
+
+  // Update checklist task
+  await ExitChecklist.updateOne(
+    { employeeId, companyId, 'tasks.task': { $regex: 'clearance', $options: 'i' } },
+    { $set: { 'tasks.$.isCompleted': data.status === 'CLEARED', 'tasks.$.completedAt': data.status === 'CLEARED' ? new Date() : undefined } }
+  );
+
+  return clearance;
+};
+
+// ─── EXIT FNF ────────────────────────────────────────────────────────────────
+
+const getFnF = async (companyId: string, employeeId: string) => {
+  let settlement = await ExitSettlement.findOne({ employeeId, companyId }).lean();
+  if (!settlement) {
+    const ss = await SalaryStructure.findOne({ employeeId, companyId }).lean();
+    const monthlySalary = ss?.netSalary || 0;
+
+    const oneMonthNotice = Math.round(monthlySalary * 100) / 100;
+
+    const created = await ExitSettlement.create({
+      employeeId,
+      companyId,
+      noticePeriodDays: 30,
+      noticePeriodAmount: oneMonthNotice,
+      unpaidLeaves: 0,
+      unpaidLeaveDeduction: 0,
+      pendingReimbursements: 0,
+      bonusAmount: 0,
+      otherEarnings: 0,
+      otherDeductions: 0,
+      totalAmount: oneMonthNotice,
+      status: 'PENDING',
+    });
+    settlement = created.toObject() as ReturnType<typeof created.toObject>;
+  }
+  return settlement;
+};
+
 export {
   getDashboard,
   listEmployees,
@@ -1503,6 +2171,7 @@ export {
   getEmployeeById,
   updateEmployee,
   removeEmployee,
+  hardDeleteEmployee,
   activateEmployee,
   bulkImportEmployees,
   exportEmployees,
@@ -1556,4 +2225,36 @@ export {
   getPayrollReport,
   getHeadcountReport,
   getAttritionReport,
+  fullUpdateEmployee,
+  getEmployeeProfile,
+  updateEmployeeProfile,
+  updateEmployeeStatus,
+  getEmployeeHistory,
+  checkin,
+  checkout,
+  createRegularization,
+  approveRejectRegularization,
+  getEmployeePayslips,
+  getPayslipByMonthYear,
+  getEmployeeTaxDetails,
+  getEmployeeDeductions,
+  requestLetter,
+  listPerformanceGoals,
+  createPerformanceGoal,
+  updatePerformanceGoal,
+  submitAppraisal,
+  getAppraisalHistory,
+  submitFeedback,
+  listTrainingCourses,
+  enrollCourse,
+  completeCourse,
+  getTrainingHistory,
+  getTrainingCertifications,
+  createTransferRequest,
+  approveRejectTransfer,
+  createPromotion,
+  submitResignation,
+  getExitChecklist,
+  updateClearance,
+  getFnF,
 };

@@ -36,11 +36,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAsset = exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.activateEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
-exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = void 0;
+exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.activateEmployee = exports.hardRemoveEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
+exports.getFnF = exports.updateClearance = exports.getExitChecklist = exports.submitResignation = exports.createPromotion = exports.approveRejectTransfer = exports.createTransferRequest = exports.getTrainingCertifications = exports.getTrainingHistory = exports.completeCourse = exports.enrollCourse = exports.listTrainingCourses = exports.submitFeedback = exports.getAppraisalHistory = exports.submitAppraisal = exports.updatePerformanceGoal = exports.createPerformanceGoal = exports.listPerformanceGoals = exports.requestLetter = exports.getEmployeeDeductions = exports.getEmployeeTaxDetails = exports.getPayslipByMonthYear = exports.getEmployeePayslips = exports.approveRejectRegularization = exports.createRegularization = exports.checkout = exports.checkin = exports.getEmployeeHistory = exports.updateEmployeeStatus = exports.updateEmployeeProfile = exports.getEmployeeProfile = exports.fullUpdateEmployee = exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = exports.createAsset = void 0;
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const hrmsService = __importStar(require("../services/hrms.service"));
 const apiResponse_1 = __importDefault(require("../utils/apiResponse"));
+const Employee_1 = __importDefault(require("../models/Employee"));
+const appError_1 = __importDefault(require("../utils/appError"));
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────────
 exports.getDashboard = (0, catchAsync_1.default)(async (req, res, _next) => {
     const from = req.query.from;
@@ -68,6 +70,10 @@ exports.updateEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
 exports.removeEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
     const employee = await hrmsService.removeEmployee(req.companyId, req.params.id);
     apiResponse_1.default.success(res, employee);
+});
+exports.hardRemoveEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const result = await hrmsService.hardDeleteEmployee(req.companyId, req.params.id);
+    apiResponse_1.default.success(res, result);
 });
 exports.activateEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
     const employee = await hrmsService.activateEmployee(req.companyId, req.params.id);
@@ -167,7 +173,8 @@ exports.listLeaveRequests = (0, catchAsync_1.default)(async (req, res, _next) =>
     apiResponse_1.default.paginated(res, requests, meta);
 });
 exports.createLeaveRequest = (0, catchAsync_1.default)(async (req, res, _next) => {
-    const request = await hrmsService.createLeaveRequest(req.companyId, req.body, req.user._id.toString());
+    const userId = req.user._id ? req.user._id.toString() : req.body.employeeId;
+    const request = await hrmsService.createLeaveRequest(req.companyId, req.body, userId);
     apiResponse_1.default.created(res, request);
 });
 exports.getLeaveRequestById = (0, catchAsync_1.default)(async (req, res, _next) => {
@@ -290,5 +297,167 @@ exports.getHeadcountReport = (0, catchAsync_1.default)(async (req, res, _next) =
 exports.getAttritionReport = (0, catchAsync_1.default)(async (req, res, _next) => {
     const data = await hrmsService.getAttritionReport(req.companyId, req.query);
     apiResponse_1.default.success(res, data);
+});
+// ─── EMPLOYEE FULL UPDATE (PUT) ──────────────────────────────────────────────
+exports.fullUpdateEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const employee = await hrmsService.fullUpdateEmployee(req.companyId, req.params.id, req.body);
+    apiResponse_1.default.success(res, employee);
+});
+// ─── EMPLOYEE PROFILE ────────────────────────────────────────────────────────
+exports.getEmployeeProfile = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const profile = await hrmsService.getEmployeeProfile(req.companyId, req.params.id);
+    apiResponse_1.default.success(res, profile);
+});
+exports.updateEmployeeProfile = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const profile = await hrmsService.updateEmployeeProfile(req.companyId, req.params.id, req.body);
+    apiResponse_1.default.success(res, profile);
+});
+// ─── EMPLOYEE STATUS ─────────────────────────────────────────────────────────
+exports.updateEmployeeStatus = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const employee = await hrmsService.updateEmployeeStatus(req.companyId, req.params.id, req.body);
+    apiResponse_1.default.success(res, employee);
+});
+// ─── EMPLOYEE HISTORY ────────────────────────────────────────────────────────
+exports.getEmployeeHistory = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const history = await hrmsService.getEmployeeHistory(req.companyId, req.params.id);
+    apiResponse_1.default.success(res, history);
+});
+// ─── ATTENDANCE CHECKIN/CHECKOUT ─────────────────────────────────────────────
+exports.checkin = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const record = await hrmsService.checkin(req.companyId, req.body);
+    apiResponse_1.default.success(res, record);
+});
+exports.checkout = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const record = await hrmsService.checkout(req.companyId, req.body);
+    apiResponse_1.default.success(res, record);
+});
+// ─── ATTENDANCE REGULARIZE ───────────────────────────────────────────────────
+exports.createRegularization = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const result = await hrmsService.createRegularization(req.companyId, req.body);
+    apiResponse_1.default.created(res, result);
+});
+exports.approveRejectRegularization = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const result = await hrmsService.approveRejectRegularization(req.companyId, req.params.id, req.body);
+    apiResponse_1.default.success(res, result);
+});
+// ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
+exports.getEmployeePayslips = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const payslips = await hrmsService.getEmployeePayslips(req.companyId, req.params.employeeId);
+    apiResponse_1.default.success(res, payslips);
+});
+exports.getPayslipByMonthYear = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const result = await hrmsService.getPayslipByMonthYear(req.companyId, req.params.month, req.params.year);
+    apiResponse_1.default.success(res, result);
+});
+exports.getEmployeeTaxDetails = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const tax = await hrmsService.getEmployeeTaxDetails(req.companyId, req.params.employeeId);
+    apiResponse_1.default.success(res, tax);
+});
+exports.getEmployeeDeductions = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const deductions = await hrmsService.getEmployeeDeductions(req.companyId, req.params.employeeId);
+    apiResponse_1.default.success(res, deductions);
+});
+// ─── DOCUMENTS — REQUEST LETTER ──────────────────────────────────────────────
+exports.requestLetter = (0, catchAsync_1.default)(async (req, res, _next) => {
+    let employeeId = req.body.employeeId;
+    if (!employeeId) {
+        const emp = await Employee_1.default.findOne({ userId: req.user._id, companyId: req.companyId }).select('_id');
+        if (!emp)
+            throw new appError_1.default(404, 'NOT_FOUND', 'Employee profile not found for this user');
+        employeeId = emp._id.toString();
+    }
+    const result = await hrmsService.requestLetter(req.companyId, employeeId, req.body);
+    apiResponse_1.default.created(res, result);
+});
+// ─── PERFORMANCE GOALS ───────────────────────────────────────────────────────
+exports.listPerformanceGoals = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { goals, meta } = await hrmsService.listPerformanceGoals(req.companyId, req.params.employeeId, req.query);
+    apiResponse_1.default.paginated(res, goals, meta);
+});
+exports.createPerformanceGoal = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const goal = await hrmsService.createPerformanceGoal(req.companyId, req.body, req.user._id.toString());
+    apiResponse_1.default.created(res, goal);
+});
+exports.updatePerformanceGoal = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const goal = await hrmsService.updatePerformanceGoal(req.companyId, req.params.id, req.body);
+    apiResponse_1.default.success(res, goal);
+});
+// ─── PERFORMANCE APPRAISAL ───────────────────────────────────────────────────
+exports.submitAppraisal = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const appraisal = await hrmsService.submitAppraisal(req.companyId, req.body, req.user._id.toString());
+    apiResponse_1.default.created(res, appraisal);
+});
+exports.getAppraisalHistory = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const history = await hrmsService.getAppraisalHistory(req.companyId, req.params.employeeId);
+    apiResponse_1.default.success(res, history);
+});
+// ─── PERFORMANCE FEEDBACK ────────────────────────────────────────────────────
+exports.submitFeedback = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const feedback = await hrmsService.submitFeedback(req.companyId, req.body, req.user._id.toString());
+    apiResponse_1.default.created(res, feedback);
+});
+// ─── TRAINING COURSES ────────────────────────────────────────────────────────
+exports.listTrainingCourses = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { courses, meta } = await hrmsService.listTrainingCourses(req.companyId, req.query);
+    apiResponse_1.default.paginated(res, courses, meta);
+});
+// ─── TRAINING ENROLLMENT ─────────────────────────────────────────────────────
+exports.enrollCourse = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const enrollment = await hrmsService.enrollCourse(req.companyId, req.body);
+    apiResponse_1.default.created(res, enrollment);
+});
+exports.completeCourse = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const enrollment = await hrmsService.completeCourse(req.companyId, req.params.enrollmentId, req.body);
+    apiResponse_1.default.success(res, enrollment);
+});
+// ─── TRAINING HISTORY & CERTIFICATIONS ───────────────────────────────────────
+exports.getTrainingHistory = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const history = await hrmsService.getTrainingHistory(req.companyId, req.params.employeeId);
+    apiResponse_1.default.success(res, history);
+});
+exports.getTrainingCertifications = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const certs = await hrmsService.getTrainingCertifications(req.companyId, req.params.employeeId);
+    apiResponse_1.default.success(res, certs);
+});
+// ─── TRANSFER REQUESTS ───────────────────────────────────────────────────────
+exports.createTransferRequest = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const transfer = await hrmsService.createTransferRequest(req.companyId, req.body, req.user._id.toString());
+    apiResponse_1.default.created(res, transfer);
+});
+exports.approveRejectTransfer = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const transfer = await hrmsService.approveRejectTransfer(req.companyId, req.params.id, req.body, req.user._id.toString());
+    apiResponse_1.default.success(res, transfer);
+});
+// ─── PROMOTIONS ──────────────────────────────────────────────────────────────
+exports.createPromotion = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const promotion = await hrmsService.createPromotion(req.companyId, req.body, req.user._id.toString());
+    apiResponse_1.default.created(res, promotion);
+});
+// ─── EXIT RESIGNATION ────────────────────────────────────────────────────────
+exports.submitResignation = (0, catchAsync_1.default)(async (req, res, _next) => {
+    let employeeId = req.body.employeeId;
+    if (!employeeId) {
+        const emp = await Employee_1.default.findOne({ userId: req.user._id, companyId: req.companyId }).select('_id');
+        if (!emp)
+            throw new appError_1.default(404, 'NOT_FOUND', 'Employee profile not found for this user');
+        employeeId = emp._id.toString();
+    }
+    const resignation = await hrmsService.submitResignation(req.companyId, employeeId, req.body);
+    apiResponse_1.default.created(res, resignation);
+});
+// ─── EXIT CHECKLIST ──────────────────────────────────────────────────────────
+exports.getExitChecklist = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const checklist = await hrmsService.getExitChecklist(req.companyId, req.params.employeeId);
+    apiResponse_1.default.success(res, checklist);
+});
+// ─── EXIT CLEARANCE ──────────────────────────────────────────────────────────
+exports.updateClearance = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const clearance = await hrmsService.updateClearance(req.companyId, req.params.employeeId, req.params.departmentId, req.body, req.user._id.toString());
+    apiResponse_1.default.success(res, clearance);
+});
+// ─── EXIT FNF ────────────────────────────────────────────────────────────────
+exports.getFnF = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const settlement = await hrmsService.getFnF(req.companyId, req.params.employeeId);
+    apiResponse_1.default.success(res, settlement);
 });
 //# sourceMappingURL=hrms.controller.js.map

@@ -199,6 +199,7 @@ export const updateLeaveTypeSchema: Joi.ObjectSchema = Joi.object({
 
 export const createLeaveRequestSchema: Joi.ObjectSchema = Joi.object({
   leaveTypeId: objectId.required(),
+  employeeId: objectId.optional(),
   fromDate: Joi.date().iso().required(),
   toDate: Joi.date().iso().required(),
   reason: Joi.string().trim().max(2000).allow('', null),
@@ -312,3 +313,206 @@ export const updateSalaryStructureSchema: Joi.ObjectSchema = Joi.object({
     })
   ),
 }).min(1);
+
+// ─── EMPLOYEE PROFILE ────────────────────────────────────────────────────────
+
+export const updateProfileSchema: Joi.ObjectSchema = Joi.object({
+  personalEmail: Joi.string().email().max(200).allow('', null),
+  phone: Joi.string().trim().max(20).allow('', null),
+  alternatePhone: Joi.string().trim().max(20).allow('', null),
+  dob: Joi.date().iso().allow(null, ''),
+  gender: Joi.string().valid('MALE', 'FEMALE', 'OTHER', 'male', 'female', 'other').allow('', null),
+  bloodGroup: Joi.string().trim().max(10).allow('', null),
+  maritalStatus: Joi.string().trim().max(20).allow('', null),
+  avatar: Joi.string().uri().allow('', null),
+  address: Joi.alternatives().try(
+    Joi.object({
+      street: Joi.string().trim().max(500).allow('', null),
+      city: Joi.string().trim().max(100).allow('', null),
+      state: Joi.string().trim().max(100).allow('', null),
+      country: Joi.string().trim().max(100).allow('', null),
+      zip: Joi.string().trim().max(20).allow('', null),
+    }),
+    Joi.string().trim().max(500).allow('', null)
+  ).allow(null),
+  emergencyContact: Joi.object({
+    name: Joi.string().trim().max(200).allow('', null),
+    relation: Joi.string().trim().max(100).allow('', null),
+    phone: Joi.string().trim().max(20).allow('', null),
+  }).allow(null),
+  bankDetails: Joi.object({
+    accountNumber: Joi.string().trim().max(50).allow('', null),
+    ifscCode: Joi.string().trim().max(20).allow('', null),
+    bankName: Joi.string().trim().max(200).allow('', null),
+    accountType: Joi.string().trim().max(50).allow('', null),
+  }).allow(null),
+  panNumber: Joi.string().trim().max(20).allow('', null),
+  aadharNumber: Joi.string().trim().max(20).allow('', null),
+}).min(1);
+
+export const updateEmployeeStatusSchema: Joi.ObjectSchema = Joi.object({
+  status: Joi.string().valid('ACTIVE', 'INACTIVE', 'TERMINATED', 'active', 'inactive', 'terminated').required(),
+  exitDate: Joi.date().iso().allow(null, ''),
+  exitReason: Joi.string().trim().max(1000).allow('', null),
+});
+
+// ─── ATTENDANCE CHECKIN / CHECKOUT / REGULARIZE ─────────────────────────────
+
+export const checkinSchema: Joi.ObjectSchema = Joi.object({
+  employeeId: objectId.required(),
+  date: Joi.date().iso().optional(),
+  checkIn: Joi.date().iso().optional(),
+  source: Joi.string().valid('APP', 'MANUAL', 'BIOMETRIC').default('APP'),
+  notes: Joi.string().trim().max(1000).allow('', null),
+});
+
+export const checkoutSchema: Joi.ObjectSchema = Joi.object({
+  employeeId: objectId.required(),
+  date: Joi.date().iso().optional(),
+  checkOut: Joi.date().iso().optional(),
+  notes: Joi.string().trim().max(1000).allow('', null),
+});
+
+export const regularizeAttendanceSchema: Joi.ObjectSchema = Joi.object({
+  employeeId: objectId.required(),
+  date: Joi.date().iso().required(),
+  checkIn: Joi.date().iso().allow(null),
+  checkOut: Joi.date().iso().allow(null),
+  reason: Joi.string().trim().max(1000).required(),
+});
+
+export const approveRejectRegularizationSchema: Joi.ObjectSchema = Joi.object({
+  status: Joi.string().valid('APPROVED', 'REJECTED').required(),
+  comments: Joi.string().trim().max(1000).allow('', null),
+});
+
+// ─── PERFORMANCE ────────────────────────────────────────────────────────────
+
+export const createPerformanceGoalSchema: Joi.ObjectSchema = Joi.object({
+  employeeId: objectId.required(),
+  title: Joi.string().trim().max(200).required(),
+  description: Joi.string().trim().max(2000).allow('', null),
+  category: Joi.string().trim().max(100).allow('', null),
+  startDate: Joi.date().iso().allow(null),
+  endDate: Joi.date().iso().allow(null),
+  targetValue: Joi.number().allow(null),
+  measurementUnit: Joi.string().trim().max(50).allow('', null),
+  weightage: Joi.number().min(0).max(100).allow(null),
+  status: Joi.string().valid('NOT_STARTED', 'IN_PROGRESS', 'ACHIEVED', 'NOT_ACHIEVED').allow(null),
+  notes: Joi.string().trim().max(2000).allow('', null),
+});
+
+export const updatePerformanceGoalSchema: Joi.ObjectSchema = Joi.object({
+  title: Joi.string().trim().max(200),
+  description: Joi.string().trim().max(2000).allow('', null),
+  category: Joi.string().trim().max(100).allow('', null),
+  startDate: Joi.date().iso().allow(null),
+  endDate: Joi.date().iso().allow(null),
+  targetValue: Joi.number().allow(null),
+  currentValue: Joi.number().min(0).allow(null),
+  measurementUnit: Joi.string().trim().max(50).allow('', null),
+  weightage: Joi.number().min(0).max(100).allow(null),
+  status: Joi.string().valid('NOT_STARTED', 'IN_PROGRESS', 'ACHIEVED', 'NOT_ACHIEVED'),
+  notes: Joi.string().trim().max(2000).allow('', null),
+}).min(1);
+
+export const submitAppraisalSchema: Joi.ObjectSchema = Joi.object({
+  employeeId: objectId.required(),
+  reviewPeriod: Joi.string().trim().max(100).required(),
+  startDate: Joi.date().iso().allow(null),
+  endDate: Joi.date().iso().allow(null),
+  rating: Joi.number().min(1).max(5).allow(null),
+  strengths: Joi.string().trim().max(2000).allow('', null),
+  areasOfImprovement: Joi.string().trim().max(2000).allow('', null),
+  overallComments: Joi.string().trim().max(3000).allow('', null),
+  goals: Joi.array().items(
+    Joi.object({
+      goalId: objectId.required(),
+      rating: Joi.number().min(1).max(5).allow(null),
+      comments: Joi.string().trim().max(1000).allow('', null),
+    })
+  ).allow(null),
+});
+
+export const submitFeedbackSchema: Joi.ObjectSchema = Joi.object({
+  employeeId: objectId.required(),
+  rating: Joi.number().min(1).max(5).required(),
+  comments: Joi.string().trim().max(2000).required(),
+  category: Joi.string().valid('PEER', 'MANAGER', 'SUBORDINATE', 'SELF').default('PEER'),
+  isAnonymous: Joi.boolean().default(false),
+});
+
+// ─── TRAINING ───────────────────────────────────────────────────────────────
+
+export const createTrainingCourseSchema: Joi.ObjectSchema = Joi.object({
+  title: Joi.string().trim().max(200).required(),
+  description: Joi.string().trim().max(2000).allow('', null),
+  provider: Joi.string().trim().max(200).allow('', null),
+  duration: Joi.string().trim().max(100).allow('', null),
+  mode: Joi.string().valid('ONLINE', 'OFFLINE', 'HYBRID').default('ONLINE'),
+  category: Joi.string().trim().max(100).allow('', null),
+  skills: Joi.array().items(Joi.string().trim()).allow(null),
+  isMandatory: Joi.boolean().default(false),
+  maxParticipants: Joi.number().integer().min(1).allow(null),
+  startDate: Joi.date().iso().allow(null),
+  endDate: Joi.date().iso().allow(null),
+});
+
+export const enrollCourseSchema: Joi.ObjectSchema = Joi.object({
+  courseId: objectId.required(),
+  employeeId: objectId.required(),
+});
+
+export const completeCourseSchema: Joi.ObjectSchema = Joi.object({
+  score: Joi.number().min(0).allow(null),
+  feedback: Joi.string().trim().max(2000).allow('', null),
+});
+
+// ─── TRANSFER & PROMOTION ───────────────────────────────────────────────────
+
+export const createTransferSchema: Joi.ObjectSchema = Joi.object({
+  employeeId: objectId.required(),
+  toDepartmentId: objectId.allow(null),
+  toDesignationId: objectId.allow(null),
+  toBranchId: objectId.allow(null),
+  reason: Joi.string().trim().max(2000).required(),
+  effectiveDate: Joi.date().iso().allow(null),
+});
+
+export const approveRejectTransferSchema: Joi.ObjectSchema = Joi.object({
+  status: Joi.string().valid('APPROVED', 'REJECTED').required(),
+  comments: Joi.string().trim().max(2000).allow('', null),
+});
+
+export const createPromotionSchema: Joi.ObjectSchema = Joi.object({
+  employeeId: objectId.required(),
+  toDesignationId: objectId.required(),
+  toDepartmentId: objectId.allow(null),
+  toSalary: Joi.number().min(0).allow(null),
+  effectiveDate: Joi.date().iso().required(),
+  reason: Joi.string().trim().max(2000).allow('', null),
+});
+
+// ─── EXIT / OFFBOARDING ─────────────────────────────────────────────────────
+
+export const resignSchema: Joi.ObjectSchema = Joi.object({
+  resignationDate: Joi.date().iso().required(),
+  lastWorkingDay: Joi.date().iso().required(),
+  reason: Joi.string().trim().max(2000).required(),
+  remarks: Joi.string().trim().max(2000).allow('', null),
+  employeeId: objectId.allow(null).optional(),
+});
+
+export const updateClearanceSchema: Joi.ObjectSchema = Joi.object({
+  status: Joi.string().valid('CLEARED', 'NOT_CLEARED').required(),
+  comments: Joi.string().trim().max(1000).allow('', null),
+});
+
+// ─── DOCUMENTS ──────────────────────────────────────────────────────────────
+
+export const requestLetterSchema: Joi.ObjectSchema = Joi.object({
+  type: Joi.string().valid('EXPERIENCE', 'SALARY', 'OFFER', 'RELIEVING', 'OTHER').required(),
+  content: Joi.string().trim().max(5000).allow('', null),
+  notes: Joi.string().trim().max(1000).allow('', null),
+  employeeId: objectId.allow(null).optional(),
+});

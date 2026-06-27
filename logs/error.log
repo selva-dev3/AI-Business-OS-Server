@@ -474,3 +474,109 @@ CastError: Cast to ObjectId failed for value "runs" (type string) at path "_id" 
     at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
     at async Object.getPayrollById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1119:19)
+2026-06-27 17:21:49 [ERROR]: Employee not found
+Error: Employee not found
+    at Object.getEmployeeById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:411:24)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:29:20
+2026-06-27 17:21:49 [ERROR]: Employee not found
+Error: Employee not found
+    at Object.getEmployeeById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:411:24)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:29:20
+2026-06-27 18:11:31 [ERROR]: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+CastError: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._find (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2401:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 0)
+2026-06-27 18:11:33 [ERROR]: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+CastError: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._find (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2401:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 0)
+2026-06-27 18:11:35 [ERROR]: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+CastError: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._find (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2401:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 0)
+2026-06-27 18:39:53 [ERROR]: CORS Error: http://localhost:5000 is not allowed
+Error: CORS Error: http://localhost:5000 is not allowed
+    at origin (/home/selva/Downloads/projects/AI Business Os/server/src/app.ts:78:9)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:219:13
+    at optionsCallback (/home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:199:9)
+    at corsMiddleware (/home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:328:13)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/selva/Downloads/projects/AI Business Os/server/node_modules/helmet/index.cjs:537:6)
+2026-06-27 18:39:54 [ERROR]: CORS Error: http://localhost:5000 is not allowed
+Error: CORS Error: http://localhost:5000 is not allowed
+    at origin (/home/selva/Downloads/projects/AI Business Os/server/src/app.ts:78:9)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:219:13
+    at optionsCallback (/home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:199:9)
+    at corsMiddleware (/home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:328:13)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/selva/Downloads/projects/AI Business Os/server/node_modules/helmet/index.cjs:537:6)
+2026-06-27 18:43:51 [ERROR]: Employee profile not found for this user
+Error: Employee profile not found for this user
+    at getEmployeeIdFromUser (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1011:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.createLeaveRequest (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:875:32)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:174:19
+2026-06-27 18:50:49 [ERROR]: Employee profile not found for this user
+Error: Employee profile not found for this user
+    at getEmployeeIdFromUser (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1011:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.createLeaveRequest (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:875:32)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:174:19
+2026-06-27 18:56:20 [ERROR]: Employee profile not found for this user
+Error: Employee profile not found for this user
+    at getEmployeeIdFromUser (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1011:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.createLeaveRequest (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:875:32)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:174:19
+2026-06-27 18:57:33 [ERROR]: Employee profile not found for this user
+Error: Employee profile not found for this user
+    at getEmployeeIdFromUser (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1011:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.createLeaveRequest (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:875:32)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:174:19
+2026-06-27 19:11:55 [ERROR]: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Department"
+CastError: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Department"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at SchemaObjectId.handleSingle (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1641:15)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1714:20)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:367:39)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)

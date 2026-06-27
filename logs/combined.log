@@ -1126,3 +1126,261 @@ CastError: Cast to ObjectId failed for value "runs" (type string) at path "_id" 
 2026-06-27 17:08:32 [INFO]: ::1 - - [27/Jun/2026:11:38:32 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 17:08:32 [INFO]: ::1 - - [27/Jun/2026:11:38:32 +0000] "GET /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 588 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 17:08:32 [INFO]: ::1 - - [27/Jun/2026:11:38:32 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1592 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:16:17 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 17:16:17 [INFO]: Server running on http://localhost:5000
+2026-06-27 17:16:17 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 17:16:17 [INFO]: Health: http://localhost:5000/health
+2026-06-27 17:16:59 [INFO]: ::1 - - [27/Jun/2026:11:46:59 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:16:59 [INFO]: ::1 - - [27/Jun/2026:11:46:59 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:16:59 [INFO]: ::1 - - [27/Jun/2026:11:46:59 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:16:59 [INFO]: ::1 - - [27/Jun/2026:11:46:59 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:16:59 [INFO]: ::1 - - [27/Jun/2026:11:46:59 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 200 522234 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:17:00 [INFO]: ::1 - - [27/Jun/2026:11:47:00 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:19:22 [INFO]: ::1 - - [27/Jun/2026:11:49:22 +0000] "GET /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 401 237 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:19:22 [INFO]: ::1 - - [27/Jun/2026:11:49:22 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:19:22 [INFO]: ::1 - - [27/Jun/2026:11:49:22 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:19:22 [INFO]: ::1 - - [27/Jun/2026:11:49:22 +0000] "GET /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 588 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:19:22 [INFO]: ::1 - - [27/Jun/2026:11:49:22 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1592 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:20:53 [INFO]: ::1 - - [27/Jun/2026:11:50:53 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:20:53 [INFO]: ::1 - - [27/Jun/2026:11:50:53 +0000] "GET /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 588 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:20:53 [INFO]: ::1 - - [27/Jun/2026:11:50:53 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1592 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:20:53 [INFO]: ::1 - - [27/Jun/2026:11:50:53 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:39 [INFO]: ::1 - - [27/Jun/2026:11:51:39 +0000] "DELETE /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 628 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:40 [INFO]: ::1 - - [27/Jun/2026:11:51:40 +0000] "GET /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 628 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:40 [INFO]: ::1 - - [27/Jun/2026:11:51:40 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1632 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:40 [INFO]: ::1 - - [27/Jun/2026:11:51:40 +0000] "GET /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 628 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:49 [INFO]: ::1 - - [27/Jun/2026:11:51:49 +0000] "DELETE /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89/permanent HTTP/1.1" 200 196 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:49 [ERROR]: Employee not found
+Error: Employee not found
+    at Object.getEmployeeById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:411:24)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:29:20
+2026-06-27 17:21:49 [INFO]: ::1 - - [27/Jun/2026:11:51:49 +0000] "GET /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 404 232 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:49 [INFO]: ::1 - - [27/Jun/2026:11:51:49 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:49 [ERROR]: Employee not found
+Error: Employee not found
+    at Object.getEmployeeById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:411:24)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:29:20
+2026-06-27 17:21:49 [INFO]: ::1 - - [27/Jun/2026:11:51:49 +0000] "GET /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 404 232 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:50 [INFO]: ::1 - - [27/Jun/2026:11:51:50 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 200 376 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 17:21:50 [INFO]: ::1 - - [27/Jun/2026:11:51:50 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:05:15 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 18:05:15 [INFO]: Server running on http://localhost:5000
+2026-06-27 18:05:15 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 18:05:15 [INFO]: Health: http://localhost:5000/health
+2026-06-27 18:05:54 [INFO]: ::1 - - [27/Jun/2026:12:35:54 +0000] "GET /api/v1/auth/me HTTP/1.1" 401 205 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:05:54 [INFO]: ::1 - - [27/Jun/2026:12:35:54 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:05:54 [INFO]: ::1 - - [27/Jun/2026:12:35:54 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 401 215 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:05:55 [INFO]: ::1 - - [27/Jun/2026:12:35:55 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:05:55 [INFO]: ::1 - - [27/Jun/2026:12:35:55 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:05:55 [INFO]: ::1 - - [27/Jun/2026:12:35:55 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 200 376 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:05:55 [INFO]: ::1 - - [27/Jun/2026:12:35:55 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:07:32 [INFO]: ::1 - - [27/Jun/2026:12:37:32 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 200 139 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:07:33 [INFO]: ::1 - - [27/Jun/2026:12:37:33 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:07:33 [INFO]: ::1 - - [27/Jun/2026:12:37:33 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:10:44 [INFO]: ::1 - - [27/Jun/2026:12:40:44 +0000] "GET /api/v1/hrms/employees?search=m HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:10:44 [INFO]: ::1 - - [27/Jun/2026:12:40:44 +0000] "GET /api/v1/hrms/employees?search=mu HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:10:45 [INFO]: ::1 - - [27/Jun/2026:12:40:45 +0000] "GET /api/v1/hrms/employees?search=mut HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:10:45 [INFO]: ::1 - - [27/Jun/2026:12:40:45 +0000] "GET /api/v1/hrms/employees?search=mutg HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:10:46 [INFO]: ::1 - - [27/Jun/2026:12:40:46 +0000] "GET /api/v1/hrms/employees?search=mutgu HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:10:49 [INFO]: ::1 - - [27/Jun/2026:12:40:49 +0000] "GET /api/v1/hrms/employees?search=muth HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:10:49 [INFO]: ::1 - - [27/Jun/2026:12:40:49 +0000] "GET /api/v1/hrms/employees?search=muthu HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:10:58 [INFO]: ::1 - - [27/Jun/2026:12:40:58 +0000] "GET /api/v1/hrms/employees?status=on_leave HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:11:07 [INFO]: ::1 - - [27/Jun/2026:12:41:07 +0000] "GET /api/v1/hrms/employees?status=inactive HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:11:13 [INFO]: ::1 - - [27/Jun/2026:12:41:13 +0000] "GET /api/v1/hrms/employees?status=terminated HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:11:17 [INFO]: ::1 - - [27/Jun/2026:12:41:17 +0000] "GET /api/v1/hrms/employees?status=active HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:11:31 [ERROR]: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+CastError: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._find (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2401:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 0)
+2026-06-27 18:11:31 [INFO]: ::1 - - [27/Jun/2026:12:41:31 +0000] "GET /api/v1/hrms/employees?departmentId=dept-1 HTTP/1.1" 400 239 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:11:33 [ERROR]: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+CastError: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._find (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2401:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 0)
+2026-06-27 18:11:33 [INFO]: ::1 - - [27/Jun/2026:12:41:33 +0000] "GET /api/v1/hrms/employees?departmentId=dept-1 HTTP/1.1" 400 239 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:11:35 [ERROR]: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+CastError: Cast to ObjectId failed for value "dept-1" (type string) at path "departmentId" for model "Employee"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._find (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2401:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 0)
+2026-06-27 18:11:35 [INFO]: ::1 - - [27/Jun/2026:12:41:35 +0000] "GET /api/v1/hrms/employees?departmentId=dept-1 HTTP/1.1" 400 239 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:12:27 [INFO]: ::1 - - [27/Jun/2026:12:42:27 +0000] "GET /api/v1/hrms/employees?employmentType=full_time HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:12:31 [INFO]: ::1 - - [27/Jun/2026:12:42:31 +0000] "GET /api/v1/hrms/employees?employmentType=part_time HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:13:13 [INFO]: ::1 - - [27/Jun/2026:12:43:13 +0000] "GET /api/v1/hrms/attendance?date=2026-06-27 HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:13:23 [INFO]: ::1 - - [27/Jun/2026:12:43:23 +0000] "POST /api/v1/hrms/attendance/check-in HTTP/1.1" 404 247 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:14:20 [INFO]: ::1 - - [27/Jun/2026:12:44:20 +0000] "POST /api/v1/hrms/attendance/check-out HTTP/1.1" 404 249 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:14:29 [INFO]: ::1 - - [27/Jun/2026:12:44:29 +0000] "GET /api/v1/hrms/attendance?date=2026-06-27&search=j HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:14:30 [INFO]: ::1 - - [27/Jun/2026:12:44:30 +0000] "GET /api/v1/hrms/attendance?date=2026-06-27&search=jo HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:14:30 [INFO]: ::1 - - [27/Jun/2026:12:44:30 +0000] "GET /api/v1/hrms/attendance?date=2026-06-27&search=jon HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:14:41 [INFO]: ::1 - - [27/Jun/2026:12:44:41 +0000] "GET /api/v1/hrms/leave-requests HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:14:41 [INFO]: ::1 - - [27/Jun/2026:12:44:41 +0000] "GET /api/v1/hrms/leave-balance HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:15:09 [INFO]: ::1 - - [27/Jun/2026:12:45:09 +0000] "POST /api/v1/hrms/leave-requests HTTP/1.1" 400 273 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:17:45 [INFO]: ::1 - - [27/Jun/2026:12:47:45 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:17:45 [INFO]: ::1 - - [27/Jun/2026:12:47:45 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:17:45 [INFO]: ::1 - - [27/Jun/2026:12:47:45 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:17:45 [INFO]: ::1 - - [27/Jun/2026:12:47:45 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:17:45 [INFO]: ::1 - - [27/Jun/2026:12:47:45 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:17:47 [INFO]: ::1 - - [27/Jun/2026:12:47:47 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:20:48 [INFO]: ::1 - - [27/Jun/2026:12:50:48 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:20:48 [INFO]: ::1 - - [27/Jun/2026:12:50:48 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:20:48 [INFO]: ::1 - - [27/Jun/2026:12:50:48 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:20:48 [INFO]: ::1 - - [27/Jun/2026:12:50:48 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:20:48 [INFO]: ::1 - - [27/Jun/2026:12:50:48 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:20:50 [INFO]: ::1 - - [27/Jun/2026:12:50:50 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:23:45 [INFO]: ::1 - - [27/Jun/2026:12:53:45 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:23:45 [INFO]: ::1 - - [27/Jun/2026:12:53:45 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:23:45 [INFO]: ::1 - - [27/Jun/2026:12:53:45 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:23:45 [INFO]: ::1 - - [27/Jun/2026:12:53:45 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:23:45 [INFO]: ::1 - - [27/Jun/2026:12:53:45 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:23:47 [INFO]: ::1 - - [27/Jun/2026:12:53:47 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:24:27 [INFO]: ::1 - - [27/Jun/2026:12:54:27 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:24:28 [INFO]: ::1 - - [27/Jun/2026:12:54:28 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:24:28 [INFO]: ::1 - - [27/Jun/2026:12:54:28 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:24:28 [INFO]: ::1 - - [27/Jun/2026:12:54:28 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:24:28 [INFO]: ::1 - - [27/Jun/2026:12:54:28 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:24:29 [INFO]: ::1 - - [27/Jun/2026:12:54:29 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:25:26 [INFO]: ::1 - - [27/Jun/2026:12:55:26 +0000] "GET /api/v1/hrms/leave-balance HTTP/1.1" 401 216 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:25:26 [INFO]: ::1 - - [27/Jun/2026:12:55:26 +0000] "GET /api/v1/hrms/leave-requests HTTP/1.1" 401 217 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:25:26 [INFO]: ::1 - - [27/Jun/2026:12:55:26 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:25:26 [INFO]: ::1 - - [27/Jun/2026:12:55:26 +0000] "GET /api/v1/hrms/leave-balance HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:25:26 [INFO]: ::1 - - [27/Jun/2026:12:55:26 +0000] "GET /api/v1/hrms/leave-requests HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:25:59 [INFO]: ::1 - - [27/Jun/2026:12:55:59 +0000] "GET /api/v1/hrms/leave-types HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:39:53 [ERROR]: CORS Error: http://localhost:5000 is not allowed
+Error: CORS Error: http://localhost:5000 is not allowed
+    at origin (/home/selva/Downloads/projects/AI Business Os/server/src/app.ts:78:9)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:219:13
+    at optionsCallback (/home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:199:9)
+    at corsMiddleware (/home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:328:13)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/selva/Downloads/projects/AI Business Os/server/node_modules/helmet/index.cjs:537:6)
+2026-06-27 18:39:54 [ERROR]: CORS Error: http://localhost:5000 is not allowed
+Error: CORS Error: http://localhost:5000 is not allowed
+    at origin (/home/selva/Downloads/projects/AI Business Os/server/src/app.ts:78:9)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:219:13
+    at optionsCallback (/home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:199:9)
+    at corsMiddleware (/home/selva/Downloads/projects/AI Business Os/server/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:328:13)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/selva/Downloads/projects/AI Business Os/server/node_modules/helmet/index.cjs:537:6)
+2026-06-27 18:39:56 [INFO]: ::1 - - [27/Jun/2026:13:09:56 +0000] "GET /api/v1/hrms/leave-requests HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:39:56 [INFO]: ::1 - - [27/Jun/2026:13:09:56 +0000] "GET /api/v1/hrms/leave-types HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:39:56 [INFO]: ::1 - - [27/Jun/2026:13:09:56 +0000] "GET /api/v1/hrms/leave-balance HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:43:17 [INFO]: ::1 - - [27/Jun/2026:13:13:17 +0000] "POST /api/v1/hrms/leave-types HTTP/1.1" 401 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:43:17 [INFO]: ::1 - - [27/Jun/2026:13:13:17 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:43:17 [INFO]: ::1 - - [27/Jun/2026:13:13:17 +0000] "POST /api/v1/hrms/leave-types HTTP/1.1" 201 419 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:43:30 [INFO]: ::1 - - [27/Jun/2026:13:13:30 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:43:30 [INFO]: ::1 - - [27/Jun/2026:13:13:30 +0000] "GET /api/v1/hrms/leave-requests HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:43:30 [INFO]: ::1 - - [27/Jun/2026:13:13:30 +0000] "GET /api/v1/hrms/leave-types HTTP/1.1" 200 430 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:43:30 [INFO]: ::1 - - [27/Jun/2026:13:13:30 +0000] "GET /api/v1/hrms/leave-balance HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:43:51 [ERROR]: Employee profile not found for this user
+Error: Employee profile not found for this user
+    at getEmployeeIdFromUser (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1011:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.createLeaveRequest (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:875:32)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:174:19
+2026-06-27 18:43:51 [INFO]: ::1 - - [27/Jun/2026:13:13:51 +0000] "POST /api/v1/hrms/leave-requests HTTP/1.1" 404 234 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:48:35 [INFO]: ::1 - - [27/Jun/2026:13:18:35 +0000] "GET /api/v1/hrms/leave-requests HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:48:35 [INFO]: ::1 - - [27/Jun/2026:13:18:35 +0000] "GET /api/v1/hrms/leave-balance HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:48:35 [INFO]: ::1 - - [27/Jun/2026:13:18:35 +0000] "GET /api/v1/hrms/leave-types HTTP/1.1" 200 430 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:50:01 [INFO]: ::1 - - [27/Jun/2026:13:20:01 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:50:01 [INFO]: ::1 - - [27/Jun/2026:13:20:01 +0000] "GET /api/v1/hrms/leave-requests HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:50:01 [INFO]: ::1 - - [27/Jun/2026:13:20:01 +0000] "GET /api/v1/hrms/leave-types HTTP/1.1" 200 430 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:50:01 [INFO]: ::1 - - [27/Jun/2026:13:20:01 +0000] "GET /api/v1/hrms/leave-balance HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:50:02 [INFO]: ::1 - - [27/Jun/2026:13:20:02 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:50:49 [ERROR]: Employee profile not found for this user
+Error: Employee profile not found for this user
+    at getEmployeeIdFromUser (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1011:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.createLeaveRequest (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:875:32)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:174:19
+2026-06-27 18:50:49 [INFO]: ::1 - - [27/Jun/2026:13:20:49 +0000] "POST /api/v1/hrms/leave-requests HTTP/1.1" 404 234 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:56:02 [INFO]: ::1 - - [27/Jun/2026:13:26:02 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:56:02 [INFO]: ::1 - - [27/Jun/2026:13:26:02 +0000] "GET /api/v1/hrms/leave-requests HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:56:02 [INFO]: ::1 - - [27/Jun/2026:13:26:02 +0000] "GET /api/v1/hrms/leave-balance HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:56:02 [INFO]: ::1 - - [27/Jun/2026:13:26:02 +0000] "GET /api/v1/hrms/leave-types HTTP/1.1" 200 430 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:56:05 [INFO]: ::1 - - [27/Jun/2026:13:26:05 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:56:20 [ERROR]: Employee profile not found for this user
+Error: Employee profile not found for this user
+    at getEmployeeIdFromUser (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1011:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.createLeaveRequest (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:875:32)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:174:19
+2026-06-27 18:56:20 [INFO]: ::1 - - [27/Jun/2026:13:26:20 +0000] "POST /api/v1/hrms/leave-requests HTTP/1.1" 404 234 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:57:19 [INFO]: ::1 - - [27/Jun/2026:13:27:19 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 18:57:33 [ERROR]: Employee profile not found for this user
+Error: Employee profile not found for this user
+    at getEmployeeIdFromUser (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1011:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.createLeaveRequest (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:875:32)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:174:19
+2026-06-27 18:57:33 [INFO]: ::1 - - [27/Jun/2026:13:27:33 +0000] "POST /api/v1/hrms/leave-requests HTTP/1.1" 404 234 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:00:14 [INFO]: ::1 - - [27/Jun/2026:13:30:14 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:00:14 [INFO]: ::1 - - [27/Jun/2026:13:30:14 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:00:14 [INFO]: ::1 - - [27/Jun/2026:13:30:14 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:00:14 [INFO]: ::1 - - [27/Jun/2026:13:30:14 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:00:14 [INFO]: ::1 - - [27/Jun/2026:13:30:14 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:00:16 [INFO]: ::1 - - [27/Jun/2026:13:30:16 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:01:30 [INFO]: ::1 - - [27/Jun/2026:13:31:30 +0000] "GET /api/v1/hrms/attendance?date=2026-06-27 HTTP/1.1" 401 229 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:01:31 [INFO]: ::1 - - [27/Jun/2026:13:31:31 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:01:31 [INFO]: ::1 - - [27/Jun/2026:13:31:31 +0000] "GET /api/v1/hrms/attendance?date=2026-06-27 HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:03:11 [INFO]: ::1 - - [27/Jun/2026:13:33:11 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 412 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:04:13 [INFO]: ::1 - - [27/Jun/2026:13:34:13 +0000] "POST /api/v1/hrms/departments HTTP/1.1" 400 232 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:09:36 [INFO]: ::1 - - [27/Jun/2026:13:39:36 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 412 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:09:59 [INFO]: ::1 - - [27/Jun/2026:13:39:59 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:10:34 [INFO]: ::1 - - [27/Jun/2026:13:40:34 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:10:34 [INFO]: ::1 - - [27/Jun/2026:13:40:34 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 412 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:10:34 [INFO]: ::1 - - [27/Jun/2026:13:40:34 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:11:17 [INFO]: ::1 - - [27/Jun/2026:13:41:17 +0000] "POST /api/v1/hrms/departments HTTP/1.1" 201 397 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:11:18 [INFO]: ::1 - - [27/Jun/2026:13:41:18 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 784 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:11:18 [INFO]: ::1 - - [27/Jun/2026:13:41:18 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 784 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:11:55 [ERROR]: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Department"
+CastError: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Department"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at SchemaObjectId.handleSingle (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1641:15)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1714:20)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:367:39)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+2026-06-27 19:11:55 [INFO]: ::1 - - [27/Jun/2026:13:41:55 +0000] "PATCH /api/v1/hrms/departments/undefined HTTP/1.1" 400 225 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:14:33 [INFO]: ::1 - - [27/Jun/2026:13:44:33 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:14:33 [INFO]: ::1 - - [27/Jun/2026:13:44:33 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:14:33 [INFO]: ::1 - - [27/Jun/2026:13:44:33 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:14:33 [INFO]: ::1 - - [27/Jun/2026:13:44:33 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:14:33 [INFO]: ::1 - - [27/Jun/2026:13:44:33 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 19:14:34 [INFO]: ::1 - - [27/Jun/2026:13:44:34 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"

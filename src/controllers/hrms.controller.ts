@@ -3,6 +3,8 @@ import { AuthRequest } from '../types';
 import catchAsync from '../utils/catchAsync';
 import * as hrmsService from '../services/hrms.service';
 import ApiResponse from '../utils/apiResponse';
+import Employee from '../models/Employee';
+import AppError from '../utils/appError';
 
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────────
 
@@ -38,6 +40,11 @@ export const updateEmployee = catchAsync(async (req: AuthRequest, res: Response,
 export const removeEmployee = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
   const employee = await hrmsService.removeEmployee(req.companyId!, req.params.id as string);
   ApiResponse.success(res, employee);
+});
+
+export const hardRemoveEmployee = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const result = await hrmsService.hardDeleteEmployee(req.companyId!, req.params.id as string);
+  ApiResponse.success(res, result);
 });
 
 export const activateEmployee = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
@@ -166,7 +173,8 @@ export const listLeaveRequests = catchAsync(async (req: AuthRequest, res: Respon
 });
 
 export const createLeaveRequest = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
-  const request = await hrmsService.createLeaveRequest(req.companyId!, req.body, req.user!._id.toString());
+  const userId = req.user!._id ? req.user!._id.toString() : req.body.employeeId;
+  const request = await hrmsService.createLeaveRequest(req.companyId!, req.body, userId);
   ApiResponse.created(res, request);
 });
 
@@ -323,4 +331,216 @@ export const getHeadcountReport = catchAsync(async (req: AuthRequest, res: Respo
 export const getAttritionReport = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
   const data = await hrmsService.getAttritionReport(req.companyId!, req.query);
   ApiResponse.success(res, data);
+});
+
+// ─── EMPLOYEE FULL UPDATE (PUT) ──────────────────────────────────────────────
+
+export const fullUpdateEmployee = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const employee = await hrmsService.fullUpdateEmployee(req.companyId!, req.params.id as string, req.body);
+  ApiResponse.success(res, employee);
+});
+
+// ─── EMPLOYEE PROFILE ────────────────────────────────────────────────────────
+
+export const getEmployeeProfile = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const profile = await hrmsService.getEmployeeProfile(req.companyId!, req.params.id as string);
+  ApiResponse.success(res, profile);
+});
+
+export const updateEmployeeProfile = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const profile = await hrmsService.updateEmployeeProfile(req.companyId!, req.params.id as string, req.body);
+  ApiResponse.success(res, profile);
+});
+
+// ─── EMPLOYEE STATUS ─────────────────────────────────────────────────────────
+
+export const updateEmployeeStatus = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const employee = await hrmsService.updateEmployeeStatus(req.companyId!, req.params.id as string, req.body);
+  ApiResponse.success(res, employee);
+});
+
+// ─── EMPLOYEE HISTORY ────────────────────────────────────────────────────────
+
+export const getEmployeeHistory = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const history = await hrmsService.getEmployeeHistory(req.companyId!, req.params.id as string);
+  ApiResponse.success(res, history);
+});
+
+// ─── ATTENDANCE CHECKIN/CHECKOUT ─────────────────────────────────────────────
+
+export const checkin = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const record = await hrmsService.checkin(req.companyId!, req.body);
+  ApiResponse.success(res, record);
+});
+
+export const checkout = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const record = await hrmsService.checkout(req.companyId!, req.body);
+  ApiResponse.success(res, record);
+});
+
+// ─── ATTENDANCE REGULARIZE ───────────────────────────────────────────────────
+
+export const createRegularization = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const result = await hrmsService.createRegularization(req.companyId!, req.body);
+  ApiResponse.created(res, result);
+});
+
+export const approveRejectRegularization = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const result = await hrmsService.approveRejectRegularization(req.companyId!, req.params.id as string, req.body);
+  ApiResponse.success(res, result);
+});
+
+// ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
+
+export const getEmployeePayslips = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const payslips = await hrmsService.getEmployeePayslips(req.companyId!, req.params.employeeId as string);
+  ApiResponse.success(res, payslips);
+});
+
+export const getPayslipByMonthYear = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const result = await hrmsService.getPayslipByMonthYear(req.companyId!, req.params.month as string, req.params.year as string);
+  ApiResponse.success(res, result);
+});
+
+export const getEmployeeTaxDetails = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const tax = await hrmsService.getEmployeeTaxDetails(req.companyId!, req.params.employeeId as string);
+  ApiResponse.success(res, tax);
+});
+
+export const getEmployeeDeductions = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const deductions = await hrmsService.getEmployeeDeductions(req.companyId!, req.params.employeeId as string);
+  ApiResponse.success(res, deductions);
+});
+
+// ─── DOCUMENTS — REQUEST LETTER ──────────────────────────────────────────────
+
+export const requestLetter = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  let employeeId = req.body.employeeId as string | undefined;
+  if (!employeeId) {
+    const emp = await Employee.findOne({ userId: req.user!._id, companyId: req.companyId! }).select('_id');
+    if (!emp) throw new AppError(404, 'NOT_FOUND', 'Employee profile not found for this user');
+    employeeId = emp._id.toString();
+  }
+  const result = await hrmsService.requestLetter(req.companyId!, employeeId, req.body);
+  ApiResponse.created(res, result);
+});
+
+// ─── PERFORMANCE GOALS ───────────────────────────────────────────────────────
+
+export const listPerformanceGoals = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const { goals, meta } = await hrmsService.listPerformanceGoals(req.companyId!, req.params.employeeId as string, req.query);
+  ApiResponse.paginated(res, goals, meta);
+});
+
+export const createPerformanceGoal = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const goal = await hrmsService.createPerformanceGoal(req.companyId!, req.body, req.user!._id.toString());
+  ApiResponse.created(res, goal);
+});
+
+export const updatePerformanceGoal = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const goal = await hrmsService.updatePerformanceGoal(req.companyId!, req.params.id as string, req.body);
+  ApiResponse.success(res, goal);
+});
+
+// ─── PERFORMANCE APPRAISAL ───────────────────────────────────────────────────
+
+export const submitAppraisal = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const appraisal = await hrmsService.submitAppraisal(req.companyId!, req.body, req.user!._id.toString());
+  ApiResponse.created(res, appraisal);
+});
+
+export const getAppraisalHistory = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const history = await hrmsService.getAppraisalHistory(req.companyId!, req.params.employeeId as string);
+  ApiResponse.success(res, history);
+});
+
+// ─── PERFORMANCE FEEDBACK ────────────────────────────────────────────────────
+
+export const submitFeedback = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const feedback = await hrmsService.submitFeedback(req.companyId!, req.body, req.user!._id.toString());
+  ApiResponse.created(res, feedback);
+});
+
+// ─── TRAINING COURSES ────────────────────────────────────────────────────────
+
+export const listTrainingCourses = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const { courses, meta } = await hrmsService.listTrainingCourses(req.companyId!, req.query);
+  ApiResponse.paginated(res, courses, meta);
+});
+
+// ─── TRAINING ENROLLMENT ─────────────────────────────────────────────────────
+
+export const enrollCourse = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const enrollment = await hrmsService.enrollCourse(req.companyId!, req.body);
+  ApiResponse.created(res, enrollment);
+});
+
+export const completeCourse = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const enrollment = await hrmsService.completeCourse(req.companyId!, req.params.enrollmentId as string, req.body);
+  ApiResponse.success(res, enrollment);
+});
+
+// ─── TRAINING HISTORY & CERTIFICATIONS ───────────────────────────────────────
+
+export const getTrainingHistory = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const history = await hrmsService.getTrainingHistory(req.companyId!, req.params.employeeId as string);
+  ApiResponse.success(res, history);
+});
+
+export const getTrainingCertifications = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const certs = await hrmsService.getTrainingCertifications(req.companyId!, req.params.employeeId as string);
+  ApiResponse.success(res, certs);
+});
+
+// ─── TRANSFER REQUESTS ───────────────────────────────────────────────────────
+
+export const createTransferRequest = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const transfer = await hrmsService.createTransferRequest(req.companyId!, req.body, req.user!._id.toString());
+  ApiResponse.created(res, transfer);
+});
+
+export const approveRejectTransfer = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const transfer = await hrmsService.approveRejectTransfer(req.companyId!, req.params.id as string, req.body, req.user!._id.toString());
+  ApiResponse.success(res, transfer);
+});
+
+// ─── PROMOTIONS ──────────────────────────────────────────────────────────────
+
+export const createPromotion = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const promotion = await hrmsService.createPromotion(req.companyId!, req.body, req.user!._id.toString());
+  ApiResponse.created(res, promotion);
+});
+
+// ─── EXIT RESIGNATION ────────────────────────────────────────────────────────
+
+export const submitResignation = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  let employeeId = req.body.employeeId as string | undefined;
+  if (!employeeId) {
+    const emp = await Employee.findOne({ userId: req.user!._id, companyId: req.companyId! }).select('_id');
+    if (!emp) throw new AppError(404, 'NOT_FOUND', 'Employee profile not found for this user');
+    employeeId = emp._id.toString();
+  }
+  const resignation = await hrmsService.submitResignation(req.companyId!, employeeId, req.body);
+  ApiResponse.created(res, resignation);
+});
+
+// ─── EXIT CHECKLIST ──────────────────────────────────────────────────────────
+
+export const getExitChecklist = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const checklist = await hrmsService.getExitChecklist(req.companyId!, req.params.employeeId as string);
+  ApiResponse.success(res, checklist);
+});
+
+// ─── EXIT CLEARANCE ──────────────────────────────────────────────────────────
+
+export const updateClearance = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const clearance = await hrmsService.updateClearance(req.companyId!, req.params.employeeId as string, req.params.departmentId as string, req.body, req.user!._id.toString());
+  ApiResponse.success(res, clearance);
+});
+
+// ─── EXIT FNF ────────────────────────────────────────────────────────────────
+
+export const getFnF = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const settlement = await hrmsService.getFnF(req.companyId!, req.params.employeeId as string);
+  ApiResponse.success(res, settlement);
 });

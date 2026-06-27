@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAsset = exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.activateEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
-exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = void 0;
+exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.activateEmployee = exports.hardDeleteEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
+exports.getFnF = exports.updateClearance = exports.getExitChecklist = exports.submitResignation = exports.createPromotion = exports.approveRejectTransfer = exports.createTransferRequest = exports.getTrainingCertifications = exports.getTrainingHistory = exports.completeCourse = exports.enrollCourse = exports.listTrainingCourses = exports.submitFeedback = exports.getAppraisalHistory = exports.submitAppraisal = exports.updatePerformanceGoal = exports.createPerformanceGoal = exports.listPerformanceGoals = exports.requestLetter = exports.getEmployeeDeductions = exports.getEmployeeTaxDetails = exports.getPayslipByMonthYear = exports.getEmployeePayslips = exports.approveRejectRegularization = exports.createRegularization = exports.checkout = exports.checkin = exports.getEmployeeHistory = exports.updateEmployeeStatus = exports.updateEmployeeProfile = exports.getEmployeeProfile = exports.fullUpdateEmployee = exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = exports.createAsset = void 0;
 const Employee_1 = __importDefault(require("../models/Employee"));
 const Department_1 = __importDefault(require("../models/Department"));
 const Designation_1 = __importDefault(require("../models/Designation"));
@@ -18,6 +18,20 @@ const Payslip_1 = __importDefault(require("../models/Payslip"));
 const SalaryStructure_1 = __importDefault(require("../models/SalaryStructure"));
 const Asset_1 = __importDefault(require("../models/Asset"));
 const AssetAssignment_1 = __importDefault(require("../models/AssetAssignment"));
+const RegularizationRequest_1 = __importDefault(require("../models/RegularizationRequest"));
+const PerformanceGoal_1 = __importDefault(require("../models/PerformanceGoal"));
+const PerformanceAppraisal_1 = __importDefault(require("../models/PerformanceAppraisal"));
+const PerformanceFeedback_1 = __importDefault(require("../models/PerformanceFeedback"));
+const TrainingCourse_1 = __importDefault(require("../models/TrainingCourse"));
+const TrainingEnrollment_1 = __importDefault(require("../models/TrainingEnrollment"));
+const TrainingCertification_1 = __importDefault(require("../models/TrainingCertification"));
+const TransferRequest_1 = __importDefault(require("../models/TransferRequest"));
+const Promotion_1 = __importDefault(require("../models/Promotion"));
+const EmployeeHistory_1 = __importDefault(require("../models/EmployeeHistory"));
+const ExitResignation_1 = __importDefault(require("../models/ExitResignation"));
+const ExitChecklist_1 = __importDefault(require("../models/ExitChecklist"));
+const ExitClearance_1 = __importDefault(require("../models/ExitClearance"));
+const ExitSettlement_1 = __importDefault(require("../models/ExitSettlement"));
 const appError_1 = __importDefault(require("../utils/appError"));
 const helpers_1 = require("../utils/helpers");
 const transformEmployee = (emp) => {
@@ -385,6 +399,25 @@ const removeEmployee = async (companyId, id) => {
     return transformEmployee(populated.toObject());
 };
 exports.removeEmployee = removeEmployee;
+const hardDeleteEmployee = async (companyId, id) => {
+    const employee = await Employee_1.default.findOne({ _id: id, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    if (employee.status === 'ACTIVE') {
+        throw new appError_1.default(400, 'BAD_REQUEST', 'Cannot permanently delete an active employee. Deactivate first.');
+    }
+    await Promise.all([
+        Attendance_1.default.deleteMany({ employeeId: id }),
+        LeaveRequest_1.default.deleteMany({ employeeId: id }),
+        LeaveBalance_1.default.deleteMany({ employeeId: id }),
+        Payslip_1.default.deleteMany({ employeeId: id }),
+        SalaryStructure_1.default.deleteMany({ employeeId: id }),
+        AssetAssignment_1.default.deleteMany({ employeeId: id }),
+    ]);
+    await Employee_1.default.findOneAndDelete({ _id: id, companyId });
+    return { message: 'Employee permanently deleted', employeeId: id };
+};
+exports.hardDeleteEmployee = hardDeleteEmployee;
 const activateEmployee = async (companyId, id) => {
     const employee = await Employee_1.default.findOneAndUpdate({ _id: id, companyId }, { status: 'ACTIVE', $unset: { exitDate: 1 } }, { new: true });
     if (!employee)
@@ -1372,4 +1405,608 @@ const getAttritionReport = async (companyId, query) => {
     };
 };
 exports.getAttritionReport = getAttritionReport;
+// ─── EMPLOYEE FULL UPDATE (PUT) ─────────────────────────────────────────────
+const fullUpdateEmployee = async (companyId, id, rawData) => {
+    const data = await normalizeEmployeeData(companyId, rawData);
+    if (data.email) {
+        const existing = await Employee_1.default.findOne({ email: data.email, _id: { $ne: id } });
+        if (existing)
+            throw new appError_1.default(409, 'CONFLICT', 'Email already in use');
+    }
+    const employee = await Employee_1.default.findOneAndUpdate({ _id: id, companyId }, data, {
+        new: true,
+        runValidators: true,
+        overwrite: true,
+    });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const populated = await Employee_1.default.findById(employee._id)
+        .populate('departmentId', 'name code')
+        .populate('designationId', 'name level')
+        .populate('branchId', 'name')
+        .populate('reportingManagerId', 'firstName lastName employeeCode')
+        .populate('userId', 'email');
+    return transformEmployee(populated.toObject());
+};
+exports.fullUpdateEmployee = fullUpdateEmployee;
+// ─── EMPLOYEE PROFILE ────────────────────────────────────────────────────────
+const getEmployeeProfile = async (companyId, id) => {
+    const employee = await Employee_1.default.findOne({ _id: id, companyId })
+        .select('personalEmail phone alternatePhone dob gender bloodGroup maritalStatus avatar address emergencyContact bankDetails panNumber aadharNumber')
+        .lean();
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    return employee;
+};
+exports.getEmployeeProfile = getEmployeeProfile;
+const updateEmployeeProfile = async (companyId, id, data) => {
+    const upd = {};
+    const personalFields = ['personalEmail', 'phone', 'alternatePhone', 'dob', 'gender', 'bloodGroup', 'maritalStatus', 'avatar', 'panNumber', 'aadharNumber'];
+    personalFields.forEach(f => { if (data[f] !== undefined)
+        upd[f] = data[f]; });
+    if (data.gender)
+        upd.gender = data.gender.toUpperCase();
+    if (data.address && typeof data.address === 'object') {
+        upd.address = data.address;
+    }
+    else if (typeof data.address === 'string') {
+        upd.address = { street: data.address, city: '', state: '', country: '', zip: '' };
+    }
+    if (data.emergencyContact)
+        upd.emergencyContact = data.emergencyContact;
+    if (data.bankDetails)
+        upd.bankDetails = data.bankDetails;
+    const employee = await Employee_1.default.findOneAndUpdate({ _id: id, companyId }, upd, {
+        new: true,
+        runValidators: true,
+    });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    return employee;
+};
+exports.updateEmployeeProfile = updateEmployeeProfile;
+// ─── EMPLOYEE STATUS ─────────────────────────────────────────────────────────
+const updateEmployeeStatus = async (companyId, id, data) => {
+    const upd = { status: data.status.toUpperCase() };
+    if (data.exitDate)
+        upd.exitDate = new Date(data.exitDate);
+    if (data.exitReason)
+        upd.exitReason = data.exitReason;
+    const employee = await Employee_1.default.findOneAndUpdate({ _id: id, companyId }, upd, {
+        new: true,
+        runValidators: true,
+    });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    await EmployeeHistory_1.default.create({
+        employeeId: id,
+        companyId,
+        changeType: 'STATUS_CHANGE',
+        newValue: upd.status,
+        effectiveDate: new Date(),
+        reason: data.exitReason || undefined,
+    });
+    return employee;
+};
+exports.updateEmployeeStatus = updateEmployeeStatus;
+// ─── EMPLOYEE HISTORY ────────────────────────────────────────────────────────
+const getEmployeeHistory = async (companyId, id) => {
+    return EmployeeHistory_1.default.find({ employeeId: id, companyId })
+        .populate('changedBy', 'firstName lastName email')
+        .populate('oldDepartmentId', 'name')
+        .populate('newDepartmentId', 'name')
+        .populate('oldDesignationId', 'name')
+        .populate('newDesignationId', 'name')
+        .sort({ createdAt: -1 })
+        .lean();
+};
+exports.getEmployeeHistory = getEmployeeHistory;
+// ─── ATTENDANCE CHECKIN ──────────────────────────────────────────────────────
+const checkin = async (companyId, data) => {
+    const today = data.date ? new Date(data.date) : new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date(today);
+    todayEnd.setHours(23, 59, 59, 999);
+    const existing = await Attendance_1.default.findOne({
+        employeeId: data.employeeId,
+        companyId,
+        date: { $gte: today, $lte: todayEnd },
+    });
+    if (existing) {
+        if (existing.checkIn)
+            throw new appError_1.default(409, 'CONFLICT', 'Already checked in today');
+        existing.checkIn = data.checkIn ? new Date(data.checkIn) : new Date();
+        existing.source = data.source || 'APP';
+        if (data.notes)
+            existing.notes = data.notes;
+        existing.status = 'PRESENT';
+        await existing.save();
+        return existing;
+    }
+    const checkInTime = data.checkIn ? new Date(data.checkIn) : new Date();
+    const record = await Attendance_1.default.create({
+        employeeId: data.employeeId,
+        companyId,
+        date: today,
+        checkIn: checkInTime,
+        source: data.source || 'APP',
+        notes: data.notes,
+        status: 'PRESENT',
+    });
+    return record;
+};
+exports.checkin = checkin;
+// ─── ATTENDANCE CHECKOUT ─────────────────────────────────────────────────────
+const checkout = async (companyId, data) => {
+    const today = data.date ? new Date(data.date) : new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date(today);
+    todayEnd.setHours(23, 59, 59, 999);
+    const record = await Attendance_1.default.findOne({
+        employeeId: data.employeeId,
+        companyId,
+        date: { $gte: today, $lte: todayEnd },
+    });
+    if (!record)
+        throw new appError_1.default(404, 'NOT_FOUND', 'No check-in found for today');
+    if (record.checkOut)
+        throw new appError_1.default(409, 'CONFLICT', 'Already checked out today');
+    record.checkOut = data.checkOut ? new Date(data.checkOut) : new Date();
+    record.workingHours = (0, helpers_1.calculateWorkingHours)(record.checkIn, record.checkOut);
+    if (data.notes)
+        record.notes = data.notes;
+    await record.save();
+    return record;
+};
+exports.checkout = checkout;
+// ─── ATTENDANCE REGULARIZE ───────────────────────────────────────────────────
+const createRegularization = async (companyId, data) => {
+    const existing = await RegularizationRequest_1.default.findOne({
+        employeeId: data.employeeId,
+        date: data.date,
+        status: 'PENDING',
+    });
+    if (existing)
+        throw new appError_1.default(409, 'CONFLICT', 'A pending regularization request already exists for this date');
+    return RegularizationRequest_1.default.create({ ...data, companyId });
+};
+exports.createRegularization = createRegularization;
+const approveRejectRegularization = async (companyId, id, data) => {
+    const req = await RegularizationRequest_1.default.findOne({ _id: id, companyId, status: 'PENDING' });
+    if (!req)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Regularization request not found or already processed');
+    req.status = data.status;
+    req.comments = data.comments || req.comments;
+    if (data.status === 'APPROVED') {
+        const existing = await Attendance_1.default.findOne({ employeeId: req.employeeId, date: req.date });
+        if (existing) {
+            if (req.checkIn)
+                existing.checkIn = req.checkIn;
+            if (req.checkOut)
+                existing.checkOut = req.checkOut;
+            if (existing.checkIn && existing.checkOut) {
+                existing.workingHours = (0, helpers_1.calculateWorkingHours)(existing.checkIn, existing.checkOut);
+            }
+            await existing.save();
+        }
+        else {
+            await Attendance_1.default.create({
+                employeeId: req.employeeId,
+                companyId,
+                date: req.date,
+                checkIn: req.checkIn,
+                checkOut: req.checkOut,
+                status: req.checkIn ? 'PRESENT' : 'ABSENT',
+                source: 'MANUAL',
+                notes: `Regularized: ${req.reason}`,
+            });
+        }
+        req.approvedAt = new Date();
+    }
+    await req.save();
+    return req;
+};
+exports.approveRejectRegularization = approveRejectRegularization;
+// ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
+const getEmployeePayslips = async (companyId, employeeId) => {
+    return Payslip_1.default.find({ employeeId, companyId })
+        .populate({
+        path: 'payrollId',
+        select: 'month year status',
+    })
+        .sort({ createdAt: -1 })
+        .lean();
+};
+exports.getEmployeePayslips = getEmployeePayslips;
+const getPayslipByMonthYear = async (companyId, month, year) => {
+    const payroll = await Payroll_1.default.findOne({ companyId, month: parseInt(month), year: parseInt(year) });
+    if (!payroll)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Payroll not found for this period');
+    const payslips = await Payslip_1.default.find({ payrollId: payroll._id, companyId })
+        .populate('employeeId', 'firstName lastName employeeCode departmentId')
+        .lean();
+    return { payroll, payslips };
+};
+exports.getPayslipByMonthYear = getPayslipByMonthYear;
+const getEmployeeTaxDetails = async (companyId, employeeId) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId }).lean();
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const ss = await SalaryStructure_1.default.findOne({ employeeId, companyId }).lean();
+    if (!ss)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Salary structure not found');
+    const currentYear = new Date().getFullYear();
+    const payslips = await Payslip_1.default.find({
+        employeeId,
+        companyId,
+        createdAt: {
+            $gte: new Date(currentYear, 0, 1),
+            $lte: new Date(currentYear, 11, 31, 23, 59, 59, 999),
+        },
+    }).lean();
+    const totalGrossYTD = payslips.reduce((sum, p) => sum + (p.grossSalary || 0), 0);
+    const totalDeductionsYTD = payslips.reduce((sum, p) => sum + (p.pf || 0) + (p.esi || 0) + (p.tds || 0), 0);
+    const totalNetYTD = payslips.reduce((sum, p) => sum + (p.netSalary || 0), 0);
+    return {
+        employeeId,
+        panNumber: employee.panNumber,
+        monthlyGross: ss.grossSalary,
+        monthlyNet: ss.netSalary,
+        annualGross: ss.grossSalary * 12,
+        annualNet: ss.netSalary * 12,
+        ytdGross: totalGrossYTD,
+        ytdDeductions: totalDeductionsYTD,
+        ytdNet: totalNetYTD,
+        pfPerMonth: ss.pf || 0,
+        esiPerMonth: ss.esi || 0,
+    };
+};
+exports.getEmployeeTaxDetails = getEmployeeTaxDetails;
+const getEmployeeDeductions = async (companyId, employeeId) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId }).lean();
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const ss = await SalaryStructure_1.default.findOne({ employeeId, companyId }).lean();
+    if (!ss)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Salary structure not found');
+    const payslips = await Payslip_1.default.find({ employeeId, companyId })
+        .sort({ createdAt: -1 })
+        .limit(12)
+        .lean();
+    const deductionSummary = {
+        pf: { perMonth: ss.pf || 0, annual: (ss.pf || 0) * 12 },
+        esi: { perMonth: ss.esi || 0, annual: (ss.esi || 0) * 12 },
+        tds: { perMonth: 0, annual: 0 },
+        customDeductions: (ss.deductions || []).map(d => ({
+            name: d.name,
+            perMonth: d.amount,
+            annual: d.amount * 12,
+        })),
+        recentPayslips: payslips.map(p => ({
+            period: p.createdAt,
+            grossSalary: p.grossSalary,
+            pf: p.pf,
+            esi: p.esi,
+            tds: p.tds,
+            deductions: p.deductions,
+            netSalary: p.netSalary,
+        })),
+    };
+    // Calculate average TDS from recent payslips
+    const tdsValues = payslips.map(p => p.tds || 0).filter(v => v > 0);
+    if (tdsValues.length > 0) {
+        const avgTds = tdsValues.reduce((a, b) => a + b, 0) / tdsValues.length;
+        deductionSummary.tds.perMonth = Math.round(avgTds * 100) / 100;
+        deductionSummary.tds.annual = Math.round(avgTds * 12 * 100) / 100;
+    }
+    return deductionSummary;
+};
+exports.getEmployeeDeductions = getEmployeeDeductions;
+// ─── DOCUMENTS — REQUEST LETTER ──────────────────────────────────────────────
+const requestLetter = async (companyId, employeeId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId })
+        .populate('departmentId', 'name')
+        .populate('designationId', 'name')
+        .lean();
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const letterContent = data.content || '';
+    const letterType = data.type;
+    return {
+        employeeId,
+        type: letterType,
+        content: letterContent,
+        notes: data.notes,
+        generatedAt: new Date().toISOString(),
+        message: `${letterType} letter request submitted successfully`,
+    };
+};
+exports.requestLetter = requestLetter;
+// ─── PERFORMANCE GOALS ────────────────────────────────────────────────────────
+const listPerformanceGoals = async (companyId, employeeId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { employeeId, companyId };
+    if (query.status)
+        filter.status = query.status;
+    const [goals, total] = await Promise.all([
+        PerformanceGoal_1.default.find(filter)
+            .populate('createdBy', 'firstName lastName email')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        PerformanceGoal_1.default.countDocuments(filter),
+    ]);
+    return { goals, meta: (0, helpers_1.buildMeta)(total, page, limit) };
+};
+exports.listPerformanceGoals = listPerformanceGoals;
+const createPerformanceGoal = async (companyId, data, userId) => {
+    return PerformanceGoal_1.default.create({ ...data, companyId, createdBy: userId });
+};
+exports.createPerformanceGoal = createPerformanceGoal;
+const updatePerformanceGoal = async (companyId, id, data) => {
+    const goal = await PerformanceGoal_1.default.findOneAndUpdate({ _id: id, companyId }, data, {
+        new: true,
+        runValidators: true,
+    });
+    if (!goal)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Performance goal not found');
+    return goal;
+};
+exports.updatePerformanceGoal = updatePerformanceGoal;
+// ─── PERFORMANCE APPRAISAL ───────────────────────────────────────────────────
+const submitAppraisal = async (companyId, data, userId) => {
+    return PerformanceAppraisal_1.default.create({ ...data, companyId, reviewerId: userId, reviewDate: new Date(), status: 'SUBMITTED' });
+};
+exports.submitAppraisal = submitAppraisal;
+const getAppraisalHistory = async (companyId, employeeId) => {
+    return PerformanceAppraisal_1.default.find({ employeeId, companyId })
+        .populate('reviewerId', 'firstName lastName email')
+        .sort({ createdAt: -1 })
+        .lean();
+};
+exports.getAppraisalHistory = getAppraisalHistory;
+// ─── PERFORMANCE FEEDBACK ────────────────────────────────────────────────────
+const submitFeedback = async (companyId, data, userId) => {
+    return PerformanceFeedback_1.default.create({ ...data, companyId, fromEmployeeId: userId, submittedAt: new Date() });
+};
+exports.submitFeedback = submitFeedback;
+// ─── TRAINING COURSES ────────────────────────────────────────────────────────
+const listTrainingCourses = async (companyId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { companyId };
+    if (query.status)
+        filter.status = query.status;
+    if (query.category)
+        filter.category = query.category;
+    const [courses, total] = await Promise.all([
+        TrainingCourse_1.default.find(filter)
+            .sort({ startDate: 1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        TrainingCourse_1.default.countDocuments(filter),
+    ]);
+    return { courses, meta: (0, helpers_1.buildMeta)(total, page, limit) };
+};
+exports.listTrainingCourses = listTrainingCourses;
+// ─── TRAINING ENROLLMENT ─────────────────────────────────────────────────────
+const enrollCourse = async (companyId, data) => {
+    const existing = await TrainingEnrollment_1.default.findOne({
+        courseId: data.courseId,
+        employeeId: data.employeeId,
+    });
+    if (existing)
+        throw new appError_1.default(409, 'CONFLICT', 'Already enrolled in this course');
+    const course = await TrainingCourse_1.default.findOne({ _id: data.courseId, companyId });
+    if (!course)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Course not found');
+    if (course.maxParticipants) {
+        const enrolledCount = await TrainingEnrollment_1.default.countDocuments({
+            courseId: data.courseId,
+            status: { $in: ['ENROLLED', 'IN_PROGRESS'] },
+        });
+        if (enrolledCount >= course.maxParticipants) {
+            throw new appError_1.default(400, 'BAD_REQUEST', 'Course has reached maximum participants');
+        }
+    }
+    return TrainingEnrollment_1.default.create({
+        ...data,
+        companyId,
+        enrolledAt: new Date(),
+        status: 'ENROLLED',
+    });
+};
+exports.enrollCourse = enrollCourse;
+const completeCourse = async (companyId, enrollmentId, data) => {
+    const enrollment = await TrainingEnrollment_1.default.findOne({ _id: enrollmentId, companyId });
+    if (!enrollment)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Enrollment not found');
+    enrollment.status = 'COMPLETED';
+    enrollment.completionDate = new Date();
+    if (data.score !== undefined)
+        enrollment.score = data.score;
+    if (data.feedback)
+        enrollment.feedback = data.feedback;
+    await enrollment.save();
+    return enrollment;
+};
+exports.completeCourse = completeCourse;
+// ─── TRAINING HISTORY & CERTIFICATIONS ──────────────────────────────────────
+const getTrainingHistory = async (companyId, employeeId) => {
+    return TrainingEnrollment_1.default.find({ employeeId, companyId })
+        .populate('courseId', 'title provider category duration')
+        .sort({ enrolledAt: -1 })
+        .lean();
+};
+exports.getTrainingHistory = getTrainingHistory;
+const getTrainingCertifications = async (companyId, employeeId) => {
+    return TrainingCertification_1.default.find({ employeeId, companyId })
+        .populate('courseId', 'title provider')
+        .sort({ issueDate: -1 })
+        .lean();
+};
+exports.getTrainingCertifications = getTrainingCertifications;
+// ─── TRANSFER REQUESTS ───────────────────────────────────────────────────────
+const createTransferRequest = async (companyId, data, userId) => {
+    const employee = await Employee_1.default.findOne({ _id: data.employeeId, companyId }).lean();
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    return TransferRequest_1.default.create({
+        ...data,
+        companyId,
+        fromDepartmentId: employee.departmentId,
+        fromDesignationId: employee.designationId,
+        fromBranchId: employee.branchId,
+        requestedBy: userId,
+        status: 'PENDING',
+    });
+};
+exports.createTransferRequest = createTransferRequest;
+const approveRejectTransfer = async (companyId, id, data, userId) => {
+    const transfer = await TransferRequest_1.default.findOne({ _id: id, companyId, status: 'PENDING' });
+    if (!transfer)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Transfer request not found or already processed');
+    transfer.status = data.status;
+    transfer.approvedBy = userId;
+    transfer.approvedAt = new Date();
+    transfer.comments = data.comments || transfer.comments;
+    if (data.status === 'APPROVED') {
+        const upd = {};
+        if (transfer.toDepartmentId) {
+            upd.departmentId = transfer.toDepartmentId;
+            await EmployeeHistory_1.default.create({
+                employeeId: transfer.employeeId,
+                companyId,
+                changeType: 'DEPARTMENT_CHANGE',
+                oldDepartmentId: transfer.fromDepartmentId,
+                newDepartmentId: transfer.toDepartmentId,
+                effectiveDate: transfer.effectiveDate || new Date(),
+                changedBy: userId,
+                reason: `Transfer: ${transfer.reason}`,
+            });
+        }
+        if (transfer.toDesignationId) {
+            upd.designationId = transfer.toDesignationId;
+            await EmployeeHistory_1.default.create({
+                employeeId: transfer.employeeId,
+                companyId,
+                changeType: 'DESIGNATION_CHANGE',
+                oldDesignationId: transfer.fromDesignationId,
+                newDesignationId: transfer.toDesignationId,
+                effectiveDate: transfer.effectiveDate || new Date(),
+                changedBy: userId,
+                reason: `Transfer: ${transfer.reason}`,
+            });
+        }
+        if (transfer.toBranchId)
+            upd.branchId = transfer.toBranchId;
+        if (Object.keys(upd).length > 0) {
+            await Employee_1.default.updateOne({ _id: transfer.employeeId }, upd);
+        }
+    }
+    await transfer.save();
+    return transfer;
+};
+exports.approveRejectTransfer = approveRejectTransfer;
+// ─── PROMOTIONS ──────────────────────────────────────────────────────────────
+const createPromotion = async (companyId, data, userId) => {
+    const employee = await Employee_1.default.findOne({ _id: data.employeeId, companyId }).lean();
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const promotion = await Promotion_1.default.create({
+        ...data,
+        companyId,
+        fromDesignationId: employee.designationId,
+        fromDepartmentId: employee.departmentId,
+        fromSalary: 0,
+        createdBy: userId,
+        status: 'PENDING',
+    });
+    return promotion;
+};
+exports.createPromotion = createPromotion;
+// ─── EXIT RESIGNATION ────────────────────────────────────────────────────────
+const submitResignation = async (companyId, employeeId, data) => {
+    const existing = await ExitResignation_1.default.findOne({ employeeId, companyId, status: 'PENDING' });
+    if (existing)
+        throw new appError_1.default(409, 'CONFLICT', 'A pending resignation already exists');
+    const resignation = await ExitResignation_1.default.create({
+        ...data,
+        employeeId,
+        companyId,
+        status: 'PENDING',
+    });
+    return resignation;
+};
+exports.submitResignation = submitResignation;
+// ─── EXIT CHECKLIST ──────────────────────────────────────────────────────────
+const getExitChecklist = async (companyId, employeeId) => {
+    let checklist = await ExitChecklist_1.default.findOne({ employeeId, companyId }).lean();
+    if (!checklist) {
+        const departments = await Department_1.default.find({ companyId, isActive: true }).lean();
+        const tasks = departments.map(d => ({
+            task: `${d.name} clearance`,
+            assignedTo: d._id,
+            isCompleted: false,
+            comments: '',
+        }));
+        const created = await ExitChecklist_1.default.create({ employeeId, companyId, tasks, status: 'PENDING' });
+        checklist = created.toObject();
+    }
+    return checklist;
+};
+exports.getExitChecklist = getExitChecklist;
+// ─── EXIT CLEARANCE ──────────────────────────────────────────────────────────
+const updateClearance = async (companyId, employeeId, departmentId, data, userId) => {
+    let clearance = await ExitClearance_1.default.findOne({ employeeId, departmentId, companyId });
+    if (!clearance) {
+        clearance = await ExitClearance_1.default.create({
+            employeeId,
+            companyId,
+            departmentId,
+            clearanceBy: userId,
+            status: data.status,
+            comments: data.comments || '',
+            clearedAt: data.status === 'CLEARED' ? new Date() : undefined,
+        });
+    }
+    else {
+        clearance.status = data.status;
+        clearance.comments = data.comments || clearance.comments;
+        clearance.clearanceBy = userId;
+        clearance.clearedAt = data.status === 'CLEARED' ? new Date() : undefined;
+        await clearance.save();
+    }
+    // Update checklist task
+    await ExitChecklist_1.default.updateOne({ employeeId, companyId, 'tasks.task': { $regex: 'clearance', $options: 'i' } }, { $set: { 'tasks.$.isCompleted': data.status === 'CLEARED', 'tasks.$.completedAt': data.status === 'CLEARED' ? new Date() : undefined } });
+    return clearance;
+};
+exports.updateClearance = updateClearance;
+// ─── EXIT FNF ────────────────────────────────────────────────────────────────
+const getFnF = async (companyId, employeeId) => {
+    let settlement = await ExitSettlement_1.default.findOne({ employeeId, companyId }).lean();
+    if (!settlement) {
+        const ss = await SalaryStructure_1.default.findOne({ employeeId, companyId }).lean();
+        const monthlySalary = ss?.netSalary || 0;
+        const oneMonthNotice = Math.round(monthlySalary * 100) / 100;
+        const created = await ExitSettlement_1.default.create({
+            employeeId,
+            companyId,
+            noticePeriodDays: 30,
+            noticePeriodAmount: oneMonthNotice,
+            unpaidLeaves: 0,
+            unpaidLeaveDeduction: 0,
+            pendingReimbursements: 0,
+            bonusAmount: 0,
+            otherEarnings: 0,
+            otherDeductions: 0,
+            totalAmount: oneMonthNotice,
+            status: 'PENDING',
+        });
+        settlement = created.toObject();
+    }
+    return settlement;
+};
+exports.getFnF = getFnF;
 //# sourceMappingURL=hrms.service.js.map

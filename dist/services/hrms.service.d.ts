@@ -62,6 +62,10 @@ declare const createEmployee: (companyId: string, rawData: Record<string, unknow
 declare const getEmployeeById: (companyId: string, id: string) => Promise<TransformResult | null>;
 declare const updateEmployee: (companyId: string, id: string, rawData: Record<string, unknown>) => Promise<TransformResult | null>;
 declare const removeEmployee: (companyId: string, id: string) => Promise<TransformResult | null>;
+declare const hardDeleteEmployee: (companyId: string, id: string) => Promise<{
+    message: string;
+    employeeId: string;
+}>;
 declare const activateEmployee: (companyId: string, id: string) => Promise<TransformResult | null>;
 declare const bulkImportEmployees: (companyId: string, employeesData: Record<string, unknown>[]) => Promise<{
     created: number;
@@ -325,5 +329,208 @@ declare const getAttritionReport: (companyId: string, query: QueryParams) => Pro
     newHires: number;
     attritionRate: number;
 }>;
-export { getDashboard, listEmployees, createEmployee, getEmployeeById, updateEmployee, removeEmployee, activateEmployee, bulkImportEmployees, exportEmployees, listDepartments, createDepartment, updateDepartment, removeDepartment, listDepartmentEmployees, listDesignations, createDesignation, updateDesignation, removeDesignation, listAttendance, createAttendance, updateAttendance, getAttendanceSummary, bulkCreateAttendance, exportAttendance, listLeaveTypes, createLeaveType, updateLeaveType, removeLeaveType, listLeaveRequests, createLeaveRequest, getLeaveRequestById, approveLeaveRequest, rejectLeaveRequest, removeLeaveRequest, getLeaveBalance, getLeaveCalendar, listHolidays, createHoliday, updateHoliday, removeHoliday, listPayroll, runPayroll, getPayrollById, getPayslip, exportPayslips, getSalaryStructure, createSalaryStructure, updateSalaryStructure, listAssets, createAsset, updateAsset, removeAsset, assignAsset, returnAsset, getAttendanceReport, getLeaveReport, getPayrollReport, getHeadcountReport, getAttritionReport, };
+declare const fullUpdateEmployee: (companyId: string, id: string, rawData: Record<string, unknown>) => Promise<TransformResult | null>;
+declare const getEmployeeProfile: (companyId: string, id: string) => Promise<mongoose.FlattenMaps<import("../models/Employee").IEmployee> & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const updateEmployeeProfile: (companyId: string, id: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/Employee").IEmployee, {}, {}> & import("../models/Employee").IEmployee & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const updateEmployeeStatus: (companyId: string, id: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/Employee").IEmployee, {}, {}> & import("../models/Employee").IEmployee & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const getEmployeeHistory: (companyId: string, id: string) => Promise<(mongoose.FlattenMaps<import("../models/EmployeeHistory").IEmployeeHistory> & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+})[]>;
+declare const checkin: (companyId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/Attendance").IAttendance, {}, {}> & import("../models/Attendance").IAttendance & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const checkout: (companyId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/Attendance").IAttendance, {}, {}> & import("../models/Attendance").IAttendance & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const createRegularization: (companyId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/RegularizationRequest").IRegularizationRequest, {}, {}> & import("../models/RegularizationRequest").IRegularizationRequest & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const approveRejectRegularization: (companyId: string, id: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/RegularizationRequest").IRegularizationRequest, {}, {}> & import("../models/RegularizationRequest").IRegularizationRequest & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const getEmployeePayslips: (companyId: string, employeeId: string) => Promise<(mongoose.FlattenMaps<import("../models/Payslip").IPayslip> & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+})[]>;
+declare const getPayslipByMonthYear: (companyId: string, month: string, year: string) => Promise<{
+    payroll: mongoose.Document<unknown, {}, import("../models/Payroll").IPayroll, {}, {}> & import("../models/Payroll").IPayroll & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    };
+    payslips: (mongoose.FlattenMaps<import("../models/Payslip").IPayslip> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+}>;
+declare const getEmployeeTaxDetails: (companyId: string, employeeId: string) => Promise<{
+    employeeId: string;
+    panNumber: string | undefined;
+    monthlyGross: number;
+    monthlyNet: number;
+    annualGross: number;
+    annualNet: number;
+    ytdGross: number;
+    ytdDeductions: number;
+    ytdNet: number;
+    pfPerMonth: number;
+    esiPerMonth: number;
+}>;
+declare const getEmployeeDeductions: (companyId: string, employeeId: string) => Promise<{
+    pf: {
+        perMonth: number;
+        annual: number;
+    };
+    esi: {
+        perMonth: number;
+        annual: number;
+    };
+    tds: {
+        perMonth: number;
+        annual: number;
+    };
+    customDeductions: {
+        name: string;
+        perMonth: number;
+        annual: number;
+    }[];
+    recentPayslips: {
+        period: Date;
+        grossSalary: number | undefined;
+        pf: number | undefined;
+        esi: number | undefined;
+        tds: number | undefined;
+        deductions: mongoose.FlattenMaps<unknown>[] | undefined;
+        netSalary: number | undefined;
+    }[];
+}>;
+declare const requestLetter: (companyId: string, employeeId: string, data: Record<string, unknown>) => Promise<{
+    employeeId: string;
+    type: string;
+    content: string;
+    notes: unknown;
+    generatedAt: string;
+    message: string;
+}>;
+declare const listPerformanceGoals: (companyId: string, employeeId: string, query: QueryParams) => Promise<{
+    goals: (mongoose.FlattenMaps<import("../models/PerformanceGoal").IPerformanceGoal> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    meta: import("../types").BuildMetaResult;
+}>;
+declare const createPerformanceGoal: (companyId: string, data: Record<string, unknown>, userId: string) => Promise<mongoose.Document<unknown, {}, import("../models/PerformanceGoal").IPerformanceGoal, {}, {}> & import("../models/PerformanceGoal").IPerformanceGoal & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const updatePerformanceGoal: (companyId: string, id: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/PerformanceGoal").IPerformanceGoal, {}, {}> & import("../models/PerformanceGoal").IPerformanceGoal & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const submitAppraisal: (companyId: string, data: Record<string, unknown>, userId: string) => Promise<mongoose.Document<unknown, {}, import("../models/PerformanceAppraisal").IPerformanceAppraisal, {}, {}> & import("../models/PerformanceAppraisal").IPerformanceAppraisal & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const getAppraisalHistory: (companyId: string, employeeId: string) => Promise<(mongoose.FlattenMaps<import("../models/PerformanceAppraisal").IPerformanceAppraisal> & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+})[]>;
+declare const submitFeedback: (companyId: string, data: Record<string, unknown>, userId: string) => Promise<mongoose.Document<unknown, {}, import("../models/PerformanceFeedback").IPerformanceFeedback, {}, {}> & import("../models/PerformanceFeedback").IPerformanceFeedback & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const listTrainingCourses: (companyId: string, query: QueryParams) => Promise<{
+    courses: (mongoose.FlattenMaps<import("../models/TrainingCourse").ITrainingCourse> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    meta: import("../types").BuildMetaResult;
+}>;
+declare const enrollCourse: (companyId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/TrainingEnrollment").ITrainingEnrollment, {}, {}> & import("../models/TrainingEnrollment").ITrainingEnrollment & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const completeCourse: (companyId: string, enrollmentId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/TrainingEnrollment").ITrainingEnrollment, {}, {}> & import("../models/TrainingEnrollment").ITrainingEnrollment & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const getTrainingHistory: (companyId: string, employeeId: string) => Promise<(mongoose.FlattenMaps<import("../models/TrainingEnrollment").ITrainingEnrollment> & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+})[]>;
+declare const getTrainingCertifications: (companyId: string, employeeId: string) => Promise<(mongoose.FlattenMaps<import("../models/TrainingCertification").ITrainingCertification> & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+})[]>;
+declare const createTransferRequest: (companyId: string, data: Record<string, unknown>, userId: string) => Promise<mongoose.Document<unknown, {}, import("../models/TransferRequest").ITransferRequest, {}, {}> & import("../models/TransferRequest").ITransferRequest & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const approveRejectTransfer: (companyId: string, id: string, data: Record<string, unknown>, userId: string) => Promise<mongoose.Document<unknown, {}, import("../models/TransferRequest").ITransferRequest, {}, {}> & import("../models/TransferRequest").ITransferRequest & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const createPromotion: (companyId: string, data: Record<string, unknown>, userId: string) => Promise<mongoose.Document<unknown, {}, import("../models/Promotion").IPromotion, {}, {}> & import("../models/Promotion").IPromotion & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const submitResignation: (companyId: string, employeeId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/ExitResignation").IExitResignation, {}, {}> & import("../models/ExitResignation").IExitResignation & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const getExitChecklist: (companyId: string, employeeId: string) => Promise<(mongoose.FlattenMaps<import("../models/ExitChecklist").IExitChecklist> & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}) | null>;
+declare const updateClearance: (companyId: string, employeeId: string, departmentId: string, data: Record<string, unknown>, userId: string) => Promise<mongoose.Document<unknown, {}, import("../models/ExitClearance").IExitClearance, {}, {}> & import("../models/ExitClearance").IExitClearance & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const getFnF: (companyId: string, employeeId: string) => Promise<(mongoose.FlattenMaps<import("../models/ExitSettlement").IExitSettlement> & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}) | null>;
+export { getDashboard, listEmployees, createEmployee, getEmployeeById, updateEmployee, removeEmployee, hardDeleteEmployee, activateEmployee, bulkImportEmployees, exportEmployees, listDepartments, createDepartment, updateDepartment, removeDepartment, listDepartmentEmployees, listDesignations, createDesignation, updateDesignation, removeDesignation, listAttendance, createAttendance, updateAttendance, getAttendanceSummary, bulkCreateAttendance, exportAttendance, listLeaveTypes, createLeaveType, updateLeaveType, removeLeaveType, listLeaveRequests, createLeaveRequest, getLeaveRequestById, approveLeaveRequest, rejectLeaveRequest, removeLeaveRequest, getLeaveBalance, getLeaveCalendar, listHolidays, createHoliday, updateHoliday, removeHoliday, listPayroll, runPayroll, getPayrollById, getPayslip, exportPayslips, getSalaryStructure, createSalaryStructure, updateSalaryStructure, listAssets, createAsset, updateAsset, removeAsset, assignAsset, returnAsset, getAttendanceReport, getLeaveReport, getPayrollReport, getHeadcountReport, getAttritionReport, fullUpdateEmployee, getEmployeeProfile, updateEmployeeProfile, updateEmployeeStatus, getEmployeeHistory, checkin, checkout, createRegularization, approveRejectRegularization, getEmployeePayslips, getPayslipByMonthYear, getEmployeeTaxDetails, getEmployeeDeductions, requestLetter, listPerformanceGoals, createPerformanceGoal, updatePerformanceGoal, submitAppraisal, getAppraisalHistory, submitFeedback, listTrainingCourses, enrollCourse, completeCourse, getTrainingHistory, getTrainingCertifications, createTransferRequest, approveRejectTransfer, createPromotion, submitResignation, getExitChecklist, updateClearance, getFnF, };
 //# sourceMappingURL=hrms.service.d.ts.map
