@@ -1,0 +1,27 @@
+import { Response, NextFunction } from 'express';
+export declare const listVendors: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createVendor: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getVendorById: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateVendor: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const removeVendor: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getVendorPurchaseHistory: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listRFQs: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createRFQ: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getRFQById: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateRFQ: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const removeRFQ: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const sendRFQ: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getRFQQuotes: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createPOFromQuote: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listPOs: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createPO: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getPOById: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updatePO: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const submitPO: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const approvePO: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const rejectPO: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const cancelPO: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createReceipt: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getReceipts: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const exportPOs: (req: import("express").Request, res: Response, next: NextFunction) => void;
+//# sourceMappingURL=procurement.controller.d.ts.map

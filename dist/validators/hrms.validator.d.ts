@@ -1,0 +1,24 @@
+import Joi from 'joi';
+export declare const createEmployeeSchema: Joi.ObjectSchema;
+export declare const updateEmployeeSchema: Joi.ObjectSchema;
+export declare const createDepartmentSchema: Joi.ObjectSchema;
+export declare const updateDepartmentSchema: Joi.ObjectSchema;
+export declare const createDesignationSchema: Joi.ObjectSchema;
+export declare const updateDesignationSchema: Joi.ObjectSchema;
+export declare const createAttendanceSchema: Joi.ObjectSchema;
+export declare const updateAttendanceSchema: Joi.ObjectSchema;
+export declare const bulkAttendanceSchema: Joi.ObjectSchema;
+export declare const createLeaveTypeSchema: Joi.ObjectSchema;
+export declare const updateLeaveTypeSchema: Joi.ObjectSchema;
+export declare const createLeaveRequestSchema: Joi.ObjectSchema;
+export declare const approveRejectLeaveSchema: Joi.ObjectSchema;
+export declare const createHolidaySchema: Joi.ObjectSchema;
+export declare const updateHolidaySchema: Joi.ObjectSchema;
+export declare const createAssetSchema: Joi.ObjectSchema;
+export declare const updateAssetSchema: Joi.ObjectSchema;
+export declare const assignAssetSchema: Joi.ObjectSchema;
+export declare const returnAssetSchema: Joi.ObjectSchema;
+export declare const runPayrollSchema: Joi.ObjectSchema;
+export declare const createSalaryStructureSchema: Joi.ObjectSchema;
+export declare const updateSalaryStructureSchema: Joi.ObjectSchema;
+//# sourceMappingURL=hrms.validator.d.ts.map

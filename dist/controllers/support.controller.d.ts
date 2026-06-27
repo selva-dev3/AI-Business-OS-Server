@@ -1,0 +1,20 @@
+import { Response, NextFunction } from 'express';
+export declare const listTickets: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createTicket: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getTicket: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateTicket: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const deleteTicket: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const replyTicket: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const assignTicket: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const changeTicketStatus: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const changeTicketPriority: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const closeTicket: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getTicketAISummary: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listCategories: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createCategory: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateCategory: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const deleteCategory: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getReportSummary: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getReportSLA: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getReportAgentPerformance: (req: import("express").Request, res: Response, next: NextFunction) => void;
+//# sourceMappingURL=support.controller.d.ts.map

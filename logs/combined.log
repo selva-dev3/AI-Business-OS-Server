@@ -860,3 +860,23 @@ Error: Invalid email or password
 2026-06-27 13:33:44 [INFO]: ::1 - - [27/Jun/2026:08:03:44 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1381 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 13:33:44 [INFO]: ::1 - - [27/Jun/2026:08:03:44 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1381 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 13:39:47 [INFO]: ::1 - - [27/Jun/2026:08:09:47 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 771 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:48:21 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 13:48:21 [INFO]: 🚀 Server running on http://localhost:5000
+2026-06-27 13:48:21 [INFO]: 📄 Swagger: http://localhost:5000/api-docs
+2026-06-27 13:48:21 [INFO]: ❤️ Health: http://localhost:5000/health
+2026-06-27 13:48:31 [INFO]: MongoDB connected: ac-jyefah8-shard-00-01.5rs7mwd.mongodb.net
+2026-06-27 13:48:31 [INFO]: 🚀 Server running on http://localhost:5000
+2026-06-27 13:48:31 [INFO]: 📄 Swagger: http://localhost:5000/api-docs
+2026-06-27 13:48:31 [INFO]: ❤️ Health: http://localhost:5000/health
+2026-06-27 15:05:47 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 15:05:47 [INFO]: Server running on http://localhost:5000
+2026-06-27 15:05:47 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 15:05:47 [INFO]: Health: http://localhost:5000/health
+2026-06-27 15:07:56 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 15:07:56 [INFO]: Server running on http://localhost:5000
+2026-06-27 15:07:56 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 15:07:56 [INFO]: Health: http://localhost:5000/health
+2026-06-27 15:33:28 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 15:33:28 [INFO]: Server running on http://localhost:5000
+2026-06-27 15:33:28 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 15:33:28 [INFO]: Health: http://localhost:5000/health

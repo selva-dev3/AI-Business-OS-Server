@@ -1,0 +1,622 @@
+import Invoice from '../models/Invoice';
+import InvoiceItem from '../models/InvoiceItem';
+import Payment from '../models/Payment';
+import Expense from '../models/Expense';
+import Budget from '../models/Budget';
+import ReportSchedule from '../models/ReportSchedule';
+import AppError from '../utils/appError';
+import { sendEmail } from '../utils/emailService';
+import PDFDocument from 'pdfkit';
+
+const generateInvoiceNumber = async (companyId: string, type: string) => {
+  const prefix = type === 'SALES' ? 'INV' : type === 'PURCHASE' ? 'PUR' : 'EXP';
+  const count = await Invoice.countDocuments({ companyId, type });
+  const padded = String(count + 1).padStart(5, '0');
+  return `${prefix}-${new Date().getFullYear()}-${padded}`;
+};
+
+const calculateItemTotal = (item: { quantity: number; unitPrice: number; discount: number; taxRate: number }) => {
+  const lineTotal = item.quantity * item.unitPrice;
+  const discountAmount = lineTotal * (item.discount / 100);
+  const taxable = lineTotal - discountAmount;
+  const taxAmount = taxable * (item.taxRate / 100);
+  return { total: taxable + taxAmount, taxAmount, discountAmount };
+};
+
+const calculateInvoiceTotals = (items: { quantity: number; unitPrice: number; discount: number; taxRate: number }[], discount = 0) => {
+  let subtotal = 0;
+  let taxAmount = 0;
+  const itemTotals = items.map(item => {
+    const calc = calculateItemTotal(item);
+    subtotal += calc.total;
+    taxAmount += calc.taxAmount;
+    return { ...item, ...calc };
+  });
+  const discountAmount = subtotal * (discount / 100);
+  const totalAmount = subtotal - discountAmount;
+  return { itemTotals, subtotal, taxAmount, discountAmount, totalAmount };
+};
+
+const listInvoices = async (
+  companyId: string,
+  { type, status, accountId, startDate, endDate, search, page = 1, limit = 20 }: Record<string, unknown>
+) => {
+  const filter: Record<string, unknown> = { companyId };
+  if (type) filter.type = type;
+  if (status) filter.status = status;
+  if (accountId) filter.accountId = accountId;
+  if (startDate || endDate) {
+    filter.issueDate = {};
+    if (startDate) (filter.issueDate as Record<string, unknown>).$gte = new Date(startDate as string);
+    if (endDate) (filter.issueDate as Record<string, unknown>).$lte = new Date(endDate as string);
+  }
+  if (search) {
+    filter.$or = [
+      { invoiceNumber: new RegExp(search as string, 'i') },
+      { notes: new RegExp(search as string, 'i') },
+    ];
+  }
+
+  const p = Math.max(1, parseInt(page as string));
+  const l = Math.min(100, Math.max(1, parseInt(limit as string)));
+  const skip = (p - 1) * l;
+  const [data, total] = await Promise.all([
+    Invoice.find(filter).sort({ createdAt: -1 }).skip(skip).limit(l).populate('accountId', 'name email'),
+    Invoice.countDocuments(filter),
+  ]);
+
+  return { data, meta: { total, page: p, limit: l, totalPages: Math.ceil(total / l) } };
+};
+
+const createInvoice = async (companyId: string, data: Record<string, unknown>): Promise<any> => {
+  const invoiceNumber = await generateInvoiceNumber(companyId, data.type as string);
+  const { itemTotals, subtotal, taxAmount, totalAmount } = calculateInvoiceTotals(
+    data.items as { quantity: number; unitPrice: number; discount: number; taxRate: number }[],
+    data.discount as number
+  );
+
+  const invoice = await Invoice.create({
+    companyId,
+    invoiceNumber,
+    type: data.type,
+    accountId: data.accountId,
+    issueDate: data.issueDate,
+    dueDate: data.dueDate,
+    currency: data.currency,
+    subtotal,
+    taxAmount,
+    discount: data.discount,
+    totalAmount,
+    notes: data.notes,
+    termsAndConditions: data.termsAndConditions,
+  });
+
+  const items = await InvoiceItem.insertMany(
+    (itemTotals as Record<string, unknown>[]).map(item => ({
+      invoiceId: invoice._id,
+      productId: item.productId,
+      description: item.description,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      taxRate: item.taxRate,
+      discount: item.discount,
+      totalAmount: item.total,
+    })) as any
+  );
+
+  return { ...invoice.toJSON(), items };
+};
+
+const getInvoiceById = async (companyId: string, id: string): Promise<any> => {
+  const invoice = await Invoice.findOne({ _id: id, companyId }).populate('accountId', 'name email');
+  if (!invoice) throw new AppError(404, 'NOT_FOUND', 'Invoice not found');
+  const items = await InvoiceItem.find({ invoiceId: id });
+  const payments = await Payment.find({ invoiceId: id }).sort({ paidAt: -1 });
+  return { ...invoice.toJSON(), items, payments };
+};
+
+const updateInvoice = async (companyId: string, id: string, data: Record<string, unknown>) => {
+  const invoice = await Invoice.findOneAndUpdate(
+    { _id: id, companyId },
+    { $set: data },
+    { new: true, runValidators: true }
+  );
+  if (!invoice) throw new AppError(404, 'NOT_FOUND', 'Invoice not found');
+  return invoice;
+};
+
+const removeInvoice = async (companyId: string, id: string) => {
+  const invoice = await Invoice.findOne({ _id: id, companyId });
+  if (!invoice) throw new AppError(404, 'NOT_FOUND', 'Invoice not found');
+  if (invoice.status === 'PAID' || invoice.status === 'CANCELLED') {
+    throw new AppError(400, 'BAD_REQUEST', 'Cannot void a paid or already cancelled invoice');
+  }
+  invoice.status = 'CANCELLED';
+  invoice.cancelledAt = new Date();
+  await invoice.save();
+  return { success: true };
+};
+
+const sendInvoice = async (companyId: string, id: string, { to, cc: _cc, subject, message }: Record<string, unknown>) => {
+  const invoice = await Invoice.findOne({ _id: id, companyId });
+  if (!invoice) throw new AppError(404, 'NOT_FOUND', 'Invoice not found');
+
+  await sendEmail({
+    to: to as string,
+    subject: (subject as string) || `Invoice ${invoice.invoiceNumber}`,
+    html: `<p>${(message as string) || ''}</p><p>Invoice: ${invoice.invoiceNumber}</p><p>Amount: ${invoice.totalAmount} ${invoice.currency}</p><p>Due Date: ${(invoice.dueDate as Date).toISOString().split('T')[0]}</p>`,
+  } as any);
+
+  invoice.status = 'SENT';
+  invoice.sentAt = new Date();
+  await invoice.save();
+  return invoice;
+};
+
+const recordPayment = async (companyId: string, userId: string, invoiceId: string, data: Record<string, unknown>) => {
+  const invoice = await Invoice.findOne({ _id: invoiceId, companyId });
+  if (!invoice) throw new AppError(404, 'NOT_FOUND', 'Invoice not found');
+  if (invoice.status === 'CANCELLED') throw new AppError(400, 'BAD_REQUEST', 'Cannot record payment for a cancelled invoice');
+
+  const payment = await Payment.create({
+    invoiceId,
+    companyId,
+    amount: data.amount,
+    method: data.method,
+    reference: data.reference,
+    paidAt: data.paidAt,
+    notes: data.notes,
+    createdBy: userId,
+  });
+
+  const totalPaid = (invoice.paidAmount || 0) + (data.amount as number);
+  invoice.paidAmount = totalPaid;
+  invoice.balanceDue = (invoice.totalAmount || 0) - totalPaid;
+
+  if (invoice.balanceDue <= 0) {
+    invoice.status = 'PAID';
+  } else {
+    invoice.status = 'PARTIALLY_PAID';
+  }
+
+  await invoice.save();
+  return payment;
+};
+
+const getInvoicePayments = async (companyId: string, invoiceId: string) => {
+  const invoice = await Invoice.findOne({ _id: invoiceId, companyId });
+  if (!invoice) throw new AppError(404, 'NOT_FOUND', 'Invoice not found');
+  return Payment.find({ invoiceId }).sort({ paidAt: -1 }).populate('createdBy', 'name email');
+};
+
+const getInvoicePDF = async (companyId: string, id: string): Promise<Buffer> => {
+  const invoice = await Invoice.findOne({ _id: id, companyId }).populate('accountId', 'name email phone address');
+  if (!invoice) throw new AppError(404, 'NOT_FOUND', 'Invoice not found');
+  const items = await InvoiceItem.find({ invoiceId: id });
+
+  const doc = new PDFDocument({ margin: 50 });
+  const buffers: Buffer[] = [];
+  doc.on('data', (buf: Buffer) => buffers.push(buf));
+
+  doc.fontSize(24).text('INVOICE', { align: 'center' });
+  doc.moveDown();
+  doc.fontSize(12).text(`Invoice #: ${invoice.invoiceNumber}`);
+  doc.text(`Issue Date: ${(invoice.issueDate as Date).toISOString().split('T')[0]}`);
+  doc.text(`Due Date: ${(invoice.dueDate as Date).toISOString().split('T')[0]}`);
+  doc.text(`Status: ${invoice.status}`);
+  doc.moveDown();
+
+  const account = invoice.accountId as unknown as Record<string, unknown> | undefined;
+  if (account) {
+    doc.fontSize(14).text('Bill To:');
+    doc.fontSize(12).text(account.name as string);
+    if (account.email) doc.text(account.email as string);
+    if (account.phone) doc.text(account.phone as string);
+    doc.moveDown();
+  }
+
+  const tableTop = doc.y;
+  doc.fontSize(12).font('Helvetica-Bold');
+  doc.text('Description', 50, tableTop, { width: 200 });
+  doc.text('Qty', 260, tableTop, { width: 50, align: 'center' });
+  doc.text('Price', 320, tableTop, { width: 80, align: 'right' });
+  doc.text('Total', 420, tableTop, { width: 80, align: 'right' });
+  doc.moveDown();
+
+  doc.font('Helvetica');
+  let y = doc.y;
+  for (const item of items) {
+    doc.text(item.description || '', 50, y, { width: 200 });
+    doc.text(String(item.quantity), 260, y, { width: 50, align: 'center' });
+    doc.text((item.unitPrice || 0).toFixed(2), 320, y, { width: 80, align: 'right' });
+    doc.text((item.totalAmount || 0).toFixed(2), 420, y, { width: 80, align: 'right' });
+    y += 20;
+  }
+
+  doc.moveDown();
+  doc.text(`Subtotal: ${(invoice.subtotal || 0).toFixed(2)}`, { align: 'right' });
+  doc.text(`Tax: ${(invoice.taxAmount || 0).toFixed(2)}`, { align: 'right' });
+  doc.text(`Discount: ${(invoice.discount || 0).toFixed(2)}`, { align: 'right' });
+  doc.font('Helvetica-Bold').text(`Total: ${(invoice.totalAmount || 0).toFixed(2)} ${invoice.currency}`, { align: 'right' });
+
+  doc.end();
+
+  return new Promise<Buffer>(resolve => {
+    doc.on('end', () => resolve(Buffer.concat(buffers)));
+  });
+};
+
+const exportInvoices = async (companyId: string, { type, status, startDate, endDate }: Record<string, unknown>) => {
+  const filter: Record<string, unknown> = { companyId };
+  if (type) filter.type = type;
+  if (status) filter.status = status;
+  if (startDate || endDate) {
+    filter.issueDate = {};
+    if (startDate) (filter.issueDate as Record<string, unknown>).$gte = new Date(startDate as string);
+    if (endDate) (filter.issueDate as Record<string, unknown>).$lte = new Date(endDate as string);
+  }
+  return Invoice.find(filter).sort({ createdAt: -1 }).populate('accountId', 'name email');
+};
+
+const listExpenses = async (
+  companyId: string,
+  { status, category, employeeId, startDate, endDate, search, page = 1, limit = 20 }: Record<string, unknown>
+) => {
+  const filter: Record<string, unknown> = { companyId };
+  if (status) filter.status = status;
+  if (category) filter.category = category;
+  if (employeeId) filter.employeeId = employeeId;
+  if (startDate || endDate) {
+    filter.date = {};
+    if (startDate) (filter.date as Record<string, unknown>).$gte = new Date(startDate as string);
+    if (endDate) (filter.date as Record<string, unknown>).$lte = new Date(endDate as string);
+  }
+  if (search) {
+    filter.$or = [
+      { title: new RegExp(search as string, 'i') },
+      { notes: new RegExp(search as string, 'i') },
+    ];
+  }
+
+  const p = Math.max(1, parseInt(page as string));
+  const l = Math.min(100, Math.max(1, parseInt(limit as string)));
+  const skip = (p - 1) * l;
+  const [data, total] = await Promise.all([
+    Expense.find(filter).sort({ createdAt: -1 }).skip(skip).limit(l).populate('employeeId', 'name email'),
+    Expense.countDocuments(filter),
+  ]);
+
+  return { data, meta: { total, page: p, limit: l, totalPages: Math.ceil(total / l) } };
+};
+
+const createExpense = async (companyId: string, employeeId: string, data: Record<string, unknown>) => {
+  return Expense.create({ ...data, companyId, employeeId });
+};
+
+const getExpenseById = async (companyId: string, id: string) => {
+  const expense = await Expense.findOne({ _id: id, companyId }).populate('employeeId', 'name email').populate('approvedBy', 'name');
+  if (!expense) throw new AppError(404, 'NOT_FOUND', 'Expense not found');
+  return expense;
+};
+
+const updateExpense = async (companyId: string, id: string, data: Record<string, unknown>) => {
+  const expense = await Expense.findOneAndUpdate(
+    { _id: id, companyId },
+    { $set: data },
+    { new: true, runValidators: true }
+  );
+  if (!expense) throw new AppError(404, 'NOT_FOUND', 'Expense not found');
+  return expense;
+};
+
+const removeExpense = async (companyId: string, id: string) => {
+  const expense = await Expense.findOneAndDelete({ _id: id, companyId });
+  if (!expense) throw new AppError(404, 'NOT_FOUND', 'Expense not found');
+  return { success: true };
+};
+
+const approveExpense = async (companyId: string, id: string, userId: string, { notes }: Record<string, unknown>) => {
+  const expense = await Expense.findOne({ _id: id, companyId });
+  if (!expense) throw new AppError(404, 'NOT_FOUND', 'Expense not found');
+  if (expense.status !== 'PENDING') throw new AppError(400, 'BAD_REQUEST', 'Only pending expenses can be approved');
+
+  expense.status = 'APPROVED';
+  expense.approvedBy = userId as any;
+  expense.approvedAt = new Date();
+  if (notes) expense.notes = notes as string;
+  await expense.save();
+  return expense;
+};
+
+const rejectExpense = async (companyId: string, id: string, userId: string, { notes }: Record<string, unknown>) => {
+  const expense = await Expense.findOne({ _id: id, companyId });
+  if (!expense) throw new AppError(404, 'NOT_FOUND', 'Expense not found');
+  if (expense.status !== 'PENDING') throw new AppError(400, 'BAD_REQUEST', 'Only pending expenses can be rejected');
+
+  expense.status = 'REJECTED';
+  expense.rejectedBy = userId as any;
+  expense.rejectedAt = new Date();
+  if (notes) expense.notes = notes as string;
+  await expense.save();
+  return expense;
+};
+
+const uploadExpenseReceipt = async (companyId: string, id: string, file: { path: string }) => {
+  const expense = await Expense.findOne({ _id: id, companyId });
+  if (!expense) throw new AppError(404, 'NOT_FOUND', 'Expense not found');
+  expense.receipt = file.path;
+  await expense.save();
+  return expense;
+};
+
+const listPayments = async (
+  companyId: string,
+  { method, startDate, endDate, page = 1, limit = 20 }: Record<string, unknown>
+) => {
+  const filter: Record<string, unknown> = { companyId };
+  if (method) filter.method = method;
+  if (startDate || endDate) {
+    filter.paidAt = {};
+    if (startDate) (filter.paidAt as Record<string, unknown>).$gte = new Date(startDate as string);
+    if (endDate) (filter.paidAt as Record<string, unknown>).$lte = new Date(endDate as string);
+  }
+
+  const p = Math.max(1, parseInt(page as string));
+  const l = Math.min(100, Math.max(1, parseInt(limit as string)));
+  const skip = (p - 1) * l;
+  const [data, total] = await Promise.all([
+    Payment.find(filter).sort({ paidAt: -1 }).skip(skip).limit(l).populate('invoiceId', 'invoiceNumber').populate('createdBy', 'name'),
+    Payment.countDocuments(filter),
+  ]);
+
+  return { data, meta: { total, page: p, limit: l, totalPages: Math.ceil(total / l) } };
+};
+
+const getPaymentById = async (companyId: string, id: string) => {
+  const payment = await Payment.findOne({ _id: id, companyId }).populate('invoiceId', 'invoiceNumber totalAmount').populate('createdBy', 'name');
+  if (!payment) throw new AppError(404, 'NOT_FOUND', 'Payment not found');
+  return payment;
+};
+
+const profitLoss = async (companyId: string, { startDate, endDate }: Record<string, unknown>) => {
+  const dateFilter: Record<string, unknown> = {};
+  if (startDate) dateFilter.$gte = new Date(startDate as string);
+  if (endDate) dateFilter.$lte = new Date(endDate as string);
+
+  const invoiceFilter: Record<string, unknown> = { companyId };
+  if (Object.keys(dateFilter).length) invoiceFilter.issueDate = dateFilter;
+  const expenseFilter: Record<string, unknown> = { companyId, status: { $ne: 'REJECTED' } };
+  if (Object.keys(dateFilter).length) expenseFilter.date = dateFilter;
+
+  const [invoices, expenses] = await Promise.all([
+    Invoice.find(invoiceFilter),
+    Expense.find(expenseFilter),
+  ]);
+
+  const salesRevenue = invoices.filter(i => i.type === 'SALES').reduce((s, i) => s + (i.totalAmount || 0), 0);
+  const purchaseCost = invoices.filter(i => i.type === 'PURCHASE').reduce((s, i) => s + (i.totalAmount || 0), 0);
+  const totalExpenses = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+  const grossProfit = salesRevenue - purchaseCost;
+  const netProfit = grossProfit - totalExpenses;
+
+  return { salesRevenue, purchaseCost, totalExpenses, grossProfit, netProfit };
+};
+
+const balanceSheet = async (companyId: string, { asOf }: Record<string, unknown>) => {
+  const asOfDate = asOf ? new Date(asOf as string) : new Date();
+
+  const invoiceFilter: Record<string, unknown> = { companyId, issueDate: { $lte: asOfDate } };
+  const invoices = await Invoice.find(invoiceFilter);
+
+  const totalReceivables = invoices
+    .filter(i => i.type === 'SALES' && ['SENT', 'PARTIALLY_PAID', 'OVERDUE'].includes(i.status))
+    .reduce((s, i) => s + (i.balanceDue || 0), 0);
+
+  const totalPayables = invoices
+    .filter(i => i.type === 'PURCHASE' && ['SENT', 'PARTIALLY_PAID', 'OVERDUE'].includes(i.status))
+    .reduce((s, i) => s + (i.balanceDue || 0), 0);
+
+  const totalRevenue = invoices.filter(i => i.type === 'SALES' && i.status === 'PAID').reduce((s, i) => s + (i.totalAmount || 0), 0);
+
+  return { totalReceivables, totalPayables, totalRevenue, asOf: asOfDate };
+};
+
+const cashFlow = async (companyId: string, { startDate, endDate }: Record<string, unknown>) => {
+  const dateFilter: Record<string, unknown> = {};
+  if (startDate) dateFilter.$gte = new Date(startDate as string);
+  if (endDate) dateFilter.$lte = new Date(endDate as string);
+
+  const paymentFilter: Record<string, unknown> = { companyId };
+  if (Object.keys(dateFilter).length) paymentFilter.paidAt = dateFilter;
+  const expenseFilter: Record<string, unknown> = { companyId, status: 'APPROVED' };
+  if (Object.keys(dateFilter).length) expenseFilter.date = dateFilter;
+
+  const [payments, expenses] = await Promise.all([
+    Payment.find(paymentFilter),
+    Expense.find(expenseFilter),
+  ]);
+
+  const inflow = payments.reduce((s, p) => s + (p.amount || 0), 0);
+  const outflow = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+
+  return { inflow, outflow, netCashFlow: inflow - outflow };
+};
+
+const taxReport = async (companyId: string, { startDate, endDate }: Record<string, unknown>) => {
+  const dateFilter: Record<string, unknown> = {};
+  if (startDate) dateFilter.$gte = new Date(startDate as string);
+  if (endDate) dateFilter.$lte = new Date(endDate as string);
+
+  const filter: Record<string, unknown> = { companyId };
+  if (Object.keys(dateFilter).length) filter.issueDate = dateFilter;
+  const invoices = await Invoice.find(filter);
+
+  const totalTaxableSales = invoices.filter(i => i.type === 'SALES').reduce((s, i) => s + (i.subtotal || 0), 0);
+  const totalTaxCollected = invoices.filter(i => i.type === 'SALES').reduce((s, i) => s + (i.taxAmount || 0), 0);
+  const totalTaxablePurchases = invoices.filter(i => i.type === 'PURCHASE').reduce((s, i) => s + (i.subtotal || 0), 0);
+  const totalTaxPaid = invoices.filter(i => i.type === 'PURCHASE').reduce((s, i) => s + (i.taxAmount || 0), 0);
+  const netTaxLiability = totalTaxCollected - totalTaxPaid;
+
+  return { totalTaxableSales, totalTaxCollected, totalTaxablePurchases, totalTaxPaid, netTaxLiability };
+};
+
+const arAging = async (companyId: string) => {
+  const now = new Date();
+  const invoices = await Invoice.find({
+    companyId,
+    type: 'SALES',
+    status: { $in: ['SENT', 'PARTIALLY_PAID', 'OVERDUE'] },
+  }).populate('accountId', 'name email');
+
+  const aging: Record<string, { invoice: string; account: unknown; amount: number; dueDate: Date; daysOverdue: number }[]> = { current: [], '1-30': [], '31-60': [], '61-90': [], '90+': [] };
+
+  for (const inv of invoices) {
+    const daysOverdue = Math.floor((now.getTime() - new Date(inv.dueDate).getTime()) / (1000 * 60 * 60 * 24));
+    const entry = { invoice: inv.invoiceNumber, account: inv.accountId, amount: inv.balanceDue || 0, dueDate: inv.dueDate as Date, daysOverdue };
+
+    if (daysOverdue <= 0) aging.current!.push(entry);
+    else if (daysOverdue <= 30) aging['1-30']!.push(entry);
+    else if (daysOverdue <= 60) aging['31-60']!.push(entry);
+    else if (daysOverdue <= 90) aging['61-90']!.push(entry);
+    else aging['90+']!.push(entry);
+  }
+
+  return aging;
+};
+
+const apAging = async (companyId: string) => {
+  const now = new Date();
+  const invoices = await Invoice.find({
+    companyId,
+    type: 'PURCHASE',
+    status: { $in: ['SENT', 'PARTIALLY_PAID', 'OVERDUE'] },
+  }).populate('accountId', 'name email');
+
+  const aging: Record<string, { invoice: string; account: unknown; amount: number; dueDate: Date; daysOverdue: number }[]> = { current: [], '1-30': [], '31-60': [], '61-90': [], '90+': [] };
+
+  for (const inv of invoices) {
+    const daysOverdue = Math.floor((now.getTime() - new Date(inv.dueDate).getTime()) / (1000 * 60 * 60 * 24));
+    const entry = { invoice: inv.invoiceNumber, account: inv.accountId, amount: inv.balanceDue || 0, dueDate: inv.dueDate as Date, daysOverdue };
+
+    if (daysOverdue <= 0) aging.current!.push(entry);
+    else if (daysOverdue <= 30) aging['1-30']!.push(entry);
+    else if (daysOverdue <= 60) aging['31-60']!.push(entry);
+    else if (daysOverdue <= 90) aging['61-90']!.push(entry);
+    else aging['90+']!.push(entry);
+  }
+
+  return aging;
+};
+
+const scheduleReport = async (companyId: string, data: Record<string, unknown>) => {
+  const schedule = await ReportSchedule.create({ companyId, ...data, nextRunAt: new Date() });
+  return schedule;
+};
+
+const listBudgets = async (companyId: string, { year, month, department, category, page = 1, limit = 20 }: Record<string, unknown>) => {
+  const filter: Record<string, unknown> = { companyId };
+  if (year) filter.year = year;
+  if (month) filter.month = month;
+  if (department) filter.department = department;
+  if (category) filter.category = category;
+
+  const p = Math.max(1, parseInt(page as string));
+  const l = Math.min(100, Math.max(1, parseInt(limit as string)));
+  const skip = (p - 1) * l;
+  const [data, total] = await Promise.all([
+    Budget.find(filter).sort({ year: -1, month: 1 }).skip(skip).limit(l),
+    Budget.countDocuments(filter),
+  ]);
+
+  return { data, meta: { total, page: p, limit: l, totalPages: Math.ceil(total / l) } };
+};
+
+const createBudget = async (companyId: string, data: Record<string, unknown>) => {
+  const existing = await Budget.findOne({ companyId, year: data.year, department: data.department, category: data.category, month: data.month || null });
+  if (existing) throw new AppError(409, 'CONFLICT', 'Budget already exists for this period/department/category');
+
+  return Budget.create({ ...data, companyId });
+};
+
+const updateBudget = async (companyId: string, id: string, data: Record<string, unknown>) => {
+  const budget = await Budget.findOneAndUpdate(
+    { _id: id, companyId },
+    { $set: data },
+    { new: true, runValidators: true }
+  );
+  if (!budget) throw new AppError(404, 'NOT_FOUND', 'Budget not found');
+  return budget;
+};
+
+const removeBudget = async (companyId: string, id: string) => {
+  const budget = await Budget.findOneAndDelete({ _id: id, companyId });
+  if (!budget) throw new AppError(404, 'NOT_FOUND', 'Budget not found');
+  return { success: true };
+};
+
+const budgetVsActual = async (companyId: string, { year, month, department }: Record<string, unknown>) => {
+  const filter: Record<string, unknown> = { companyId };
+  if (year) filter.year = year;
+  if (month) filter.month = month;
+  if (department) filter.department = department;
+
+  const budgets = await Budget.find(filter);
+  const expenseFilter: Record<string, unknown> = { companyId, status: { $ne: 'REJECTED' } };
+  if (year && !month) {
+    expenseFilter.date = { $gte: new Date(`${year as string}-01-01`), $lte: new Date(`${year as string}-12-31`) };
+  }
+  if (month && year) {
+    expenseFilter.date = { $gte: new Date(`${year as string}-${String(month).padStart(2, '0')}-01`), $lte: new Date(`${year as string}-${String(month).padStart(2, '0')}-31`) };
+  }
+
+  const expenses = await Expense.find(expenseFilter);
+
+  const comparison = budgets.map(b => {
+    const actual = expenses
+      .filter(e => e.category === b.category)
+      .reduce((s, e) => s + (e.amount || 0), 0);
+    return {
+      budget: b.toJSON(),
+      actual,
+      variance: (b.amount || 0) - actual,
+      variancePercentage: (b.amount || 0) > 0 ? ((((b.amount || 0) - actual) / (b.amount || 0)) * 100).toFixed(2) : '0',
+    };
+  });
+
+  return comparison;
+};
+
+export {
+  listInvoices,
+  createInvoice,
+  getInvoiceById,
+  updateInvoice,
+  removeInvoice,
+  sendInvoice,
+  recordPayment,
+  getInvoicePayments,
+  getInvoicePDF,
+  exportInvoices,
+  listExpenses,
+  createExpense,
+  getExpenseById,
+  updateExpense,
+  removeExpense,
+  approveExpense,
+  rejectExpense,
+  uploadExpenseReceipt,
+  listPayments,
+  getPaymentById,
+  profitLoss,
+  balanceSheet,
+  cashFlow,
+  taxReport,
+  arAging,
+  apAging,
+  scheduleReport,
+  listBudgets,
+  createBudget,
+  updateBudget,
+  removeBudget,
+  budgetVsActual,
+};

@@ -1,0 +1,27 @@
+import { Response, NextFunction } from 'express';
+export declare const list: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const create: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getById: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const update: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const remove: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const addMember: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const removeMember: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listTasks: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createTask: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getTaskById: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateTask: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const removeTask: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const moveTask: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const logTime: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const addComment: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getComments: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listMilestones: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getMilestone: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createMilestone: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateMilestone: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const removeMilestone: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listTimesheets: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createTimesheet: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getProjectTimesheets: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getSummary: (req: import("express").Request, res: Response, next: NextFunction) => void;
+//# sourceMappingURL=project.controller.d.ts.map

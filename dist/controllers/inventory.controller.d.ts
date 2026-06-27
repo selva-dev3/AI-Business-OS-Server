@@ -1,0 +1,24 @@
+import { Response, NextFunction } from 'express';
+export declare const listProducts: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createProduct: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getProductById: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateProduct: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const removeProduct: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getStockHistory: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getLowStock: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listCategories: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createCategory: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateCategory: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const removeCategory: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listWarehouses: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createWarehouse: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const updateWarehouse: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getWarehouseStock: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getStock: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const adjustStock: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getMovements: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const createTransfer: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const listTransfers: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const approveTransfer: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const completeTransfer: (req: import("express").Request, res: Response, next: NextFunction) => void;
+//# sourceMappingURL=inventory.controller.d.ts.map

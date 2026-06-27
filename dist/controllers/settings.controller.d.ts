@@ -1,0 +1,25 @@
+import { Request, Response, NextFunction } from 'express';
+export declare const listRoles: (req: Request, res: Response, next: NextFunction) => void;
+export declare const createRole: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getRoleById: (req: Request, res: Response, next: NextFunction) => void;
+export declare const updateRole: (req: Request, res: Response, next: NextFunction) => void;
+export declare const removeRole: (req: Request, res: Response, next: NextFunction) => void;
+export declare const listPermissions: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getEmailSettings: (req: Request, res: Response, next: NextFunction) => void;
+export declare const updateEmailSettings: (req: Request, res: Response, next: NextFunction) => void;
+export declare const testEmail: (req: Request, res: Response, next: NextFunction) => void;
+export declare const listTemplates: (req: Request, res: Response, next: NextFunction) => void;
+export declare const updateTemplate: (req: Request, res: Response, next: NextFunction) => void;
+export declare const listIntegrations: (req: Request, res: Response, next: NextFunction) => void;
+export declare const connectIntegration: (req: Request, res: Response, next: NextFunction) => void;
+export declare const disconnectIntegration: (req: Request, res: Response, next: NextFunction) => void;
+export declare const listApiKeys: (req: Request, res: Response, next: NextFunction) => void;
+export declare const createApiKey: (req: Request, res: Response, next: NextFunction) => void;
+export declare const removeApiKey: (req: Request, res: Response, next: NextFunction) => void;
+export declare const listAuditLogs: (req: Request, res: Response, next: NextFunction) => void;
+export declare const exportAuditLogs: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getPlan: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getUsage: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getInvoices: (req: Request, res: Response, next: NextFunction) => void;
+export declare const upgradePlan: (req: Request, res: Response, next: NextFunction) => void;
+//# sourceMappingURL=settings.controller.d.ts.map
