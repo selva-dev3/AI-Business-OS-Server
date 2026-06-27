@@ -167,10 +167,12 @@ const employeeSchema = new mongoose.Schema<IEmployee>(
     departmentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Department',
+      default: null,
     },
     designationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Designation',
+      default: null,
     },
     branchId: {
       type: mongoose.Schema.Types.ObjectId,

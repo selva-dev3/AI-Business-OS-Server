@@ -84,9 +84,9 @@ const transformEmployee = (emp: Record<string, unknown> | null): TransformResult
       result.designation = (result.designationId as Record<string, unknown>).name || '';
       result.designationId = (result.designationId as Record<string, unknown>)._id
         ? ((result.designationId as Record<string, unknown>)._id as string).toString()
-        : result.designationId;
+        : String(result.designationId);
     } else {
-      result.designationId = (result.designationId as string).toString();
+      result.designationId = String(result.designationId);
     }
   }
 
@@ -352,17 +352,17 @@ const normalizeEmployeeData = async (companyId: string, inputData: Record<string
     let desig = await Designation.findOne({ name: data.designation as string, companyId });
     if (!desig) {
       desig = await Designation.create({
-        name: data.designation as string,
+        name: data.designation,
         companyId,
         level: 1,
-        description: `${data.designation as string} Designation`,
+        description: `${data.designation} Designation`,
       });
     }
     data.designationId = desig._id;
   }
   delete data.designation;
 
-  if (data.designationId && !isValidObjectId(data.designationId)) {
+  if (data.designationId && !isValidObjectId(String(data.designationId))) {
     delete data.designationId;
   }
 

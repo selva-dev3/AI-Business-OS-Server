@@ -1069,3 +1069,17 @@ CastError: Cast to ObjectId failed for value "runs" (type string) at path "_id" 
 2026-06-27 16:47:58 [INFO]: ::1 - - [27/Jun/2026:11:17:58 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1630 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 16:52:07 [INFO]: ::1 - - [27/Jun/2026:11:22:07 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 200 376 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 16:52:07 [INFO]: ::1 - - [27/Jun/2026:11:22:07 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1630 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:53:45 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 16:53:45 [INFO]: Server running on http://localhost:5000
+2026-06-27 16:53:45 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 16:53:45 [INFO]: Health: http://localhost:5000/health
+2026-06-27 16:54:03 [INFO]: ::1 - - [27/Jun/2026:11:24:03 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:54:03 [INFO]: ::1 - - [27/Jun/2026:11:24:03 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 1038 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:54:03 [INFO]: ::1 - - [27/Jun/2026:11:24:03 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1630 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:54:54 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 16:54:54 [INFO]: Server running on http://localhost:5000
+2026-06-27 16:54:54 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-27 16:54:54 [INFO]: Health: http://localhost:5000/health
+2026-06-27 16:54:59 [INFO]: ::1 - - [27/Jun/2026:11:24:59 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:54:59 [INFO]: ::1 - - [27/Jun/2026:11:24:59 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 1038 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 16:54:59 [INFO]: ::1 - - [27/Jun/2026:11:24:59 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1630 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
