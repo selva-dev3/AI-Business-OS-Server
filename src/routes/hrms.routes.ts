@@ -28,6 +28,7 @@ import {
   createSalaryStructureSchema,
   updateSalaryStructureSchema,
 } from '../validators/hrms.validator';
+import { checkPermission } from '../middleware/rbac';
 
 /**
  * @swagger
@@ -180,6 +181,62 @@ router.post('/employees', validate(createEmployeeSchema), auditLog('hrms', 'CREA
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /hrms/employees/{id}/activate:
+ *   post:
+ *     summary: Activate an inactive employee
+ *     description: >
+ *       Reactivates an employee by setting their status to ACTIVE
+ *       and clearing the exitDate. Use this to reinstate terminated
+ *       or inactive employees.
+ *     tags: [HRMS]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: MongoDB ObjectId of the employee to activate
+ *     responses:
+ *       200:
+ *         description: Employee activated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiSuccess'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/Employee'
+ *       401:
+ *         description: Unauthorized - missing or invalid JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       404:
+ *         description: Employee not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+router.post('/employees/:id/activate', checkPermission('EMPLOYEES', 'UPDATE'), auditLog('EMPLOYEES', 'UPDATE', 'Employee'), hrmsController.activateEmployee);
 router.get('/employees/export', hrmsController.exportEmployees);
 /**
  * @swagger
@@ -342,48 +399,6 @@ router.patch('/employees/:id', validate(updateEmployeeSchema), auditLog('hrms', 
  *               $ref: '#/components/schemas/ApiError'
  */
 router.delete('/employees/:id', auditLog('hrms', 'DELETE', 'employee'), hrmsController.removeEmployee);
-/**
- * @swagger
- * /hrms/employees/{id}/activate:
- *   patch:
- *     summary: Update employees activate
- *     tags: [HRMS]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The id parameter
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiSuccess'
- *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       401:
- *         description: Unauthorized — missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- */
-router.patch('/employees/:id/activate', hrmsController.activateEmployee);
 
 // Departments
 /**
@@ -1187,6 +1202,78 @@ router.get('/leave-requests', hrmsController.listLeaveRequests);
 router.post('/leave-requests', validate(createLeaveRequestSchema), auditLog('hrms', 'CREATE', 'leave_request'), hrmsController.createLeaveRequest);
 /**
  * @swagger
+ * /hrms/leave-requests/{id}/approve:
+ *   post:
+ *     summary: Approve a leave request
+ *     tags: [HRMS]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Leave request approved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+router.post('/leave-requests/:id/approve', validate(approveRejectLeaveSchema), auditLog('hrms', 'APPROVE', 'leave_request'), hrmsController.approveLeaveRequest);
+/**
+ * @swagger
+ * /hrms/leave-requests/{id}/reject:
+ *   post:
+ *     summary: Reject a leave request
+ *     tags: [HRMS]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Leave request rejected
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+router.post('/leave-requests/:id/reject', validate(approveRejectLeaveSchema), auditLog('hrms', 'REJECT', 'leave_request'), hrmsController.rejectLeaveRequest);
+/**
+ * @swagger
  * /hrms/leave-requests/{id}:
  *   get:
  *     summary: Get leave requests by ID
@@ -1207,14 +1294,8 @@ router.post('/leave-requests', validate(createLeaveRequestSchema), auditLog('hrm
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ApiSuccess'
- *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized — missing or invalid token
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
@@ -1227,90 +1308,6 @@ router.post('/leave-requests', validate(createLeaveRequestSchema), auditLog('hrm
  *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/leave-requests/:id', hrmsController.getLeaveRequestById);
-/**
- * @swagger
- * /hrms/leave-requests/{id}/approve:
- *   post:
- *     summary: Create leave requests approve
- *     tags: [HRMS]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The id parameter
- *     responses:
- *       201:
- *         description: Created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiSuccess'
- *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       401:
- *         description: Unauthorized — missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- */
-router.post('/leave-requests/:id/approve', validate(approveRejectLeaveSchema), auditLog('hrms', 'APPROVE', 'leave_request'), hrmsController.approveLeaveRequest);
-/**
- * @swagger
- * /hrms/leave-requests/{id}/reject:
- *   post:
- *     summary: Create leave requests reject
- *     tags: [HRMS]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The id parameter
- *     responses:
- *       201:
- *         description: Created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiSuccess'
- *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       401:
- *         description: Unauthorized — missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- */
-router.post('/leave-requests/:id/reject', validate(approveRejectLeaveSchema), auditLog('hrms', 'REJECT', 'leave_request'), hrmsController.rejectLeaveRequest);
 /**
  * @swagger
  * /hrms/leave-requests/{id}:
@@ -1622,25 +1619,19 @@ router.get('/payroll', hrmsController.listPayroll);
  * @swagger
  * /hrms/payroll/run:
  *   post:
- *     summary: Create payroll run
+ *     summary: Run payroll for a month/year
  *     tags: [HRMS]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       201:
- *         description: Created successfully
+ *         description: Payroll run created
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ApiSuccess'
- *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized — missing or invalid token
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
@@ -1653,48 +1644,6 @@ router.get('/payroll', hrmsController.listPayroll);
  *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/payroll/run', validate(runPayrollSchema), auditLog('hrms', 'RUN', 'payroll'), hrmsController.runPayroll);
-/**
- * @swagger
- * /hrms/payroll/{runId}:
- *   get:
- *     summary: Get payroll by ID
- *     tags: [HRMS]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: runId
- *         required: true
- *         schema:
- *           type: string
- *         description: The runId parameter
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiSuccess'
- *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       401:
- *         description: Unauthorized — missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- */
-router.get('/payroll/:runId', hrmsController.getPayrollById);
 /**
  * @swagger
  * /hrms/payroll/payslip/{id}:
@@ -1772,6 +1721,71 @@ router.get('/payroll/payslip/:id', hrmsController.getPayslip);
  *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/payroll/export', hrmsController.exportPayslips);
+/**
+ * @swagger
+ * /hrms/payroll/payslip/export:
+ *   post:
+ *     summary: Export payroll payslips
+ *     tags: [HRMS]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Export initiated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+router.post('/payroll/payslip/export', hrmsController.exportPayslips);
+/**
+ * @swagger
+ * /hrms/payroll/{runId}:
+ *   get:
+ *     summary: Get payroll by ID
+ *     tags: [HRMS]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: runId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The payroll run ID
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+router.get('/payroll/:runId', hrmsController.getPayrollById);
 
 // Salary Structure
 /**

@@ -60,6 +60,12 @@ const company_validator_1 = require("../validators/company.validator");
  *     responses:
  *       200:
  *         description: Company details
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/', auth_1.authenticate, companyController.get);
 /**
@@ -72,6 +78,12 @@ router.get('/', auth_1.authenticate, companyController.get);
  *     responses:
  *       200:
  *         description: Company updated
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/', auth_1.authenticate, (0, validate_1.validate)(company_validator_1.updateCompanySchema), (0, auditLogger_1.default)('company', 'UPDATE', 'company'), companyController.update);
 /**
@@ -84,6 +96,12 @@ router.patch('/', auth_1.authenticate, (0, validate_1.validate)(company_validato
  *     responses:
  *       200:
  *         description: Logo uploaded
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/logo', auth_1.authenticate, upload_1.logoUpload, upload_1.handleUploadError, companyController.uploadLogo);
 /**
@@ -96,6 +114,12 @@ router.post('/logo', auth_1.authenticate, upload_1.logoUpload, upload_1.handleUp
  *     responses:
  *       200:
  *         description: Company settings
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/settings', auth_1.authenticate, companyController.getSettings);
 /**
@@ -108,10 +132,15 @@ router.get('/settings', auth_1.authenticate, companyController.getSettings);
  *     responses:
  *       200:
  *         description: Settings updated
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/settings', auth_1.authenticate, (0, validate_1.validate)(company_validator_1.updateSettingsSchema), companyController.updateSettings);
 /**
- * @swagger
  * @swagger
  * /company/branches:
  *   get:
@@ -121,6 +150,12 @@ router.patch('/settings', auth_1.authenticate, (0, validate_1.validate)(company_
  *     responses:
  *       200:
  *         description: List of branches
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/branches', auth_1.authenticate, companyController.listBranches);
 /**
@@ -133,6 +168,12 @@ router.get('/branches', auth_1.authenticate, companyController.listBranches);
  *     responses:
  *       201:
  *         description: Branch created
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/branches', auth_1.authenticate, (0, validate_1.validate)(company_validator_1.createBranchSchema), (0, auditLogger_1.default)('company', 'CREATE', 'branch'), companyController.createBranch);
 /**
@@ -145,6 +186,12 @@ router.post('/branches', auth_1.authenticate, (0, validate_1.validate)(company_v
  *     responses:
  *       200:
  *         description: Branch updated
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/branches/:id', auth_1.authenticate, (0, validate_1.validate)(company_validator_1.updateBranchSchema), companyController.updateBranch);
 /**
@@ -157,6 +204,12 @@ router.patch('/branches/:id', auth_1.authenticate, (0, validate_1.validate)(comp
  *     responses:
  *       200:
  *         description: Branch deleted
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.delete('/branches/:id', auth_1.authenticate, (0, auditLogger_1.default)('company', 'DELETE', 'branch'), companyController.deleteBranch);
 exports.default = router;

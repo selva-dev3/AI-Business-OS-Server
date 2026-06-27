@@ -136,10 +136,12 @@ const employeeSchema = new mongoose_1.default.Schema({
     departmentId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'Department',
+        default: null,
     },
     designationId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'Designation',
+        default: null,
     },
     branchId: {
         type: mongoose_1.default.Schema.Types.ObjectId,

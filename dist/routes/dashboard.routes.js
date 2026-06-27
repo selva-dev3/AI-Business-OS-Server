@@ -111,6 +111,12 @@ const dashboardController = __importStar(require("../controllers/dashboard.contr
  *                   format: uuid
  *       401:
  *         description: Unauthorized — missing or invalid token
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/activity', auth_1.authenticate, dashboardController.getActivity);
 exports.default = router;

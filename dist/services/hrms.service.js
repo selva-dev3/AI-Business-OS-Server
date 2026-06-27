@@ -49,10 +49,10 @@ const transformEmployee = (emp) => {
             result.designation = result.designationId.name || '';
             result.designationId = result.designationId._id
                 ? result.designationId._id.toString()
-                : result.designationId;
+                : String(result.designationId);
         }
         else {
-            result.designationId = result.designationId.toString();
+            result.designationId = String(result.designationId);
         }
     }
     if (result.departmentId) {
@@ -303,7 +303,7 @@ const normalizeEmployeeData = async (companyId, inputData) => {
         data.designationId = desig._id;
     }
     delete data.designation;
-    if (data.designationId && !isValidObjectId(data.designationId)) {
+    if (data.designationId && !isValidObjectId(String(data.designationId))) {
         delete data.designationId;
     }
     if (data.branchId && !isValidObjectId(data.branchId)) {

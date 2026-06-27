@@ -85,6 +85,46 @@ const finance_validator_1 = require("../validators/finance.validator");
  *     responses:
  *       200:
  *         description: Paginated list of invoices
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /finance/invoices:
+ *   get:
+ *     summary: List invoices
+ *     tags: [Finance]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/invoices', auth_1.authenticate, financeController.listInvoices);
 /**
@@ -97,6 +137,12 @@ router.get('/invoices', auth_1.authenticate, financeController.listInvoices);
  *     responses:
  *       201:
  *         description: Invoice created
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/invoices', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.createInvoiceSchema), (0, auditLogger_1.default)('finance', 'CREATE', 'invoice'), financeController.createInvoice);
 /**
@@ -109,6 +155,12 @@ router.post('/invoices', auth_1.authenticate, (0, validate_1.validate)(finance_v
  *     responses:
  *       200:
  *         description: Invoice details with items and payments
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/invoices/:id', auth_1.authenticate, financeController.getInvoice);
 /**
@@ -121,6 +173,12 @@ router.get('/invoices/:id', auth_1.authenticate, financeController.getInvoice);
  *     responses:
  *       200:
  *         description: Invoice updated
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/invoices/:id', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.updateInvoiceSchema), (0, auditLogger_1.default)('finance', 'UPDATE', 'invoice'), financeController.updateInvoice);
 /**
@@ -133,6 +191,12 @@ router.patch('/invoices/:id', auth_1.authenticate, (0, validate_1.validate)(fina
  *     responses:
  *       200:
  *         description: Invoice voided
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.delete('/invoices/:id', auth_1.authenticate, (0, auditLogger_1.default)('finance', 'DELETE', 'invoice'), financeController.deleteInvoice);
 /**
@@ -145,6 +209,12 @@ router.delete('/invoices/:id', auth_1.authenticate, (0, auditLogger_1.default)('
  *     responses:
  *       200:
  *         description: Invoice sent
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/invoices/:id/send', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.sendInvoiceSchema), (0, auditLogger_1.default)('finance', 'SEND', 'invoice'), financeController.sendInvoice);
 /**
@@ -157,6 +227,12 @@ router.post('/invoices/:id/send', auth_1.authenticate, (0, validate_1.validate)(
  *     responses:
  *       201:
  *         description: Payment recorded
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/invoices/:id/payment', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.recordPaymentSchema), (0, auditLogger_1.default)('finance', 'PAYMENT', 'invoice'), financeController.recordPayment);
 /**
@@ -169,6 +245,12 @@ router.post('/invoices/:id/payment', auth_1.authenticate, (0, validate_1.validat
  *     responses:
  *       200:
  *         description: List of payments
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/invoices/:id/payments', auth_1.authenticate, financeController.getInvoicePayments);
 /**
@@ -181,6 +263,12 @@ router.get('/invoices/:id/payments', auth_1.authenticate, financeController.getI
  *     responses:
  *       200:
  *         description: PDF file
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/invoices/:id/pdf', auth_1.authenticate, financeController.getInvoicePDF);
 /**
@@ -193,6 +281,12 @@ router.get('/invoices/:id/pdf', auth_1.authenticate, financeController.getInvoic
  *     responses:
  *       200:
  *         description: Exported invoices
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/invoices/export', auth_1.authenticate, financeController.exportInvoices);
 /**
@@ -205,6 +299,12 @@ router.get('/invoices/export', auth_1.authenticate, financeController.exportInvo
  *     responses:
  *       200:
  *         description: Paginated list of expenses
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/expenses', auth_1.authenticate, financeController.listExpenses);
 /**
@@ -217,6 +317,12 @@ router.get('/expenses', auth_1.authenticate, financeController.listExpenses);
  *     responses:
  *       201:
  *         description: Expense created
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/expenses', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.createExpenseSchema), (0, auditLogger_1.default)('finance', 'CREATE', 'expense'), financeController.createExpense);
 /**
@@ -229,6 +335,12 @@ router.post('/expenses', auth_1.authenticate, (0, validate_1.validate)(finance_v
  *     responses:
  *       200:
  *         description: Expense details
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/expenses/:id', auth_1.authenticate, financeController.getExpense);
 /**
@@ -241,6 +353,12 @@ router.get('/expenses/:id', auth_1.authenticate, financeController.getExpense);
  *     responses:
  *       200:
  *         description: Expense updated
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/expenses/:id', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.updateExpenseSchema), (0, auditLogger_1.default)('finance', 'UPDATE', 'expense'), financeController.updateExpense);
 /**
@@ -253,6 +371,12 @@ router.patch('/expenses/:id', auth_1.authenticate, (0, validate_1.validate)(fina
  *     responses:
  *       200:
  *         description: Expense deleted
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.delete('/expenses/:id', auth_1.authenticate, (0, auditLogger_1.default)('finance', 'DELETE', 'expense'), financeController.deleteExpense);
 /**
@@ -265,6 +389,12 @@ router.delete('/expenses/:id', auth_1.authenticate, (0, auditLogger_1.default)('
  *     responses:
  *       200:
  *         description: Expense approved
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/expenses/:id/approve', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.approveExpenseSchema), (0, auditLogger_1.default)('finance', 'APPROVE', 'expense'), financeController.approveExpense);
 /**
@@ -277,6 +407,12 @@ router.patch('/expenses/:id/approve', auth_1.authenticate, (0, validate_1.valida
  *     responses:
  *       200:
  *         description: Expense rejected
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/expenses/:id/reject', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.rejectExpenseSchema), (0, auditLogger_1.default)('finance', 'REJECT', 'expense'), financeController.rejectExpense);
 /**
@@ -289,6 +425,12 @@ router.patch('/expenses/:id/reject', auth_1.authenticate, (0, validate_1.validat
  *     responses:
  *       200:
  *         description: Receipt uploaded
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/expenses/:id/receipt', auth_1.authenticate, upload_1.receiptUpload, upload_1.handleUploadError, financeController.uploadExpenseReceipt);
 /**
@@ -301,6 +443,12 @@ router.post('/expenses/:id/receipt', auth_1.authenticate, upload_1.receiptUpload
  *     responses:
  *       200:
  *         description: Paginated list of payments
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/payments', auth_1.authenticate, financeController.listPayments);
 /**
@@ -313,6 +461,12 @@ router.get('/payments', auth_1.authenticate, financeController.listPayments);
  *     responses:
  *       200:
  *         description: Payment details
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/payments/:id', auth_1.authenticate, financeController.getPayment);
 /**
@@ -325,6 +479,12 @@ router.get('/payments/:id', auth_1.authenticate, financeController.getPayment);
  *     responses:
  *       200:
  *         description: P&L report
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/reports/profit-loss', auth_1.authenticate, financeController.profitLoss);
 /**
@@ -337,6 +497,12 @@ router.get('/reports/profit-loss', auth_1.authenticate, financeController.profit
  *     responses:
  *       200:
  *         description: Balance sheet
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/reports/balance-sheet', auth_1.authenticate, financeController.balanceSheet);
 /**
@@ -349,6 +515,12 @@ router.get('/reports/balance-sheet', auth_1.authenticate, financeController.bala
  *     responses:
  *       200:
  *         description: Cash flow
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/reports/cash-flow', auth_1.authenticate, financeController.cashFlow);
 /**
@@ -361,6 +533,12 @@ router.get('/reports/cash-flow', auth_1.authenticate, financeController.cashFlow
  *     responses:
  *       200:
  *         description: Tax report
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/reports/tax-report', auth_1.authenticate, financeController.taxReport);
 /**
@@ -373,6 +551,12 @@ router.get('/reports/tax-report', auth_1.authenticate, financeController.taxRepo
  *     responses:
  *       200:
  *         description: AR aging
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/reports/ar-aging', auth_1.authenticate, financeController.arAging);
 /**
@@ -385,6 +569,12 @@ router.get('/reports/ar-aging', auth_1.authenticate, financeController.arAging);
  *     responses:
  *       200:
  *         description: AP aging
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/reports/ap-aging', auth_1.authenticate, financeController.apAging);
 /**
@@ -397,6 +587,12 @@ router.get('/reports/ap-aging', auth_1.authenticate, financeController.apAging);
  *     responses:
  *       201:
  *         description: Report scheduled
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/reports/schedule', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.scheduleReportSchema), financeController.scheduleReport);
 /**
@@ -422,6 +618,12 @@ router.post('/reports/schedule', auth_1.authenticate, (0, validate_1.validate)(f
  *     responses:
  *       200:
  *         description: Paginated list of budgets
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/budgets', auth_1.authenticate, financeController.listBudgets);
 /**
@@ -434,6 +636,12 @@ router.get('/budgets', auth_1.authenticate, financeController.listBudgets);
  *     responses:
  *       201:
  *         description: Budget created
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/budgets', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.createBudgetSchema), (0, auditLogger_1.default)('finance', 'CREATE', 'budget'), financeController.createBudget);
 /**
@@ -446,6 +654,12 @@ router.post('/budgets', auth_1.authenticate, (0, validate_1.validate)(finance_va
  *     responses:
  *       200:
  *         description: Budget updated
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/budgets/:id', auth_1.authenticate, (0, validate_1.validate)(finance_validator_1.updateBudgetSchema), (0, auditLogger_1.default)('finance', 'UPDATE', 'budget'), financeController.updateBudget);
 /**
@@ -458,6 +672,12 @@ router.patch('/budgets/:id', auth_1.authenticate, (0, validate_1.validate)(finan
  *     responses:
  *       200:
  *         description: Budget deleted
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.delete('/budgets/:id', auth_1.authenticate, (0, auditLogger_1.default)('finance', 'DELETE', 'budget'), financeController.deleteBudget);
 /**
@@ -470,6 +690,12 @@ router.delete('/budgets/:id', auth_1.authenticate, (0, auditLogger_1.default)('f
  *     responses:
  *       200:
  *         description: Budget vs actual
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/budgets/vs-actual', auth_1.authenticate, financeController.budgetVsActual);
 exports.default = router;

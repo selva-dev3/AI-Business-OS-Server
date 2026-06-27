@@ -63,6 +63,12 @@ const ai_validator_1 = require("../validators/ai.validator");
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/chat', auth_1.authenticate, (0, validate_1.validate)(ai_validator_1.chatSchema), aiController.chat);
 /**
@@ -79,6 +85,12 @@ router.post('/chat', auth_1.authenticate, (0, validate_1.validate)(ai_validator_
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/insights', auth_1.authenticate, (0, validate_1.validate)(ai_validator_1.aiInsightsSchema), aiController.getInsights);
 /**
@@ -95,6 +107,12 @@ router.post('/insights', auth_1.authenticate, (0, validate_1.validate)(ai_valida
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/summarize', auth_1.authenticate, (0, validate_1.validate)(ai_validator_1.summarizeSchema), aiController.summarize);
 /**
@@ -111,6 +129,12 @@ router.post('/summarize', auth_1.authenticate, (0, validate_1.validate)(ai_valid
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/generate-email', auth_1.authenticate, (0, validate_1.validate)(ai_validator_1.generateEmailSchema), aiController.generateEmail);
 /**
@@ -127,6 +151,12 @@ router.post('/generate-email', auth_1.authenticate, (0, validate_1.validate)(ai_
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/extract-document', auth_1.authenticate, upload_1.resumeUpload, upload_1.handleUploadError, aiController.extractDocument);
 /**
@@ -143,6 +173,12 @@ router.post('/extract-document', auth_1.authenticate, upload_1.resumeUpload, upl
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/forecast', auth_1.authenticate, (0, validate_1.validate)(ai_validator_1.forecastSchema), aiController.forecast);
 /**
@@ -159,6 +195,12 @@ router.post('/forecast', auth_1.authenticate, (0, validate_1.validate)(ai_valida
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/parse-resume', auth_1.authenticate, upload_1.resumeUpload, upload_1.handleUploadError, aiController.parseResume);
 exports.default = router;
