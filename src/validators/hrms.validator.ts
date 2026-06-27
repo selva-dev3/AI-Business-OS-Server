@@ -133,16 +133,38 @@ export const updateDepartmentSchema: Joi.ObjectSchema = Joi.object({
 
 export const createDesignationSchema: Joi.ObjectSchema = Joi.object({
   name: Joi.string().trim().max(200).required(),
-  level: Joi.number().integer().min(0).allow(null),
+  designationCode: Joi.string().trim().max(50).allow('', null),
   description: Joi.string().trim().max(1000).allow('', null),
+  level: Joi.number().integer().min(0).allow(null),
+  hierarchyOrder: Joi.number().integer().min(0).allow(null),
+  employmentTypes: Joi.array().items(Joi.string().valid('FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN', 'FREELANCE')).allow(null),
+  color: Joi.string().trim().max(7).regex(/^#[0-9a-fA-F]{6}$/).allow('', null).message('Color must be a valid hex code'),
+  isDefault: Joi.boolean().default(false),
+  departmentId: objectId.allow(null),
+  status: Joi.string().valid('ACTIVE', 'INACTIVE').default('ACTIVE'),
 });
 
 export const updateDesignationSchema: Joi.ObjectSchema = Joi.object({
   name: Joi.string().trim().max(200),
-  level: Joi.number().integer().min(0).allow(null),
+  designationCode: Joi.string().trim().max(50).allow('', null),
   description: Joi.string().trim().max(1000).allow('', null),
+  level: Joi.number().integer().min(0).allow(null),
+  hierarchyOrder: Joi.number().integer().min(0).allow(null),
+  employmentTypes: Joi.array().items(Joi.string().valid('FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN', 'FREELANCE')).allow(null),
+  color: Joi.string().trim().max(7).regex(/^#[0-9a-fA-F]{6}$/).allow('', null).message('Color must be a valid hex code'),
+  isDefault: Joi.boolean(),
+  departmentId: objectId.allow(null),
+  status: Joi.string().valid('ACTIVE', 'INACTIVE'),
   isActive: Joi.boolean(),
 }).min(1);
+
+export const bulkDesignationsSchema: Joi.ObjectSchema = Joi.object({
+  ids: Joi.array().items(objectId.required()).min(1).required(),
+});
+
+export const changeDesignationStatusSchema: Joi.ObjectSchema = Joi.object({
+  status: Joi.string().valid('ACTIVE', 'INACTIVE').required(),
+});
 
 export const createAttendanceSchema: Joi.ObjectSchema = Joi.object({
   employeeId: objectId.required(),

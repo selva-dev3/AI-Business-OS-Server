@@ -643,41 +643,224 @@ const listDepartmentEmployees = async (companyId: string, id: string, query: Que
   return { employees, meta: buildMeta(total, page, limit) };
 };
 
-const listDesignations = async (companyId: string) => {
-  return Designation.find({ companyId }).sort({ level: 1 }).lean();
-};
+const listDesignations = async (companyId: string, query: Record<string, unknown>) => {
+  const { page, limit, skip } = paginateQuery(query.page as string, Number(query.limit));
+  const filter: Record<string, unknown> = { companyId, deletedAt: null };
 
-const createDesignation = async (companyId: string, data: Record<string, unknown>) => {
-  const existing = await Designation.findOne({ name: data.name as string, companyId });
-  if (existing) throw new AppError(409, 'CONFLICT', 'Designation already exists');
-  const designation = await Designation.create({ ...data, companyId });
-  return designation;
-};
-
-const updateDesignation = async (companyId: string, id: string, data: Record<string, unknown>) => {
-  if (data.name) {
-    const existing = await Designation.findOne({ name: data.name as string, companyId, _id: { $ne: id } });
-    if (existing) throw new AppError(409, 'CONFLICT', 'Designation name already in use');
+  if (query.search) {
+    const searchRegex = new RegExp(String(query.search), 'i');
+    filter.$or = [
+      { name: searchRegex },
+      { designationCode: searchRegex },
+    ];
   }
-  const designation = await Designation.findOneAndUpdate({ _id: id, companyId }, data, {
-    new: true,
-    runValidators: true,
-  });
+
+  if (query.departmentId) filter.departmentId = query.departmentId;
+  if (query.status) filter.status = query.status;
+  if (query.isActive !== undefined) filter.isActive = query.isActive === 'true' || query.isActive === true;
+
+  const sortField = (query.sortBy as string) || 'hierarchyOrder';
+  const sortOrder = query.sortOrder === 'desc' ? -1 : 1;
+
+  const [designations, total] = await Promise.all([
+    Designation.find(filter)
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limit)
+      .populate('departmentId', 'name')
+      .populate('createdBy', 'firstName lastName')
+      .populate('updatedBy', 'firstName lastName')
+      .lean(),
+    Designation.countDocuments(filter),
+  ]);
+
+  const meta = buildMeta(total, page, limit);
+  return { data: designations, meta };
+};
+
+const listAllDesignations = async (companyId: string) => {
+  return Designation.find({ companyId, deletedAt: null })
+    .sort({ hierarchyOrder: 1, level: 1 })
+    .populate('departmentId', 'name')
+    .lean();
+};
+
+const getDesignationById = async (companyId: string, id: string) => {
+  const designation = await Designation.findOne({ _id: id, companyId, deletedAt: null })
+    .populate('departmentId', 'name')
+    .populate('createdBy', 'firstName lastName')
+    .populate('updatedBy', 'firstName lastName')
+    .lean();
   if (!designation) throw new AppError(404, 'NOT_FOUND', 'Designation not found');
   return designation;
 };
 
-const removeDesignation = async (companyId: string, id: string) => {
-  const activeCount = await Employee.countDocuments({ designationId: id, companyId, status: 'ACTIVE' });
-  if (activeCount > 0) throw new AppError(400, 'BAD_REQUEST', 'Cannot delete designation with active employees');
+const createDesignation = async (companyId: string, data: Record<string, unknown>, userId?: string) => {
+  const existing = await Designation.findOne({
+    name: data.name as string,
+    companyId,
+    deletedAt: null,
+  });
+  if (existing) throw new AppError(409, 'CONFLICT', 'Designation name already exists in this company');
+
+  if (data.departmentId) {
+    const dept = await Department.findById(data.departmentId);
+    if (!dept) throw new AppError(404, 'NOT_FOUND', 'Department not found');
+  }
+
+  if (data.designationCode) {
+    const codeExists = await Designation.findOne({
+      designationCode: data.designationCode as string,
+      companyId,
+      deletedAt: null,
+    });
+    if (codeExists) throw new AppError(409, 'CONFLICT', 'Designation code already exists');
+  }
+
+  const designation = await Designation.create({
+    ...data,
+    companyId,
+    createdBy: userId,
+    updatedBy: userId,
+  });
+  return designation;
+};
+
+const updateDesignation = async (companyId: string, id: string, data: Record<string, unknown>, userId?: string) => {
+  const existing = await Designation.findOne({ _id: id, companyId, deletedAt: null });
+  if (!existing) throw new AppError(404, 'NOT_FOUND', 'Designation not found');
+
+  if (data.name) {
+    const nameExists = await Designation.findOne({
+      name: data.name as string,
+      companyId,
+      _id: { $ne: id },
+      deletedAt: null,
+    });
+    if (nameExists) throw new AppError(409, 'CONFLICT', 'Designation name already in use');
+  }
+
+  if (data.designationCode) {
+    const codeExists = await Designation.findOne({
+      designationCode: data.designationCode as string,
+      companyId,
+      _id: { $ne: id },
+      deletedAt: null,
+    });
+    if (codeExists) throw new AppError(409, 'CONFLICT', 'Designation code already in use');
+  }
+
+  if (data.departmentId) {
+    const dept = await Department.findById(data.departmentId);
+    if (!dept) throw new AppError(404, 'NOT_FOUND', 'Department not found');
+  }
 
   const designation = await Designation.findOneAndUpdate(
-    { _id: id, companyId },
-    { isActive: false },
+    { _id: id, companyId, deletedAt: null },
+    { ...data, updatedBy: userId },
+    { new: true, runValidators: true }
+  );
+  if (!designation) throw new AppError(404, 'NOT_FOUND', 'Designation not found');
+  return designation;
+};
+
+const removeDesignation = async (companyId: string, id: string, force?: boolean) => {
+  const activeCount = await Employee.countDocuments({ designationId: id, companyId, status: { $in: ['ACTIVE', 'active'] } });
+  if (activeCount > 0 && !force) {
+    throw new AppError(400, 'BAD_REQUEST', `Cannot delete designation with ${activeCount} active employee(s). Use force=true to override.`);
+  }
+
+  const designation = await Designation.findOneAndUpdate(
+    { _id: id, companyId, deletedAt: null },
+    { deletedAt: new Date(), isActive: false },
     { new: true }
   );
   if (!designation) throw new AppError(404, 'NOT_FOUND', 'Designation not found');
   return designation;
+};
+
+const restoreDesignation = async (companyId: string, id: string) => {
+  const designation = await Designation.findOneAndUpdate(
+    { _id: id, companyId, deletedAt: { $ne: null } },
+    { deletedAt: null, isActive: true },
+    { new: true }
+  );
+  if (!designation) throw new AppError(404, 'NOT_FOUND', 'Designation not found or not deleted');
+  return designation;
+};
+
+const bulkDeleteDesignations = async (companyId: string, ids: string[], force?: boolean) => {
+  const activeEmployees = await Employee.countDocuments({
+    designationId: { $in: ids },
+    companyId,
+    status: { $in: ['ACTIVE', 'active'] },
+  });
+  if (activeEmployees > 0 && !force) {
+    throw new AppError(400, 'BAD_REQUEST', `${activeEmployees} active employee(s) have these designations. Use force=true to override.`);
+  }
+
+  const result = await Designation.updateMany(
+    { _id: { $in: ids }, companyId, deletedAt: null },
+    { $set: { deletedAt: new Date(), isActive: false } }
+  );
+  return { modifiedCount: result.modifiedCount };
+};
+
+const bulkRestoreDesignations = async (companyId: string, ids: string[]) => {
+  const result = await Designation.updateMany(
+    { _id: { $in: ids }, companyId, deletedAt: { $ne: null } },
+    { $set: { deletedAt: null, isActive: true } }
+  );
+  return { modifiedCount: result.modifiedCount };
+};
+
+const changeDesignationStatus = async (companyId: string, id: string, status: string, userId?: string) => {
+  const designation = await Designation.findOneAndUpdate(
+    { _id: id, companyId, deletedAt: null },
+    { status, updatedBy: userId },
+    { new: true }
+  );
+  if (!designation) throw new AppError(404, 'NOT_FOUND', 'Designation not found');
+  return designation;
+};
+
+const exportDesignationsCSV = async (companyId: string, filter: Record<string, unknown>) => {
+  const query: Record<string, unknown> = { companyId, deletedAt: null };
+  if (filter.departmentId) query.departmentId = filter.departmentId;
+  if (filter.status) query.status = filter.status;
+
+  const designations = await Designation.find(query)
+    .populate('departmentId', 'name')
+    .sort({ hierarchyOrder: 1 })
+    .lean();
+
+  const header = 'Name,Code,Department,Level,Status,Hierarchy Order,Employment Types\n';
+  const rows = designations.map((d: Record<string, unknown>) =>
+    `"${d.name || ''}","${d.designationCode || ''}","${(d.departmentId as Record<string, unknown>)?.name || ''}",${d.level ?? ''},${d.status || 'ACTIVE'},${d.hierarchyOrder ?? ''},"${Array.isArray(d.employmentTypes) ? (d.employmentTypes as string[]).join('; ') : ''}"`
+  ).join('\n');
+
+  return header + rows;
+};
+
+const exportDesignationsExcel = async (companyId: string, filter: Record<string, unknown>) => {
+  const query: Record<string, unknown> = { companyId, deletedAt: null };
+  if (filter.departmentId) query.departmentId = filter.departmentId;
+  if (filter.status) query.status = filter.status;
+
+  const designations = await Designation.find(query)
+    .populate('departmentId', 'name')
+    .sort({ hierarchyOrder: 1 })
+    .lean();
+
+  return designations.map((d: Record<string, unknown>) => ({
+    Name: d.name || '',
+    Code: d.designationCode || '',
+    Department: (d.departmentId as Record<string, unknown>)?.name || '',
+    Level: d.level ?? '',
+    Status: d.status || 'ACTIVE',
+    'Hierarchy Order': d.hierarchyOrder ?? '',
+    'Employment Types': Array.isArray(d.employmentTypes) ? (d.employmentTypes as string[]).join('; ') : '',
+  }));
 };
 
 const listAttendance = async (companyId: string, query: QueryParams) => {
@@ -2181,9 +2364,17 @@ export {
   removeDepartment,
   listDepartmentEmployees,
   listDesignations,
+  listAllDesignations,
+  getDesignationById,
   createDesignation,
   updateDesignation,
   removeDesignation,
+  restoreDesignation,
+  bulkDeleteDesignations,
+  bulkRestoreDesignations,
+  changeDesignationStatus,
+  exportDesignationsCSV,
+  exportDesignationsExcel,
   listAttendance,
   createAttendance,
   updateAttendance,

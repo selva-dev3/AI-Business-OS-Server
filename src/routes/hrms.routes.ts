@@ -11,6 +11,8 @@ import {
   updateDepartmentSchema,
   createDesignationSchema,
   updateDesignationSchema,
+  bulkDesignationsSchema,
+  changeDesignationStatusSchema,
   createAttendanceSchema,
   updateAttendanceSchema,
   bulkAttendanceSchema,
@@ -3626,13 +3628,33 @@ router.delete('/departments/:id', auditLog('hrms', 'DELETE', 'department'), hrms
  */
 router.get('/departments/:id/employees', hrmsController.listDepartmentEmployees);
 
-// Designations
+// ─── DESIGNATIONS ─────────────────────────────────────────────────────
+/**
+ * @swagger
+ * /hrms/designations/all:
+ *   get:
+ *     summary: List all designations (unpaginated)
+ *     description: Returns all active designations for dropdown/select usage
+ *     tags: [HRMS — Designations]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of designations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ */
+router.get('/designations/all', hrmsController.listAllDesignations);
+
 /**
  * @swagger
  * /hrms/designations:
  *   get:
- *     summary: List designations
- *     tags: [HRMS]
+ *     summary: List designations with pagination
+ *     description: Search, filter, sort, and paginate designations
+ *     tags: [HRMS — Designations]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -3652,45 +3674,54 @@ router.get('/departments/:id/employees', hrmsController.listDepartmentEmployees)
  *         name: search
  *         schema:
  *           type: string
- *         description: Search by name
+ *         description: Search by name or code
  *       - in: query
- *         name: isActive
+ *         name: departmentId
  *         schema:
- *           type: boolean
- *         description: Filter by active status
+ *           type: string
+ *         description: Filter by department ObjectId
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [ACTIVE, INACTIVE]
+ *         description: Filter by status
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           default: hierarchyOrder
+ *         description: Sort field
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: asc
+ *         description: Sort direction
  *     responses:
  *       200:
- *         description: Success
+ *         description: Paginated designation list
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ApiSuccess'
- *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
  *       401:
- *         description: Unauthorized — missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       500:
- *         description: Internal server error
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/designations', hrmsController.listDesignations);
+
 /**
  * @swagger
  * /hrms/designations:
  *   post:
- *     summary: Create designations
- *     tags: [HRMS]
+ *     summary: Create a designation
+ *     description: Create a new designation with name, code, department, and hierarchy details
+ *     tags: [HRMS — Designations]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -3701,41 +3732,38 @@ router.get('/designations', hrmsController.listDesignations);
  *             $ref: '#/components/schemas/CreateDesignationRequest'
  *           example:
  *             name: Senior Software Engineer
- *             level: 3
+ *             designationCode: SSE
  *             description: Senior-level engineering role
+ *             level: 3
+ *             hierarchyOrder: 30
+ *             employmentTypes:
+ *               - FULL_TIME
+ *             color: "#4F46E5"
+ *             departmentId: 60d5f484f1a2c8b1f8e4e1c1
+ *             status: ACTIVE
  *     responses:
  *       201:
- *         description: Created successfully
+ *         description: Designation created
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ApiSuccess'
  *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
+ *         description: Validation error
  *       401:
- *         description: Unauthorized — missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
+ *         description: Unauthorized
+ *       409:
+ *         description: Designation name or code already exists
  */
-router.post('/designations', validate(createDesignationSchema), auditLog('hrms', 'CREATE', 'designation'), hrmsController.createDesignation);
+router.post('/designations', validate(createDesignationSchema), checkPermission('DESIGNATION', 'CREATE'), auditLog('hrms', 'CREATE', 'designation'), hrmsController.createDesignation);
+
 /**
  * @swagger
  * /hrms/designations/{id}:
- *   patch:
- *     summary: Update designations
- *     tags: [HRMS]
+ *   get:
+ *     summary: Get designation by ID
+ *     description: Retrieve a single designation with full details
+ *     tags: [HRMS — Designations]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -3744,7 +3772,31 @@ router.post('/designations', validate(createDesignationSchema), auditLog('hrms',
  *         required: true
  *         schema:
  *           type: string
- *         description: The id parameter
+ *         description: Designation ObjectId
+ *     responses:
+ *       200:
+ *         description: Designation details
+ *       404:
+ *         description: Designation not found
+ */
+router.get('/designations/:id', hrmsController.getDesignationById);
+
+/**
+ * @swagger
+ * /hrms/designations/{id}:
+ *   patch:
+ *     summary: Update a designation
+ *     description: Partial update of designation fields
+ *     tags: [HRMS — Designations]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Designation ObjectId
  *     requestBody:
  *       required: true
  *       content:
@@ -3752,41 +3804,29 @@ router.post('/designations', validate(createDesignationSchema), auditLog('hrms',
  *           schema:
  *             $ref: '#/components/schemas/UpdateDesignationRequest'
  *           example:
- *             name: Senior Software Engineer
- *             description: Updated description
+ *             name: Lead Software Engineer
+ *             level: 4
  *     responses:
  *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiSuccess'
+ *         description: Designation updated
  *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
+ *         description: Validation error
  *       401:
- *         description: Unauthorized — missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
+ *         description: Unauthorized
+ *       404:
+ *         description: Designation not found
+ *       409:
+ *         description: Name or code conflict
  */
-router.patch('/designations/:id', validate(updateDesignationSchema), hrmsController.updateDesignation);
+router.patch('/designations/:id', validate(updateDesignationSchema), checkPermission('DESIGNATION', 'UPDATE'), hrmsController.updateDesignation);
+
 /**
  * @swagger
  * /hrms/designations/{id}:
  *   delete:
- *     summary: Delete designations
- *     tags: [HRMS]
+ *     summary: Soft delete a designation
+ *     description: Soft delete (sets deletedAt). Use ?force=true to bypass active employee check
+ *     tags: [HRMS — Designations]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -3795,34 +3835,214 @@ router.patch('/designations/:id', validate(updateDesignationSchema), hrmsControl
  *         required: true
  *         schema:
  *           type: string
- *         description: The id parameter
+ *         description: Designation ObjectId
+ *       - in: query
+ *         name: force
+ *         schema:
+ *           type: boolean
+ *         description: Force delete even if employees are assigned
  *     responses:
  *       200:
- *         description: Deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiSuccess'
+ *         description: Designation deleted
  *       400:
- *         description: Invalid input or bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
+ *         description: Has active employees (if not forced)
  *       401:
- *         description: Unauthorized — missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiError'
+ *         description: Unauthorized
+ *       404:
+ *         description: Designation not found
  */
-router.delete('/designations/:id', auditLog('hrms', 'DELETE', 'designation'), hrmsController.removeDesignation);
+router.delete('/designations/:id', checkPermission('DESIGNATION', 'DELETE'), auditLog('hrms', 'DELETE', 'designation'), hrmsController.removeDesignation);
+
+/**
+ * @swagger
+ * /hrms/designations/{id}/restore:
+ *   post:
+ *     summary: Restore a deleted designation
+ *     description: Restores a soft-deleted designation by clearing deletedAt
+ *     tags: [HRMS — Designations]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Designation ObjectId
+ *     responses:
+ *       200:
+ *         description: Designation restored
+ *       404:
+ *         description: Designation not found or not deleted
+ */
+router.post('/designations/:id/restore', checkPermission('DESIGNATION', 'UPDATE'), auditLog('hrms', 'RESTORE', 'designation'), hrmsController.restoreDesignation);
+
+/**
+ * @swagger
+ * /hrms/designations/bulk/delete:
+ *   post:
+ *     summary: Bulk delete designations
+ *     description: Soft delete multiple designations at once
+ *     tags: [HRMS — Designations]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of designation ObjectIds
+ *               force:
+ *                 type: boolean
+ *                 description: Force delete if employees are assigned
+ *           example:
+ *             ids: ["60d5f484f1a2c8b1f8e4e1c1", "60d5f484f1a2c8b1f8e4e1c2"]
+ *             force: false
+ *     responses:
+ *       200:
+ *         description: Bulk delete result
+ *       400:
+ *         description: Has active employees
+ *       401:
+ *         description: Unauthorized
+ */
+router.post('/designations/bulk/delete', validate(bulkDesignationsSchema), checkPermission('DESIGNATION', 'DELETE'), auditLog('hrms', 'BULK_DELETE', 'designation'), hrmsController.bulkDeleteDesignations);
+
+/**
+ * @swagger
+ * /hrms/designations/bulk/restore:
+ *   post:
+ *     summary: Bulk restore designations
+ *     description: Restore multiple soft-deleted designations
+ *     tags: [HRMS — Designations]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *           example:
+ *             ids: ["60d5f484f1a2c8b1f8e4e1c1"]
+ *     responses:
+ *       200:
+ *         description: Bulk restore result
+ *       401:
+ *         description: Unauthorized
+ */
+router.post('/designations/bulk/restore', validate(bulkDesignationsSchema), checkPermission('DESIGNATION', 'UPDATE'), auditLog('hrms', 'BULK_RESTORE', 'designation'), hrmsController.bulkRestoreDesignations);
+
+/**
+ * @swagger
+ * /hrms/designations/{id}/status:
+ *   patch:
+ *     summary: Change designation status
+ *     description: Activate or deactivate a designation
+ *     tags: [HRMS — Designations]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Designation ObjectId
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, INACTIVE]
+ *           example:
+ *             status: INACTIVE
+ *     responses:
+ *       200:
+ *         description: Status updated
+ *       404:
+ *         description: Designation not found
+ */
+router.patch('/designations/:id/status', validate(changeDesignationStatusSchema), checkPermission('DESIGNATION', 'UPDATE'), hrmsController.changeDesignationStatus);
+
+/**
+ * @swagger
+ * /hrms/designations/export/csv:
+ *   get:
+ *     summary: Export designations as CSV
+ *     description: Download designations list as CSV file
+ *     tags: [HRMS — Designations]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: departmentId
+ *         schema:
+ *           type: string
+ *         description: Filter by department
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [ACTIVE, INACTIVE]
+ *         description: Filter by status
+ *     responses:
+ *       200:
+ *         description: CSV file download
+ *         content:
+ *           text/csv:
+ *             schema:
+ *               type: string
+ *               format: binary
+ */
+router.get('/designations/export/csv', checkPermission('DESIGNATION', 'EXPORT'), hrmsController.exportDesignationsCSV);
+
+/**
+ * @swagger
+ * /hrms/designations/export/excel:
+ *   get:
+ *     summary: Export designations as Excel
+ *     description: Download designations list as Excel (.xlsx) file
+ *     tags: [HRMS — Designations]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: departmentId
+ *         schema:
+ *           type: string
+ *         description: Filter by department
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [ACTIVE, INACTIVE]
+ *         description: Filter by status
+ *     responses:
+ *       200:
+ *         description: Excel file download
+ *         content:
+ *           application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+ *             schema:
+ *               type: string
+ *               format: binary
+ */
+router.get('/designations/export/excel', checkPermission('DESIGNATION', 'EXPORT'), hrmsController.exportDesignationsExcel);
 
 // Attendance
 /**

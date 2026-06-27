@@ -92,23 +92,76 @@ export const listDepartmentEmployees = catchAsync(async (req: AuthRequest, res: 
 // ─── DESIGNATIONS ─────────────────────────────────────────────────────────────────
 
 export const listDesignations = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
-  const data = await hrmsService.listDesignations(req.companyId!);
+  const result = await hrmsService.listDesignations(req.companyId!, req.query);
+  ApiResponse.paginated(res, result.data, result.meta);
+});
+
+export const listAllDesignations = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const data = await hrmsService.listAllDesignations(req.companyId!);
+  ApiResponse.success(res, data);
+});
+
+export const getDesignationById = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const data = await hrmsService.getDesignationById(req.companyId!, req.params.id as string);
   ApiResponse.success(res, data);
 });
 
 export const createDesignation = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
-  const designation = await hrmsService.createDesignation(req.companyId!, req.body);
+  const designation = await hrmsService.createDesignation(req.companyId!, req.body, req.user?._id?.toString());
   ApiResponse.created(res, designation);
 });
 
 export const updateDesignation = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
-  const designation = await hrmsService.updateDesignation(req.companyId!, req.params.id as string, req.body);
+  const designation = await hrmsService.updateDesignation(req.companyId!, req.params.id as string, req.body, req.user?._id?.toString());
   ApiResponse.success(res, designation);
 });
 
 export const removeDesignation = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
-  const designation = await hrmsService.removeDesignation(req.companyId!, req.params.id as string);
+  const force = req.query.force === 'true';
+  const designation = await hrmsService.removeDesignation(req.companyId!, req.params.id as string, force);
   ApiResponse.success(res, designation);
+});
+
+export const restoreDesignation = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const designation = await hrmsService.restoreDesignation(req.companyId!, req.params.id as string);
+  ApiResponse.success(res, designation);
+});
+
+export const bulkDeleteDesignations = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const { ids, force } = req.body;
+  const result = await hrmsService.bulkDeleteDesignations(req.companyId!, ids, force);
+  ApiResponse.success(res, result);
+});
+
+export const bulkRestoreDesignations = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const { ids } = req.body;
+  const result = await hrmsService.bulkRestoreDesignations(req.companyId!, ids);
+  ApiResponse.success(res, result);
+});
+
+export const changeDesignationStatus = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const { status } = req.body;
+  const designation = await hrmsService.changeDesignationStatus(req.companyId!, req.params.id as string, status, req.user?._id?.toString());
+  ApiResponse.success(res, designation);
+});
+
+export const exportDesignationsCSV = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const csv = await hrmsService.exportDesignationsCSV(req.companyId!, req.query);
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename="designations.csv"');
+  res.send(csv);
+});
+
+export const exportDesignationsExcel = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const data = await hrmsService.exportDesignationsExcel(req.companyId!, req.query);
+  const XLSX = require('xlsx');
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, 'Designations');
+  const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', 'attachment; filename="designations.xlsx"');
+  res.send(buffer);
 });
 
 // ─── ATTENDANCE ───────────────────────────────────────────────────────────────────
