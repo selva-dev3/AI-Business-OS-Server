@@ -841,3 +841,22 @@ Error: Invalid email or password
 2026-06-27 13:23:44 [INFO]: ::1 - - [27/Jun/2026:07:53:44 +0000] "DELETE /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 606 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 13:23:45 [INFO]: ::1 - - [27/Jun/2026:07:53:45 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1337 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 13:23:45 [INFO]: ::1 - - [27/Jun/2026:07:53:45 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1337 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:28:30 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-27 13:28:30 [INFO]: 🚀 Server running on http://localhost:5000
+2026-06-27 13:28:30 [INFO]: 📄 Swagger: http://localhost:5000/api-docs
+2026-06-27 13:28:30 [INFO]: ❤️ Health: http://localhost:5000/health
+2026-06-27 13:28:35 [INFO]: MongoDB connected: ac-jyefah8-shard-00-01.5rs7mwd.mongodb.net
+2026-06-27 13:28:35 [INFO]: 🚀 Server running on http://localhost:5000
+2026-06-27 13:28:35 [INFO]: 📄 Swagger: http://localhost:5000/api-docs
+2026-06-27 13:28:35 [INFO]: ❤️ Health: http://localhost:5000/health
+2026-06-27 13:28:45 [INFO]: ::1 - - [27/Jun/2026:07:58:45 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1383 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:31:39 [INFO]: ::1 - - [27/Jun/2026:08:01:39 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 771 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:33:24 [INFO]: ::1 - - [27/Jun/2026:08:03:24 +0000] "DELETE /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 401 237 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:33:25 [INFO]: ::1 - - [27/Jun/2026:08:03:25 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:33:25 [INFO]: ::1 - - [27/Jun/2026:08:03:25 +0000] "DELETE /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 628 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:33:27 [INFO]: ::1 - - [27/Jun/2026:08:03:27 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1383 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:33:28 [INFO]: ::1 - - [27/Jun/2026:08:03:28 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1383 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:33:44 [INFO]: ::1 - - [27/Jun/2026:08:03:44 +0000] "PATCH /api/v1/hrms/employees/6a3f80e4aa70fd8046916f89 HTTP/1.1" 200 626 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:33:44 [INFO]: ::1 - - [27/Jun/2026:08:03:44 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1381 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:33:44 [INFO]: ::1 - - [27/Jun/2026:08:03:44 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1381 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-27 13:39:47 [INFO]: ::1 - - [27/Jun/2026:08:09:47 +0000] "GET /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 771 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"

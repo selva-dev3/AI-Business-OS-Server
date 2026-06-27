@@ -124,6 +124,10 @@ const transformEmployee = (emp) => {
     result.id = result._id.toString();
   }
 
+  if (result.employeeCode) {
+    result.employeeId = result.employeeCode;
+  }
+
   if (result.status) {
     result.status = result.status.toLowerCase();
   }
@@ -217,6 +221,11 @@ const listEmployees = async (companyId, query) => {
 
 const normalizeEmployeeData = async (companyId, inputData) => {
   const data = { ...inputData };
+
+  if (data.employeeId && !data.employeeCode) {
+    data.employeeCode = data.employeeId;
+  }
+  delete data.employeeId;
 
   // 1. Convert gender to uppercase MALE/FEMALE/OTHER
   if (data.gender) {
