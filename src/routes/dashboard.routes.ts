@@ -75,6 +75,12 @@ import * as dashboardController from '../controllers/dashboard.controller';
  *                   format: uuid
  *       401:
  *         description: Unauthorized — missing or invalid token
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/activity', authenticate, dashboardController.getActivity);
 

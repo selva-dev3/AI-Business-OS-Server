@@ -35,6 +35,12 @@ import {
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/folders', authenticate, documentController.listRoot);
 /**
@@ -51,6 +57,12 @@ router.get('/folders', authenticate, documentController.listRoot);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/folders', authenticate, validate(createFolderSchema), auditLog('document', 'CREATE', 'folder'), documentController.createFolder);
 /**
@@ -74,6 +86,12 @@ router.post('/folders', authenticate, validate(createFolderSchema), auditLog('do
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/folders/:id', authenticate, documentController.getFolderById);
 /**
@@ -97,6 +115,12 @@ router.get('/folders/:id', authenticate, documentController.getFolderById);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/folders/:id', authenticate, validate(updateFolderSchema), documentController.updateFolder);
 /**
@@ -120,6 +144,12 @@ router.patch('/folders/:id', authenticate, validate(updateFolderSchema), documen
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.delete('/folders/:id', authenticate, auditLog('document', 'DELETE', 'folder'), documentController.removeFolder);
 
@@ -137,6 +167,12 @@ router.delete('/folders/:id', authenticate, auditLog('document', 'DELETE', 'fold
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/', authenticate, documentController.list);
 /**
@@ -153,6 +189,12 @@ router.get('/', authenticate, documentController.list);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/', authenticate, documentUpload, handleUploadError, documentController.create);
 /**
@@ -169,6 +211,12 @@ router.post('/', authenticate, documentUpload, handleUploadError, documentContro
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/search', authenticate, documentController.search);
 /**
@@ -192,6 +240,12 @@ router.get('/search', authenticate, documentController.search);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/:id', authenticate, documentController.getById);
 /**
@@ -215,6 +269,12 @@ router.get('/:id', authenticate, documentController.getById);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/:id', authenticate, validate(updateDocumentSchema), auditLog('document', 'UPDATE', 'document'), documentController.update);
 /**
@@ -238,6 +298,12 @@ router.patch('/:id', authenticate, validate(updateDocumentSchema), auditLog('doc
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.delete('/:id', authenticate, auditLog('document', 'DELETE', 'document'), documentController.remove);
 /**
@@ -261,6 +327,12 @@ router.delete('/:id', authenticate, auditLog('document', 'DELETE', 'document'), 
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/:id/download', authenticate, documentController.download);
 /**
@@ -284,6 +356,12 @@ router.get('/:id/download', authenticate, documentController.download);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/:id/share', authenticate, validate(shareDocumentSchema), documentController.share);
 /**
@@ -307,6 +385,12 @@ router.post('/:id/share', authenticate, validate(shareDocumentSchema), documentC
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/:id/versions', authenticate, documentController.getVersions);
 /**
@@ -336,6 +420,59 @@ router.get('/:id/versions', authenticate, documentController.getVersions);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /document/{id}/restore/{version}:
+ *   post:
+ *     summary: Create restore
+ *     tags: [Document]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *       - in: path
+ *         name: version
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The version parameter
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/:id/restore/:version', authenticate, documentController.restoreVersion);
 

@@ -35,6 +35,12 @@ import {
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/chat', authenticate, validate(chatSchema), aiController.chat);
 /**
@@ -51,6 +57,12 @@ router.post('/chat', authenticate, validate(chatSchema), aiController.chat);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/insights', authenticate, validate(aiInsightsSchema), aiController.getInsights);
 /**
@@ -67,6 +79,12 @@ router.post('/insights', authenticate, validate(aiInsightsSchema), aiController.
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/summarize', authenticate, validate(summarizeSchema), aiController.summarize);
 /**
@@ -83,6 +101,12 @@ router.post('/summarize', authenticate, validate(summarizeSchema), aiController.
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/generate-email', authenticate, validate(generateEmailSchema), aiController.generateEmail);
 /**
@@ -99,6 +123,12 @@ router.post('/generate-email', authenticate, validate(generateEmailSchema), aiCo
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/extract-document', authenticate, resumeUpload, handleUploadError, aiController.extractDocument);
 /**
@@ -115,6 +145,12 @@ router.post('/extract-document', authenticate, resumeUpload, handleUploadError, 
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/forecast', authenticate, validate(forecastSchema), aiController.forecast);
 /**
@@ -131,6 +167,12 @@ router.post('/forecast', authenticate, validate(forecastSchema), aiController.fo
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/parse-resume', authenticate, resumeUpload, handleUploadError, aiController.parseResume);
 

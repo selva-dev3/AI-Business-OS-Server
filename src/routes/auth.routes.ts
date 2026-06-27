@@ -87,6 +87,32 @@ import {
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Create register
+ *     tags: [Auth]
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/register', validate(registerSchema), authController.register);
 /**
  * @swagger
@@ -145,6 +171,32 @@ router.post('/register', validate(registerSchema), authController.register);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Create login
+ *     tags: [Auth]
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/login', validate(loginSchema), auditLog('AUTH', 'LOGIN', 'User'), authController.login);
 /**
  * @swagger
@@ -186,6 +238,32 @@ router.post('/login', validate(loginSchema), auditLog('AUTH', 'LOGIN', 'User'), 
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /auth/refresh:
+ *   post:
+ *     summary: Create refresh
+ *     tags: [Auth]
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
  *         content:
  *           application/json:
  *             schema:
@@ -250,6 +328,40 @@ router.post('/refresh', validate(refreshTokenSchema), authController.refreshToke
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Create logout
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/logout', authenticate, validate(refreshTokenSchema), authController.logout);
 /**
  * @swagger
@@ -285,6 +397,32 @@ router.post('/logout', authenticate, validate(refreshTokenSchema), authControlle
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Create forgot password
+ *     tags: [Auth]
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
  *         content:
  *           application/json:
  *             schema:
@@ -348,6 +486,32 @@ router.post('/forgot-password', validate(forgotPasswordSchema), authController.f
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Create reset password
+ *     tags: [Auth]
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/reset-password', validate(resetPasswordSchema), authController.resetPassword);
 /**
  * @swagger
@@ -383,6 +547,40 @@ router.post('/reset-password', validate(resetPasswordSchema), authController.res
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: List me
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -436,6 +634,40 @@ router.get('/me', authenticate, authController.getMe);
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /auth/change-password:
+ *   post:
+ *     summary: Create change password
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -502,6 +734,40 @@ router.post('/change-password', authenticate, validate(changePasswordSchema), au
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /auth/enable-2fa:
+ *   post:
+ *     summary: Create enable 2fa
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/enable-2fa', authenticate, authController.enable2FA);
 /**
  * @swagger
@@ -544,6 +810,40 @@ router.post('/enable-2fa', authenticate, authController.enable2FA);
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /auth/verify-2fa:
+ *   post:
+ *     summary: Create verify 2fa
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:

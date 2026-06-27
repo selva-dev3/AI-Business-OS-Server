@@ -75,6 +75,40 @@ router.use(authenticate);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/dashboard:
+ *   get:
+ *     summary: List dashboard
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.get('/dashboard', crmController.getDashboard);
 
 // ─── Leads ────────────────────────────────────────────────────────────────────
@@ -168,6 +202,40 @@ router.get('/dashboard', crmController.getDashboard);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/leads:
+ *   get:
+ *     summary: List leads
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.get('/leads', crmController.listLeads);
 /**
  * @swagger
@@ -233,6 +301,40 @@ router.get('/leads', crmController.listLeads);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/leads:
+ *   post:
+ *     summary: Create leads
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/leads', validate(createLeadSchema), crmController.createLead);
 /**
  * @swagger
@@ -282,6 +384,47 @@ router.post('/leads', validate(createLeadSchema), crmController.createLead);
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/leads/{id}:
+ *   get:
+ *     summary: Get leads by ID
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -371,6 +514,47 @@ router.get('/leads/:id', crmController.getLead);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/leads/{id}:
+ *   patch:
+ *     summary: Update leads
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.patch('/leads/:id', validate(updateLeadSchema), crmController.updateLead);
 /**
  * @swagger
@@ -420,6 +604,47 @@ router.patch('/leads/:id', validate(updateLeadSchema), crmController.updateLead)
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/leads/{id}:
+ *   delete:
+ *     summary: Delete leads
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -509,6 +734,47 @@ router.delete('/leads/:id', crmController.deleteLead);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/leads/{id}/stage:
+ *   patch:
+ *     summary: Update leads stage
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.patch('/leads/:id/stage', validate(changeLeadStageSchema), crmController.changeLeadStage);
 /**
  * @swagger
@@ -587,6 +853,47 @@ router.patch('/leads/:id/stage', validate(changeLeadStageSchema), crmController.
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/leads/{id}/convert:
+ *   post:
+ *     summary: Create leads convert
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/leads/:id/convert', validate(convertLeadSchema), crmController.convertLead);
 /**
  * @swagger
@@ -654,6 +961,47 @@ router.post('/leads/:id/convert', validate(convertLeadSchema), crmController.con
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/leads/{id}/activity:
+ *   post:
+ *     summary: Create leads activity
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -748,6 +1096,40 @@ router.post('/leads/:id/activity', validate(createActivitySchema), crmController
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/contacts:
+ *   get:
+ *     summary: List contacts
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.get('/contacts', crmController.listContacts);
 /**
  * @swagger
@@ -813,6 +1195,40 @@ router.get('/contacts', crmController.listContacts);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/contacts:
+ *   post:
+ *     summary: Create contacts
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/contacts', validate(createContactSchema), crmController.createContact);
 /**
  * @swagger
@@ -862,6 +1278,47 @@ router.post('/contacts', validate(createContactSchema), crmController.createCont
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/contacts/{id}:
+ *   get:
+ *     summary: Get contacts by ID
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -951,6 +1408,47 @@ router.get('/contacts/:id', crmController.getContact);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/contacts/{id}:
+ *   patch:
+ *     summary: Update contacts
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.patch('/contacts/:id', validate(updateContactSchema), crmController.updateContact);
 /**
  * @swagger
@@ -1000,6 +1498,47 @@ router.patch('/contacts/:id', validate(updateContactSchema), crmController.updat
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/contacts/{id}:
+ *   delete:
+ *     summary: Delete contacts
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -1065,6 +1604,40 @@ router.delete('/contacts/:id', crmController.deleteContact);
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/contacts/merge:
+ *   post:
+ *     summary: Create contacts merge
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -1159,6 +1732,40 @@ router.post('/contacts/merge', validate(mergeContactsSchema), crmController.merg
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/accounts:
+ *   get:
+ *     summary: List accounts
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.get('/accounts', crmController.listAccounts);
 /**
  * @swagger
@@ -1224,6 +1831,40 @@ router.get('/accounts', crmController.listAccounts);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/accounts:
+ *   post:
+ *     summary: Create accounts
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/accounts', validate(createAccountSchema), crmController.createAccount);
 /**
  * @swagger
@@ -1273,6 +1914,47 @@ router.post('/accounts', validate(createAccountSchema), crmController.createAcco
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/accounts/{id}:
+ *   get:
+ *     summary: Get accounts by ID
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -1362,6 +2044,47 @@ router.get('/accounts/:id', crmController.getAccount);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/accounts/{id}:
+ *   patch:
+ *     summary: Update accounts
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.patch('/accounts/:id', validate(updateAccountSchema), crmController.updateAccount);
 /**
  * @swagger
@@ -1411,6 +2134,47 @@ router.patch('/accounts/:id', validate(updateAccountSchema), crmController.updat
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/accounts/{id}:
+ *   delete:
+ *     summary: Delete accounts
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -1515,6 +2279,40 @@ router.delete('/accounts/:id', crmController.deleteAccount);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/deals:
+ *   get:
+ *     summary: List deals
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.get('/deals', crmController.listDeals);
 /**
  * @swagger
@@ -1580,6 +2378,40 @@ router.get('/deals', crmController.listDeals);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/deals:
+ *   post:
+ *     summary: Create deals
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/deals', validate(createDealSchema), crmController.createDeal);
 /**
  * @swagger
@@ -1629,6 +2461,47 @@ router.post('/deals', validate(createDealSchema), crmController.createDeal);
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/deals/{id}:
+ *   get:
+ *     summary: Get deals by ID
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -1718,6 +2591,47 @@ router.get('/deals/:id', crmController.getDeal);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/deals/{id}:
+ *   patch:
+ *     summary: Update deals
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.patch('/deals/:id', validate(updateDealSchema), crmController.updateDeal);
 /**
  * @swagger
@@ -1767,6 +2681,47 @@ router.patch('/deals/:id', validate(updateDealSchema), crmController.updateDeal)
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/deals/{id}:
+ *   delete:
+ *     summary: Delete deals
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -1856,6 +2811,47 @@ router.delete('/deals/:id', crmController.deleteDeal);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/deals/{id}/stage:
+ *   patch:
+ *     summary: Update deals stage
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.patch('/deals/:id/stage', validate(changeDealStageSchema), crmController.changeDealStage);
 /**
  * @swagger
@@ -1923,6 +2919,47 @@ router.patch('/deals/:id/stage', validate(changeDealStageSchema), crmController.
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/deals/{id}/close-won:
+ *   post:
+ *     summary: Create deals close won
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -2012,6 +3049,47 @@ router.post('/deals/:id/close-won', validate(closeWonDealSchema), crmController.
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/deals/{id}/close-lost:
+ *   post:
+ *     summary: Create deals close lost
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.post('/deals/:id/close-lost', validate(closeLostDealSchema), crmController.closeLostDeal);
 
 // ─── Pipeline ─────────────────────────────────────────────────────────────────
@@ -2050,6 +3128,40 @@ router.post('/deals/:id/close-lost', validate(closeLostDealSchema), crmControlle
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/pipeline:
+ *   get:
+ *     summary: List pipeline
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -2121,6 +3233,40 @@ router.get('/pipeline', crmController.getPipeline);
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/pipeline/reorder:
+ *   patch:
+ *     summary: Update pipeline reorder
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -2242,6 +3388,40 @@ router.patch('/pipeline/reorder', validate(reorderPipelineSchema), crmController
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/activities:
+ *   get:
+ *     summary: List activities
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.get('/activities', crmController.listActivities);
 /**
  * @swagger
@@ -2296,6 +3476,40 @@ router.get('/activities', crmController.listActivities);
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/activities:
+ *   post:
+ *     summary: Create activities
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:
@@ -2385,6 +3599,47 @@ router.post('/activities', validate(createActivitySchema), crmController.createA
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
+/**
+ * @swagger
+ * /crm/activities/{id}:
+ *   patch:
+ *     summary: Update activities
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
 router.patch('/activities/:id', validate(updateActivitySchema), crmController.updateActivity);
 /**
  * @swagger
@@ -2434,6 +3689,47 @@ router.patch('/activities/:id', validate(updateActivitySchema), crmController.up
  *               $ref: '#/components/schemas/ApiError'
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+/**
+ * @swagger
+ * /crm/activities/{id}:
+ *   delete:
+ *     summary: Delete activities
+ *     tags: [Crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The id parameter
+ *     responses:
+ *       200:
+ *         description: Deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiSuccess'
+ *       400:
+ *         description: Invalid input or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       401:
+ *         description: Unauthorized — missing or invalid token
  *         content:
  *           application/json:
  *             schema:

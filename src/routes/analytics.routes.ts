@@ -31,6 +31,12 @@ import {
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/overview', authenticate, analyticsController.getOverview);
 /**
@@ -47,6 +53,12 @@ router.get('/overview', authenticate, analyticsController.getOverview);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/revenue', authenticate, analyticsController.getRevenue);
 /**
@@ -63,6 +75,12 @@ router.get('/revenue', authenticate, analyticsController.getRevenue);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/hrms', authenticate, analyticsController.getHRMS);
 /**
@@ -79,6 +97,12 @@ router.get('/hrms', authenticate, analyticsController.getHRMS);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/crm', authenticate, analyticsController.getCRM);
 /**
@@ -95,6 +119,12 @@ router.get('/crm', authenticate, analyticsController.getCRM);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/inventory', authenticate, analyticsController.getInventory);
 /**
@@ -111,6 +141,12 @@ router.get('/inventory', authenticate, analyticsController.getInventory);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/support', authenticate, analyticsController.getSupport);
 /**
@@ -127,6 +163,12 @@ router.get('/support', authenticate, analyticsController.getSupport);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.get('/finance', authenticate, analyticsController.getFinance);
 /**
@@ -143,6 +185,12 @@ router.get('/finance', authenticate, analyticsController.getFinance);
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/ai-insights', authenticate, validate(aiInsightsSchema), analyticsController.getAIInsights);
 /**
@@ -159,6 +207,12 @@ router.post('/ai-insights', authenticate, validate(aiInsightsSchema), analyticsC
  *         description: Invalid input or bad request
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/schedule-report', authenticate, validate(scheduleReportSchema), analyticsController.scheduleReport);
 
