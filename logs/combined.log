@@ -1519,3 +1519,117 @@ MongoServerError: E11000 duplicate key error collection: test.employees index: e
 2026-06-27 22:21:25 [INFO]: ::1 - - [27/Jun/2026:16:51:25 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 22:21:39 [INFO]: ::1 - - [27/Jun/2026:16:51:39 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 200 621 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-27 22:21:39 [INFO]: ::1 - - [27/Jun/2026:16:51:39 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:27:52 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 11:27:52 [INFO]: Server running on http://localhost:5000
+2026-06-28 11:27:52 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-28 11:27:52 [INFO]: Health: http://localhost:5000/health
+2026-06-28 11:28:03 [INFO]: ::1 - - [28/Jun/2026:05:58:03 +0000] "GET /api/v1/auth/me HTTP/1.1" 401 205 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:03 [INFO]: ::1 - - [28/Jun/2026:05:58:03 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:03 [INFO]: ::1 - - [28/Jun/2026:05:58:03 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 401 215 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:04 [INFO]: ::1 - - [28/Jun/2026:05:58:04 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:04 [INFO]: ::1 - - [28/Jun/2026:05:58:04 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:04 [INFO]: ::1 - - [28/Jun/2026:05:58:04 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 200 719 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:04 [INFO]: ::1 - - [28/Jun/2026:05:58:04 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:37 [INFO]: ::1 - - [28/Jun/2026:05:58:37 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:37 [INFO]: ::1 - - [28/Jun/2026:05:58:37 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:37 [INFO]: ::1 - - [28/Jun/2026:05:58:37 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 784 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:41 [INFO]: ::1 - - [28/Jun/2026:05:58:41 +0000] "GET /api/v1/hrms/designations HTTP/1.1" 200 719 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:28:41 [INFO]: ::1 - - [28/Jun/2026:05:58:41 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:30:11 [INFO]: ::1 - - [28/Jun/2026:06:00:11 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:30:11 [INFO]: ::1 - - [28/Jun/2026:06:00:11 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 200 621 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:30:11 [INFO]: ::1 - - [28/Jun/2026:06:00:11 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:30:32 [INFO]: ::1 - - [28/Jun/2026:06:00:32 +0000] "GET /api/v1/hrms/employees/6a3ff151123c863ffb8c2e26 HTTP/1.1" 200 749 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:30:32 [INFO]: ::1 - - [28/Jun/2026:06:00:32 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:31:08 [INFO]: ::1 - - [28/Jun/2026:06:01:08 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:31:08 [INFO]: ::1 - - [28/Jun/2026:06:01:08 +0000] "GET /api/v1/hrms/employees/6a3ff151123c863ffb8c2e26 HTTP/1.1" 200 749 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:31:08 [INFO]: ::1 - - [28/Jun/2026:06:01:08 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:31:34 [INFO]: ::1 - - [28/Jun/2026:06:01:34 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 200 621 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:31:34 [INFO]: ::1 - - [28/Jun/2026:06:01:34 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:36:18 [INFO]: ::1 - - [28/Jun/2026:06:06:18 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 784 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:36:41 [INFO]: ::1 - - [28/Jun/2026:06:06:41 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 200 621 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:36:41 [INFO]: ::1 - - [28/Jun/2026:06:06:41 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:39:34 [INFO]: ::1 - - [28/Jun/2026:06:09:34 +0000] "DELETE /api/v1/hrms/employees/6a3ff151123c863ffb8c2e26 HTTP/1.1" 200 789 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:39:34 [INFO]: ::1 - - [28/Jun/2026:06:09:34 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1793 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:39:34 [INFO]: ::1 - - [28/Jun/2026:06:09:34 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1793 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:39:44 [INFO]: ::1 - - [28/Jun/2026:06:09:44 +0000] "POST /api/v1/hrms/employees/6a3ff151123c863ffb8c2e26/activate HTTP/1.1" 200 749 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:39:44 [INFO]: ::1 - - [28/Jun/2026:06:09:44 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:39:44 [INFO]: ::1 - - [28/Jun/2026:06:09:44 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:45:19 [INFO]: ::1 - - [28/Jun/2026:06:15:19 +0000] "POST /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:45:19 [INFO]: ::1 - - [28/Jun/2026:06:15:19 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:45:20 [INFO]: ::1 - - [28/Jun/2026:06:15:20 +0000] "POST /api/v1/hrms/employees HTTP/1.1" 201 756 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:45:20 [INFO]: ::1 - - [28/Jun/2026:06:15:20 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2396 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:45:20 [INFO]: ::1 - - [28/Jun/2026:06:15:20 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2396 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:48:27 [INFO]: ::1 - - [28/Jun/2026:06:18:27 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 200 139 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:48:28 [INFO]: ::1 - - [28/Jun/2026:06:18:28 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2396 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:48:28 [INFO]: ::1 - - [28/Jun/2026:06:18:28 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2396 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:54:41 [INFO]: ::1 - - [28/Jun/2026:06:24:41 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 200 139 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:54:41 [INFO]: ::1 - - [28/Jun/2026:06:24:41 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2396 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 11:54:41 [INFO]: ::1 - - [28/Jun/2026:06:24:41 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2396 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:03:27 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 12:03:27 [WARN]: MongoDB disconnected
+2026-06-28 12:07:43 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 12:07:43 [WARN]: MongoDB disconnected
+2026-06-28 12:10:02 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 12:10:03 [WARN]: MongoDB disconnected
+2026-06-28 12:12:06 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 12:12:07 [INFO]: ::ffff:127.0.0.1 - - [28/Jun/2026:06:42:07 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 200 139 "-" "node"
+2026-06-28 12:12:07 [WARN]: MongoDB disconnected
+2026-06-28 12:20:24 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 12:20:24 [INFO]: Server running on http://localhost:5000
+2026-06-28 12:20:24 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-28 12:20:24 [INFO]: Health: http://localhost:5000/health
+2026-06-28 12:22:02 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 12:22:02 [ERROR]: Failed to parse CSV file: Invalid Record Length: columns length is 10, got 9 on line 6
+Error: Failed to parse CSV file: Invalid Record Length: columns length is 10, got 9 on line 6
+    at /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:71:11
+    at /home/selva/Downloads/projects/AI Business Os/server/src/utils/catchAsync.ts:7:21
+    at Layer.handle [as handle_request] (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/route.js:149:13)
+    at Layer.handle [as handle_request] (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/layer.js:91:12)
+    at next (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/route.js:149:13)
+    at done (/home/selva/Downloads/projects/AI Business Os/server/node_modules/multer/lib/make-middleware.js:47:7)
+    at indicateDone (/home/selva/Downloads/projects/AI Business Os/server/node_modules/multer/lib/make-middleware.js:51:68)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/multer/lib/make-middleware.js:157:11
+    at WriteStream.<anonymous> (/home/selva/Downloads/projects/AI Business Os/server/node_modules/multer/storage/disk.js:43:9)
+2026-06-28 12:22:02 [INFO]: ::ffff:127.0.0.1 - - [28/Jun/2026:06:52:02 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 400 289 "-" "node"
+2026-06-28 12:22:03 [WARN]: MongoDB disconnected
+2026-06-28 12:22:27 [INFO]: MongoDB connected: ac-jyefah8-shard-00-02.5rs7mwd.mongodb.net
+2026-06-28 12:22:28 [INFO]: ::ffff:127.0.0.1 - - [28/Jun/2026:06:52:28 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 200 109 "-" "node"
+2026-06-28 12:22:29 [WARN]: MongoDB disconnected
+2026-06-28 12:23:58 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 12:23:58 [INFO]: ::ffff:127.0.0.1 - - [28/Jun/2026:06:53:58 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 400 865 "-" "node"
+2026-06-28 12:23:59 [INFO]: ::ffff:127.0.0.1 - - [28/Jun/2026:06:53:59 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 400 397 "-" "node"
+2026-06-28 12:23:59 [WARN]: MongoDB disconnected
+2026-06-28 12:25:44 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-28 12:25:45 [INFO]: ::ffff:127.0.0.1 - - [28/Jun/2026:06:55:45 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 200 109 "-" "node"
+2026-06-28 12:25:46 [INFO]: ::ffff:127.0.0.1 - - [28/Jun/2026:06:55:46 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 400 397 "-" "node"
+2026-06-28 12:25:46 [WARN]: MongoDB disconnected
+2026-06-28 12:26:22 [INFO]: ::1 - - [28/Jun/2026:06:56:22 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:26:22 [INFO]: ::1 - - [28/Jun/2026:06:56:22 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 401 219 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:26:22 [INFO]: ::1 - - [28/Jun/2026:06:56:22 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 401 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:26:22 [INFO]: ::1 - - [28/Jun/2026:06:56:22 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:26:23 [INFO]: ::1 - - [28/Jun/2026:06:56:23 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 200 621 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:26:23 [INFO]: ::1 - - [28/Jun/2026:06:56:23 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2396 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:26:23 [INFO]: ::1 - - [28/Jun/2026:06:56:23 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 784 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:30:46 [INFO]: ::1 - - [28/Jun/2026:07:00:46 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 400 253 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:35 [INFO]: ::1 - - [28/Jun/2026:07:01:35 +0000] "DELETE /api/v1/hrms/employees/6a40bbf7800835be44c0ea9b HTTP/1.1" 200 796 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:35 [INFO]: ::1 - - [28/Jun/2026:07:01:35 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2436 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:36 [INFO]: ::1 - - [28/Jun/2026:07:01:36 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 2436 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:40 [INFO]: ::1 - - [28/Jun/2026:07:01:40 +0000] "DELETE /api/v1/hrms/employees/6a40bbf7800835be44c0ea9b/permanent HTTP/1.1" 200 196 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:40 [INFO]: ::1 - - [28/Jun/2026:07:01:40 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:40 [INFO]: ::1 - - [28/Jun/2026:07:01:40 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1753 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:48 [INFO]: ::1 - - [28/Jun/2026:07:01:48 +0000] "DELETE /api/v1/hrms/employees/6a3ff151123c863ffb8c2e26 HTTP/1.1" 200 789 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:48 [INFO]: ::1 - - [28/Jun/2026:07:01:48 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1793 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:49 [INFO]: ::1 - - [28/Jun/2026:07:01:49 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1793 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:54 [INFO]: ::1 - - [28/Jun/2026:07:01:54 +0000] "DELETE /api/v1/hrms/employees/6a3ff151123c863ffb8c2e26/permanent HTTP/1.1" 200 196 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:54 [INFO]: ::1 - - [28/Jun/2026:07:01:54 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:54 [INFO]: ::1 - - [28/Jun/2026:07:01:54 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1117 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:56 [INFO]: ::1 - - [28/Jun/2026:07:01:56 +0000] "DELETE /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f HTTP/1.1" 200 1078 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:57 [INFO]: ::1 - - [28/Jun/2026:07:01:57 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1157 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:31:57 [INFO]: ::1 - - [28/Jun/2026:07:01:57 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 1157 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:32:01 [INFO]: ::1 - - [28/Jun/2026:07:02:01 +0000] "DELETE /api/v1/hrms/employees/6a3f8126aa70fd8046916f9f/permanent HTTP/1.1" 200 196 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:32:01 [INFO]: ::1 - - [28/Jun/2026:07:02:01 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:32:01 [INFO]: ::1 - - [28/Jun/2026:07:02:01 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:32:13 [INFO]: ::1 - - [28/Jun/2026:07:02:13 +0000] "POST /api/v1/hrms/employees/bulk-import HTTP/1.1" 200 109 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:32:13 [INFO]: ::1 - - [28/Jun/2026:07:02:13 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 5951 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-28 12:32:14 [INFO]: ::1 - - [28/Jun/2026:07:02:14 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 5951 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"

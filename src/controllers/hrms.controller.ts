@@ -1,4 +1,6 @@
 import { Response, NextFunction } from 'express';
+import fs from 'fs';
+import { parse } from 'csv-parse/sync';
 import { AuthRequest } from '../types';
 import catchAsync from '../utils/catchAsync';
 import * as hrmsService from '../services/hrms.service';
@@ -53,8 +55,49 @@ export const activateEmployee = catchAsync(async (req: AuthRequest, res: Respons
 });
 
 export const bulkImportEmployees = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
-  const result = await hrmsService.bulkImportEmployees(req.companyId!, req.body.employees || []);
-  ApiResponse.success(res, result);
+  if (!req.file) {
+    throw new AppError(400, 'BAD_REQUEST', 'CSV file is required');
+  }
+
+  let records: Record<string, unknown>[] = [];
+  try {
+    const fileContent = fs.readFileSync(req.file.path, 'utf8');
+    records = parse(fileContent, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+    });
+  } catch (err) {
+    throw new AppError(400, 'BAD_REQUEST', `Failed to parse CSV file: ${(err as Error).message}`);
+  } finally {
+    try {
+      fs.unlinkSync(req.file.path);
+    } catch (_) {}
+  }
+
+  const result = await hrmsService.bulkImportEmployees(req.companyId!, records);
+
+  if (result.errors && result.errors.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Bulk import validation failed',
+      data: {
+        inserted: result.inserted,
+        failed: result.failed,
+        errors: result.errors,
+      },
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: `${result.inserted} employees imported successfully`,
+    data: {
+      inserted: result.inserted,
+      failed: result.failed,
+      errors: [],
+    },
+  });
 });
 
 export const exportEmployees = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {

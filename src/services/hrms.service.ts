@@ -501,46 +501,222 @@ const bulkImportEmployees = async (companyId: string, employeesData: Record<stri
   const errors: { row: number; message: string }[] = [];
   const valid: Record<string, unknown>[] = [];
 
+  // Helper function to normalize keys
+  const normalizeKey = (key: string): string => {
+    return key.toLowerCase().replace(/[^a-z0-9]/g, '');
+  };
+
+  // Fetch existing departments and designations for lookup
+  const departments = await Department.find({ companyId }).lean();
+  const departmentMap = new Map<string, any>();
+  departments.forEach(dept => {
+    departmentMap.set(dept.name.toLowerCase(), dept);
+    if (dept.code) {
+      departmentMap.set(dept.code.toLowerCase(), dept);
+    }
+    departmentMap.set(dept._id.toString(), dept);
+  });
+
+  const designations = await Designation.find({ companyId, deletedAt: null }).lean();
+  const designationMap = new Map<string, any>();
+  designations.forEach(desig => {
+    designationMap.set(desig.name.toLowerCase(), desig);
+    if (desig.designationCode) {
+      designationMap.set(desig.designationCode.toLowerCase(), desig);
+    }
+    designationMap.set(desig._id.toString(), desig);
+  });
+
+  // Fetch existing employees to verify email & employee code uniqueness
+  const existingEmployees = await Employee.find({ companyId }, '_id employeeCode email').lean();
+  const existingCodes = new Set(existingEmployees.map(emp => emp.employeeCode.toLowerCase()));
+  const existingEmails = new Set(existingEmployees.map(emp => emp.email.toLowerCase()));
+
+  // Map existing employees for manager lookup
+  const employeeMap = new Map<string, any>();
+  existingEmployees.forEach(emp => {
+    employeeMap.set(emp._id.toString(), emp);
+    if (emp.employeeCode) {
+      employeeMap.set(emp.employeeCode.toLowerCase(), emp);
+    }
+    if (emp.email) {
+      employeeMap.set(emp.email.toLowerCase(), emp);
+    }
+  });
+
+  // Tracking unique values in the current CSV
+  const csvCodes = new Set<string>();
+  const csvEmails = new Set<string>();
+
   for (let i = 0; i < employeesData.length; i++) {
     const row = employeesData[i]!;
-    try {
-      if (!row.email) throw new AppError(400, 'BAD_REQUEST', 'Email is required');
-      if (!row.employeeCode) throw new AppError(400, 'BAD_REQUEST', 'Employee code is required');
+    const rowNum = i + 1;
 
-      if (row.departmentCode) {
-        const dept = await Department.findOne({ code: row.departmentCode as string, companyId });
-        if (!dept) throw new AppError(400, 'BAD_REQUEST', `Department ${row.departmentCode as string} not found`);
-        row.departmentId = dept._id;
+    try {
+      // Map row keys to standard keys
+      const mappedRow: Record<string, string> = {};
+      for (const [key, val] of Object.entries(row)) {
+        const normKey = normalizeKey(key);
+        const strVal = typeof val === 'string' ? val.trim() : (val !== null && val !== undefined ? String(val).trim() : '');
+        
+        if (normKey === 'employeecode' || normKey === 'code') {
+          mappedRow.employeeCode = strVal;
+        } else if (normKey === 'firstname' || normKey === 'fname') {
+          mappedRow.firstName = strVal;
+        } else if (normKey === 'lastname' || normKey === 'lname') {
+          mappedRow.lastName = strVal;
+        } else if (normKey === 'email') {
+          mappedRow.email = strVal;
+        } else if (normKey === 'designation' || normKey === 'designationname' || normKey === 'designationcode') {
+          mappedRow.designation = strVal;
+        } else if (normKey === 'employmenttype' || normKey === 'type') {
+          mappedRow.employmentType = strVal;
+        } else if (normKey === 'phone' || normKey === 'phonenumber') {
+          mappedRow.phone = strVal;
+        } else if (normKey === 'department' || normKey === 'departmentname' || normKey === 'departmentcode' || normKey === 'departmentid') {
+          mappedRow.department = strVal;
+        } else if (normKey === 'manager' || normKey === 'managerid' || normKey === 'reportingmanager' || normKey === 'reportingmanagerid') {
+          mappedRow.manager = strVal;
+        } else if (normKey === 'dateofjoining' || normKey === 'joiningdate' || normKey === 'date') {
+          mappedRow.joiningDate = strVal;
+        } else {
+          mappedRow[normKey] = strVal;
+        }
       }
-      if (row.designationName) {
-        const desig = await Designation.findOne({ name: row.designationName as string, companyId });
-        if (!desig) throw new AppError(400, 'BAD_REQUEST', `Designation ${row.designationName as string} not found`);
-        row.designationId = desig._id;
+
+      // 1. Validate employeeCode (required, unique)
+      if (!mappedRow.employeeCode) {
+        throw new Error('Employee Code is required');
+      }
+      const codeLower = mappedRow.employeeCode.toLowerCase();
+      if (csvCodes.has(codeLower)) {
+        throw new Error(`Duplicate Employee Code "${mappedRow.employeeCode}" in CSV`);
+      }
+      if (existingCodes.has(codeLower)) {
+        throw new Error(`Employee Code "${mappedRow.employeeCode}" already exists in database`);
+      }
+      csvCodes.add(codeLower);
+
+      // 2. Validate firstName (required, non-empty)
+      if (!mappedRow.firstName) {
+        throw new Error('First Name is required');
+      }
+
+      // 3. Validate lastName (required, non-empty)
+      if (!mappedRow.lastName) {
+        throw new Error('Last Name is required');
+      }
+
+      // 4. Validate email (required, valid format, unique)
+      if (!mappedRow.email) {
+        throw new Error('Email is required');
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(mappedRow.email)) {
+        throw new Error(`Invalid email format: "${mappedRow.email}"`);
+      }
+      const emailLower = mappedRow.email.toLowerCase();
+      if (csvEmails.has(emailLower)) {
+        throw new Error(`Duplicate email "${mappedRow.email}" in CSV`);
+      }
+      if (existingEmails.has(emailLower)) {
+        throw new Error(`Email "${mappedRow.email}" already exists in database`);
+      }
+      csvEmails.add(emailLower);
+
+      // 5. Validate designation (required, must exist in DB)
+      if (!mappedRow.designation) {
+        throw new Error('Designation is required');
+      }
+      const desigMatch = designationMap.get(mappedRow.designation.toLowerCase());
+      if (!desigMatch) {
+        throw new Error(`Designation "${mappedRow.designation}" not found`);
+      }
+      const designationId = desigMatch._id;
+
+      // 6. Validate employmentType (required, must map to valid enum)
+      if (!mappedRow.employmentType) {
+        throw new Error('Employment Type is required');
+      }
+      const typeLower = mappedRow.employmentType.toLowerCase().replace(/[^a-z]/g, '');
+      let employmentType: string;
+      if (typeLower === 'fulltime' || typeLower === 'full') {
+        employmentType = 'FULL_TIME';
+      } else if (typeLower === 'parttime' || typeLower === 'part') {
+        employmentType = 'PART_TIME';
+      } else if (typeLower === 'contract') {
+        employmentType = 'CONTRACT';
+      } else if (typeLower === 'intern') {
+        employmentType = 'INTERN';
+      } else {
+        throw new Error(`Invalid Employment Type: "${mappedRow.employmentType}". Allowed: Full-Time, Part-Time, Contract`);
+      }
+
+      // 7. Resolve optional departmentId
+      let departmentId = null;
+      if (mappedRow.department) {
+        const deptMatch = departmentMap.get(mappedRow.department.toLowerCase());
+        if (!deptMatch) {
+          throw new Error(`Department "${mappedRow.department}" not found`);
+        }
+        departmentId = deptMatch._id;
+      }
+
+      // 8. Resolve optional managerId
+      let reportingManagerId = null;
+      if (mappedRow.manager) {
+        const managerMatch = employeeMap.get(mappedRow.manager.toLowerCase());
+        if (!managerMatch) {
+          throw new Error(`Reporting Manager "${mappedRow.manager}" not found`);
+        }
+        reportingManagerId = managerMatch._id;
+      }
+
+      // 9. Resolve optional dateOfJoining
+      let joiningDate = new Date();
+      if (mappedRow.joiningDate) {
+        const parsedDate = new Date(mappedRow.joiningDate);
+        if (isNaN(parsedDate.getTime())) {
+          throw new Error(`Invalid Joining Date format: "${mappedRow.joiningDate}"`);
+        }
+        joiningDate = parsedDate;
       }
 
       valid.push({
-        firstName: row.firstName,
-        lastName: row.lastName || '',
-        email: row.email,
-        employeeCode: row.employeeCode,
-        departmentId: row.departmentId,
-        designationId: row.designationId,
-        employmentType: row.employmentType || 'FULL_TIME',
-        joiningDate: row.joiningDate ? new Date(row.joiningDate as string) : new Date(),
-        phone: row.phone,
+        employeeCode: mappedRow.employeeCode,
+        firstName: mappedRow.firstName,
+        lastName: mappedRow.lastName,
+        email: mappedRow.email,
+        designationId,
+        employmentType,
+        phone: mappedRow.phone || undefined,
+        departmentId,
+        reportingManagerId,
+        joiningDate,
         companyId,
+        status: 'ACTIVE',
       });
     } catch (err) {
-      errors.push({ row: i + 1, message: (err as Error).message });
+      errors.push({ row: rowNum, message: (err as Error).message });
     }
   }
 
-  let created: Record<string, unknown>[] = [];
-  if (valid.length > 0) {
-    created = await Employee.insertMany(valid, { ordered: false }) as unknown as Record<string, unknown>[];
+  if (errors.length > 0) {
+    console.error('HRMS Bulk Import Validation Errors:');
+    errors.forEach(err => {
+      console.error(`Row ${err.row}: ${err.message}`);
+    });
+    return { inserted: 0, failed: errors.length, errors };
   }
 
-  return { created: created.length, errors };
+  let createdCount = 0;
+  if (valid.length > 0) {
+    const created = await Employee.insertMany(valid, { ordered: true });
+    createdCount = created.length;
+    console.log(`Successfully bulk imported ${createdCount} employees`);
+  }
+
+  return { inserted: createdCount, failed: 0, errors: [] };
 };
 
 const exportEmployees = async (companyId: string, query: QueryParams) => {

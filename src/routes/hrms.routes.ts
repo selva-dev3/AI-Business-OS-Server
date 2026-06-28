@@ -3,6 +3,7 @@ const router = express.Router();
 import { authenticate } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import auditLog from '../middleware/auditLogger';
+import { csvUpload, handleUploadError } from '../middleware/upload';
 import * as hrmsController from '../controllers/hrms.controller';
 import {
   createEmployeeSchema,
@@ -2932,7 +2933,7 @@ router.get('/employees/export', hrmsController.exportEmployees);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
-router.post('/employees/bulk-import', hrmsController.bulkImportEmployees);
+router.post('/employees/bulk-import', csvUpload, handleUploadError, hrmsController.bulkImportEmployees);
 /**
  * @swagger
  * /hrms/employees/{id}:

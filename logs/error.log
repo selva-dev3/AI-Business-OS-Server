@@ -594,3 +594,15 @@ MongoServerError: E11000 duplicate key error collection: test.employees index: e
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
     at async executeOperation (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongodb/src/operations/execute_operation.ts:119:12)
     at async Collection.insertOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongodb/src/collection.ts:294:12)
+2026-06-28 12:22:02 [ERROR]: Failed to parse CSV file: Invalid Record Length: columns length is 10, got 9 on line 6
+Error: Failed to parse CSV file: Invalid Record Length: columns length is 10, got 9 on line 6
+    at /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:71:11
+    at /home/selva/Downloads/projects/AI Business Os/server/src/utils/catchAsync.ts:7:21
+    at Layer.handle [as handle_request] (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/route.js:149:13)
+    at Layer.handle [as handle_request] (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/layer.js:91:12)
+    at next (/home/selva/Downloads/projects/AI Business Os/server/node_modules/express/lib/router/route.js:149:13)
+    at done (/home/selva/Downloads/projects/AI Business Os/server/node_modules/multer/lib/make-middleware.js:47:7)
+    at indicateDone (/home/selva/Downloads/projects/AI Business Os/server/node_modules/multer/lib/make-middleware.js:51:68)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/multer/lib/make-middleware.js:157:11
+    at WriteStream.<anonymous> (/home/selva/Downloads/projects/AI Business Os/server/node_modules/multer/storage/disk.js:43:9)
