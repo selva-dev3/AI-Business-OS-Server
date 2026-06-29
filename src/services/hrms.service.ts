@@ -25,6 +25,7 @@ import ExitResignation from '../models/ExitResignation';
 import ExitChecklist from '../models/ExitChecklist';
 import ExitClearance from '../models/ExitClearance';
 import ExitSettlement from '../models/ExitSettlement';
+import crypto from 'crypto';
 import mongoose from 'mongoose';
 import AppError from '../utils/appError';
 import { paginateQuery, buildMeta, buildSearchQuery, calculateWorkingHours, calculateDaysBetween } from '../utils/helpers';
@@ -2546,6 +2547,391 @@ const createPromotion = async (companyId: string, data: Record<string, unknown>,
   return promotion;
 };
 
+// ─── EMPLOYEE ATTENDANCE ─────────────────────────────────────────────────────
+
+const getEmployeeAttendance = async (companyId: string, employeeId: string, query: QueryParams) => {
+  const { page, limit, skip } = paginateQuery(query.page, Number(query.limit));
+  const filter: Record<string, unknown> = { companyId, employeeId };
+
+  const year = query.year ? parseInt(query.year) : new Date().getFullYear();
+  const month = query.month ? parseInt(query.month) : undefined;
+
+  if (month) {
+    const start = new Date(year, month - 1, 1);
+    const end = new Date(year, month, 0, 23, 59, 59, 999);
+    filter.date = { $gte: start, $lte: end };
+  } else {
+    const start = new Date(year, 0, 1);
+    const end = new Date(year, 11, 31, 23, 59, 59, 999);
+    filter.date = { $gte: start, $lte: end };
+  }
+
+  if (query.status) filter.status = (query.status as string).toUpperCase();
+
+  const [records, total] = await Promise.all([
+    Attendance.find(filter).sort({ date: -1 }).skip(skip).limit(limit).lean(),
+    Attendance.countDocuments(filter),
+  ]);
+
+  const summaryAgg = await Attendance.aggregate([
+    { $match: { companyId: new mongoose.Types.ObjectId(companyId), employeeId: new mongoose.Types.ObjectId(employeeId) } },
+    {
+      $group: {
+        _id: null,
+        totalPresent: { $sum: { $cond: [{ $eq: ['$status', 'PRESENT'] }, 1, 0] } },
+        totalAbsent: { $sum: { $cond: [{ $eq: ['$status', 'ABSENT'] }, 1, 0] } },
+        totalLate: { $sum: { $cond: [{ $eq: ['$status', 'LATE'] }, 1, 0] } },
+        totalHalfDay: { $sum: { $cond: [{ $eq: ['$status', 'HALF_DAY'] }, 1, 0] } },
+      },
+    },
+  ]);
+
+  const summary = (summaryAgg[0] as Record<string, unknown>) || { totalPresent: 0, totalAbsent: 0, totalLate: 0, totalHalfDay: 0 };
+
+  return { records, summary, meta: buildMeta(total, page, limit) };
+};
+
+// ─── EMPLOYEE LEAVES ─────────────────────────────────────────────────────────
+
+const getEmployeeLeaves = async (companyId: string, employeeId: string, query: QueryParams) => {
+  const { page, limit, skip } = paginateQuery(query.page, Number(query.limit));
+  const filter: Record<string, unknown> = { companyId, employeeId };
+
+  if (query.status) filter.status = (query.status as string).toUpperCase();
+  if (query.year) {
+    const y = parseInt(query.year);
+    filter.$or = [
+      { fromDate: { $gte: new Date(y, 0, 1), $lte: new Date(y, 11, 31, 23, 59, 59, 999) } },
+      { toDate: { $gte: new Date(y, 0, 1), $lte: new Date(y, 11, 31, 23, 59, 59, 999) } },
+    ];
+  }
+
+  const [requests, total] = await Promise.all([
+    LeaveRequest.find(filter)
+      .populate('leaveTypeId', 'name code')
+      .populate('approvedBy', 'firstName lastName email')
+      .populate('rejectedBy', 'firstName lastName email')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    LeaveRequest.countDocuments(filter),
+  ]);
+
+  const year = query.year ? parseInt(query.year) : new Date().getFullYear();
+  const leaveBalances = await LeaveBalance.find({ employeeId, companyId, year })
+    .populate('leaveTypeId', 'name code')
+    .lean();
+
+  const balanceMap: Record<string, { total: number; used: number; remaining: number }> = {};
+  leaveBalances.forEach((lb: any) => {
+    const name = lb.leaveTypeId?.name || 'Unknown';
+    balanceMap[name] = {
+      total: lb.allocated || 0,
+      used: lb.taken || 0,
+      remaining: lb.balance || 0,
+    };
+  });
+
+  return { requests, leaveBalance: balanceMap, meta: buildMeta(total, page, limit) };
+};
+
+// ─── EMPLOYEE PAYROLL ────────────────────────────────────────────────────────
+
+const getEmployeePayroll = async (companyId: string, employeeId: string, query: QueryParams) => {
+  const { page, limit, skip } = paginateQuery(query.page, Number(query.limit));
+  const filter: Record<string, unknown> = { companyId, employeeId };
+
+  if (query.year) filter.year = parseInt(query.year);
+  if (query.month) filter.month = parseInt(query.month);
+  if (query.status) filter.status = (query.status as string).toUpperCase();
+
+  const [records, total] = await Promise.all([
+    Payslip.find(filter)
+      .populate('payrollId', 'month year status')
+      .sort({ year: -1, month: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    Payslip.countDocuments(filter),
+  ]);
+
+  return { records, meta: buildMeta(total, page, limit) };
+};
+
+// ─── INITIATE LEAVE ON BEHALF ────────────────────────────────────────────────
+
+const initiateLeaveOnBehalf = async (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  if (employee.status !== 'ACTIVE') throw new AppError(400, 'BAD_REQUEST', 'Employee must be Active to initiate leave');
+
+  const fromDate = new Date(data.startDate as string);
+  const toDate = new Date(data.endDate as string);
+  const days = calculateDaysBetween(fromDate, toDate);
+
+  const conflict = await LeaveRequest.findOne({
+    employeeId,
+    companyId,
+    status: 'APPROVED',
+    $or: [
+      { fromDate: { $lte: toDate }, toDate: { $gte: fromDate } },
+    ],
+  });
+  if (conflict) throw new AppError(409, 'CONFLICT', 'Date conflicts with an existing approved leave');
+
+  const leaveRequest = await LeaveRequest.create({
+    employeeId,
+    companyId,
+    leaveTypeId: data.leaveTypeId,
+    fromDate,
+    toDate,
+    days,
+    reason: data.reason,
+    notes: data.notes || '',
+    status: 'APPROVED',
+    approvedBy: userId,
+    approvedAt: new Date(),
+  });
+
+  employee.status = 'ACTIVE';
+  await employee.save();
+
+  return { employee: transformEmployee(employee.toObject() as unknown as Record<string, unknown>), leaveRequest };
+};
+
+// ─── TERMINATE EMPLOYEE ──────────────────────────────────────────────────────
+
+const terminateEmployee = async (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  if (employee.status === 'TERMINATED') throw new AppError(400, 'BAD_REQUEST', 'Employee is already terminated');
+
+  const lastWorkingDate = new Date(data.lastWorkingDate as string);
+  if (isNaN(lastWorkingDate.getTime())) {
+    throw new AppError(400, 'BAD_REQUEST', 'Invalid last working date');
+  }
+
+  employee.status = 'TERMINATED';
+  employee.exitDate = lastWorkingDate;
+  employee.terminationDetails = {
+    lastWorkingDate,
+    reason: (data.reason as string)?.toUpperCase(),
+    reasonDetails: (data.reasonDetails as string) || '',
+    exitChecklist: {
+      laptopReturned: (data.exitChecklist as any)?.laptopReturned ?? false,
+      accessRevoked: (data.exitChecklist as any)?.accessRevoked ?? false,
+      fnfSettled: (data.exitChecklist as any)?.fnfSettled ?? false,
+      relievingLetterIssued: (data.exitChecklist as any)?.relievingLetterIssued ?? false,
+      exitInterviewDone: (data.exitChecklist as any)?.exitInterviewDone ?? false,
+    },
+    noticePeriodServed: (data.noticePeriodServed as boolean) ?? false,
+    finalSalaryProcessed: (data.finalSalaryProcessed as boolean) ?? false,
+    terminatedBy: new mongoose.Types.ObjectId(userId),
+    terminatedAt: new Date(),
+  } as any;
+
+  await employee.save();
+
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated!.toObject() as unknown as Record<string, unknown>);
+};
+
+// ─── ASSIGN EMPLOYEE ROLE ────────────────────────────────────────────────────
+
+const assignEmployeeRole = async (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  const hasChanges = data.designation || data.departmentId || data.employmentType || data.reportingManagerId;
+  if (!hasChanges) throw new AppError(400, 'BAD_REQUEST', 'At least one field (designation, department, employmentType, reportingManager) must be provided');
+
+  const currentDesig = employee.designationId
+    ? ((await mongoose.model('Designation').findById(employee.designationId).select('name').lean()) as { name?: string } | null)
+    : null;
+
+  const historyEntry: Record<string, unknown> = {
+    designation: currentDesig?.name,
+    departmentId: employee.departmentId,
+    employmentType: employee.employmentType,
+    reportingManagerId: employee.reportingManagerId,
+    changedAt: new Date(),
+    changedBy: new mongoose.Types.ObjectId(userId),
+    reason: data.reason,
+  };
+
+  employee.roleHistory = employee.roleHistory || [];
+  (employee.roleHistory as any).push(historyEntry);
+
+    if (data.designation) {
+    const desig = (await mongoose.model('Designation').findOne({ name: data.designation as string, companyId }).lean()) as { _id?: mongoose.Types.ObjectId } | null;
+    if (desig) employee.designationId = desig._id;
+  }
+  if (data.departmentId) employee.departmentId = new mongoose.Types.ObjectId(data.departmentId as string);
+  if (data.employmentType) employee.employmentType = (data.employmentType as string).toUpperCase();
+  if (data.reportingManagerId) employee.reportingManagerId = new mongoose.Types.ObjectId(data.reportingManagerId as string);
+
+  await employee.save();
+
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated!.toObject() as unknown as Record<string, unknown>);
+};
+
+// ─── RESET EMPLOYEE PASSWORD ─────────────────────────────────────────────────
+
+const resetEmployeePassword = async (companyId: string, employeeId: string, _userId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  const user = await mongoose.model('User').findById(employee.userId);
+  if (!user) throw new AppError(404, 'NOT_FOUND', 'User account not found for this employee');
+
+  const action = data.action as string;
+  if (action === 'reset_password') {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = expiresAt;
+    await user.save();
+
+    return {
+      message: 'Password reset email sent',
+      sentTo: user.email,
+      expiresAt,
+    };
+  }
+
+  if (action === 'resend_invite') {
+    const tempPassword = crypto.randomBytes(8).toString('hex');
+    user.password = tempPassword;
+    await user.save();
+
+    return {
+      message: 'Invite email resent with new temporary password',
+      sentTo: user.email,
+    };
+  }
+
+  throw new AppError(400, 'BAD_REQUEST', "Invalid action. Must be 'reset_password' or 'resend_invite'");
+};
+
+// ─── EMPLOYEE DOCUMENTS ──────────────────────────────────────────────────────
+
+import EmployeeDocument from '../models/EmployeeDocument';
+
+const createEmployeeDocument = async (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  const document = await EmployeeDocument.create({
+    employeeId,
+    companyId,
+    documentType: (data.documentType as string)?.toUpperCase(),
+    documentName: data.documentName,
+    fileUrl: data.fileUrl || data.documentUrl,
+    fileSize: data.fileSize || 0,
+    mimeType: data.mimeType,
+    isConfidential: data.isConfidential ?? false,
+    expiryDate: data.expiryDate ? new Date(data.expiryDate as string) : undefined,
+    uploadedBy: userId,
+  });
+
+  return document;
+};
+
+const listEmployeeDocuments = async (companyId: string, employeeId: string, query: QueryParams) => {
+  const { page, limit, skip } = paginateQuery(query.page, Number(query.limit));
+  const filter: Record<string, unknown> = { companyId, employeeId };
+  if (query.type) filter.documentType = (query.type as string).toUpperCase();
+
+  const [records, total] = await Promise.all([
+    EmployeeDocument.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    EmployeeDocument.countDocuments(filter),
+  ]);
+
+  return { records, meta: buildMeta(total, page, limit) };
+};
+
+// ─── EMPLOYEE NOTES ──────────────────────────────────────────────────────────
+
+import EmployeeNote from '../models/EmployeeNote';
+
+const createEmployeeNote = async (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: employeeId, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+
+  const note = await EmployeeNote.create({
+    employeeId,
+    companyId,
+    content: data.content,
+    category: (data.category as string)?.toUpperCase(),
+    isPinned: data.isPinned ?? false,
+    visibility: (data.visibility as string)?.toUpperCase() || 'HR_AND_ADMIN',
+    createdBy: userId,
+  });
+
+  return note;
+};
+
+const listEmployeeNotes = async (companyId: string, employeeId: string, query: QueryParams) => {
+  const { page, limit, skip } = paginateQuery(query.page, Number(query.limit));
+  const filter: Record<string, unknown> = { companyId, employeeId, isDeleted: false };
+  if (query.category) filter.category = (query.category as string).toUpperCase();
+
+  const [records, total] = await Promise.all([
+    EmployeeNote.find(filter)
+      .populate('createdBy', 'firstName lastName email')
+      .sort({ isPinned: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    EmployeeNote.countDocuments(filter),
+  ]);
+
+  return { records, meta: buildMeta(total, page, limit) };
+};
+
+const updateEmployeeNote = async (companyId: string, _employeeId: string, noteId: string, userId: string, data: Record<string, unknown>) => {
+  const note = await EmployeeNote.findOne({ _id: noteId, companyId, isDeleted: false });
+  if (!note) throw new AppError(404, 'NOT_FOUND', 'Note not found');
+  if (note.createdBy.toString() !== userId) {
+    throw new AppError(403, 'FORBIDDEN', 'Only the original author can edit this note');
+  }
+
+  if (data.content) note.content = data.content as string;
+  if (data.category) note.category = (data.category as string).toUpperCase();
+  if (data.isPinned !== undefined) note.isPinned = data.isPinned as boolean;
+  if (data.visibility) note.visibility = (data.visibility as string).toUpperCase();
+  note.updatedBy = new mongoose.Types.ObjectId(userId);
+  await note.save();
+
+  return note;
+};
+
+const deleteEmployeeNote = async (companyId: string, _employeeId: string, noteId: string, userId: string) => {
+  const note = await EmployeeNote.findOne({ _id: noteId, companyId, isDeleted: false });
+  if (!note) throw new AppError(404, 'NOT_FOUND', 'Note not found');
+  if (note.createdBy.toString() !== userId) {
+    throw new AppError(403, 'FORBIDDEN', 'Only the original author can delete this note');
+  }
+
+  note.isDeleted = true;
+  await note.save();
+  return { message: 'Note deleted successfully', noteId };
+};
+
 // ─── EXIT RESIGNATION ────────────────────────────────────────────────────────
 
 const submitResignation = async (companyId: string, employeeId: string, data: Record<string, unknown>) => {
@@ -2743,4 +3129,17 @@ export {
   getExitChecklist,
   updateClearance,
   getFnF,
+  getEmployeeAttendance,
+  getEmployeeLeaves,
+  getEmployeePayroll,
+  initiateLeaveOnBehalf,
+  terminateEmployee,
+  assignEmployeeRole,
+  resetEmployeePassword,
+  createEmployeeDocument,
+  listEmployeeDocuments,
+  createEmployeeNote,
+  listEmployeeNotes,
+  updateEmployeeNote,
+  deleteEmployeeNote,
 };

@@ -18,6 +18,8 @@ export interface IUser extends Document {
   refreshToken?: string;
   resetPasswordOtp?: string;
   resetPasswordOtpExpires?: Date;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -95,6 +97,13 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     resetPasswordOtpExpires: {
       type: Date,
+    },
+    passwordResetToken: {
+      type: String,
+      select: false,
+    },
+    passwordResetExpires: {
+      type: Date,
       select: false,
     },
   },
@@ -107,6 +116,8 @@ const userSchema = new mongoose.Schema<IUser>(
         delete ret.refreshToken;
         delete ret.resetPasswordOtp;
         delete ret.resetPasswordOtpExpires;
+        delete ret.passwordResetToken;
+        delete ret.passwordResetExpires;
         delete ret.twoFactorSecret;
         return ret;
       },

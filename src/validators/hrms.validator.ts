@@ -548,3 +548,125 @@ export const requestLetterSchema: Joi.ObjectSchema = Joi.object({
   notes: Joi.string().trim().max(1000).allow('', null),
   employeeId: objectId.allow(null).optional(),
 });
+
+// ─── EMPLOYEE ATTENDANCE ─────────────────────────────────────────────────────
+
+export const getEmployeeAttendanceSchema: Joi.ObjectSchema = Joi.object({
+  month: Joi.number().integer().min(1).max(12),
+  year: Joi.number().integer().min(1900).max(2100),
+  status: Joi.string().valid('PRESENT', 'ABSENT', 'LATE', 'HALF_DAY', 'ON_LEAVE', 'present', 'absent', 'late', 'half_day', 'on_leave'),
+  page: Joi.number().integer().min(1),
+  limit: Joi.number().integer().min(1).max(100),
+});
+
+// ─── EMPLOYEE LEAVES ─────────────────────────────────────────────────────────
+
+export const getEmployeeLeavesSchema: Joi.ObjectSchema = Joi.object({
+  status: Joi.string().valid('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED', 'pending', 'approved', 'rejected', 'cancelled'),
+  leaveType: Joi.string(),
+  year: Joi.number().integer().min(1900).max(2100),
+  page: Joi.number().integer().min(1),
+  limit: Joi.number().integer().min(1).max(100),
+});
+
+// ─── EMPLOYEE PAYROLL ────────────────────────────────────────────────────────
+
+export const getEmployeePayrollSchema: Joi.ObjectSchema = Joi.object({
+  year: Joi.number().integer().min(1900).max(2100),
+  month: Joi.number().integer().min(1).max(12),
+  status: Joi.string().valid('DRAFT', 'GENERATED', 'PAID'),
+  page: Joi.number().integer().min(1),
+  limit: Joi.number().integer().min(1).max(100),
+});
+
+// ─── INITIATE LEAVE ON BEHALF ────────────────────────────────────────────────
+
+export const initiateLeaveOnBehalfSchema: Joi.ObjectSchema = Joi.object({
+  leaveTypeId: objectId.required(),
+  startDate: Joi.date().iso().required(),
+  endDate: Joi.date().iso().required(),
+  reason: Joi.string().trim().min(10).max(2000).required(),
+  notes: Joi.string().trim().max(2000).allow('', null),
+});
+
+// ─── TERMINATE EMPLOYEE ──────────────────────────────────────────────────────
+
+export const terminateEmployeeSchema: Joi.ObjectSchema = Joi.object({
+  lastWorkingDate: Joi.date().iso().required(),
+  reason: Joi.string().valid('RESIGNATION', 'TERMINATION', 'RETIREMENT', 'CONTRACT_END', 'OTHER', 'resignation', 'termination', 'retirement', 'contract_end', 'other').required(),
+  reasonDetails: Joi.string().trim().max(2000).allow('', null),
+  exitChecklist: Joi.object({
+    laptopReturned: Joi.boolean(),
+    accessRevoked: Joi.boolean(),
+    fnfSettled: Joi.boolean(),
+    relievingLetterIssued: Joi.boolean(),
+    exitInterviewDone: Joi.boolean(),
+  }),
+  noticePeriodServed: Joi.boolean(),
+  finalSalaryProcessed: Joi.boolean(),
+});
+
+// ─── ASSIGN EMPLOYEE ROLE ────────────────────────────────────────────────────
+
+export const assignEmployeeRoleSchema: Joi.ObjectSchema = Joi.object({
+  designation: Joi.string().trim().max(200),
+  departmentId: objectId.allow(null),
+  employmentType: Joi.string().valid('FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN', 'full_time', 'part_time', 'contract', 'intern'),
+  reportingManagerId: objectId.allow(null),
+  effectiveDate: Joi.date().iso().required(),
+  reason: Joi.string().valid('PROMOTION', 'TRANSFER', 'RESTRUCTURE', 'CORRECTION', 'promotion', 'transfer', 'restructure', 'correction').required(),
+  notes: Joi.string().trim().max(2000).allow('', null),
+}).min(2);
+
+// ─── RESET EMPLOYEE PASSWORD ─────────────────────────────────────────────────
+
+export const resetEmployeePasswordSchema: Joi.ObjectSchema = Joi.object({
+  action: Joi.string().valid('reset_password', 'resend_invite').required(),
+  notifyEmployee: Joi.boolean(),
+});
+
+// ─── EMPLOYEE DOCUMENT ───────────────────────────────────────────────────────
+
+export const createEmployeeDocumentSchema: Joi.ObjectSchema = Joi.object({
+  fileUrl: Joi.string().uri().allow('', null).optional(),
+  documentUrl: Joi.string().uri().allow('', null).optional(),
+  documentType: Joi.string().valid('OFFER_LETTER', 'ID_PROOF', 'CERTIFICATE', 'CONTRACT', 'NDA', 'PAYSLIP', 'OTHER', 'offer_letter', 'id_proof', 'certificate', 'contract', 'nda', 'payslip', 'other').required(),
+  documentName: Joi.string().trim().max(255).required(),
+  fileSize: Joi.number().min(0),
+  mimeType: Joi.string().trim(),
+  expiryDate: Joi.date().iso().allow(null),
+  isConfidential: Joi.boolean(),
+}).custom((value: Record<string, unknown>, helpers: any) => {
+  if (!value.fileUrl && !value.documentUrl) {
+    return helpers.error('any.required', { message: 'Either fileUrl or documentUrl is required' });
+  }
+  return value;
+});
+
+export const listEmployeeDocumentsSchema: Joi.ObjectSchema = Joi.object({
+  type: Joi.string(),
+  page: Joi.number().integer().min(1),
+  limit: Joi.number().integer().min(1).max(100),
+});
+
+// ─── EMPLOYEE NOTE ───────────────────────────────────────────────────────────
+
+export const createEmployeeNoteSchema: Joi.ObjectSchema = Joi.object({
+  content: Joi.string().trim().min(5).max(2000).required(),
+  category: Joi.string().valid('PERFORMANCE', 'DISCIPLINARY', 'GENERAL', 'APPRECIATION', 'COMPLAINT', 'OTHER').required(),
+  isPinned: Joi.boolean(),
+  visibility: Joi.string().valid('HR_ONLY', 'ADMIN_ONLY', 'HR_AND_ADMIN'),
+});
+
+export const listEmployeeNotesSchema: Joi.ObjectSchema = Joi.object({
+  category: Joi.string(),
+  page: Joi.number().integer().min(1),
+  limit: Joi.number().integer().min(1).max(100),
+});
+
+export const updateEmployeeNoteSchema: Joi.ObjectSchema = Joi.object({
+  content: Joi.string().trim().min(5).max(2000),
+  category: Joi.string().valid('PERFORMANCE', 'DISCIPLINARY', 'GENERAL', 'APPRECIATION', 'COMPLAINT', 'OTHER'),
+  isPinned: Joi.boolean(),
+  visibility: Joi.string().valid('HR_ONLY', 'ADMIN_ONLY', 'HR_AND_ADMIN'),
+}).min(1);

@@ -46,6 +46,31 @@ export interface IEmployee extends Document {
     expectedReinstatement?: Date;
     notes?: string;
   }>;
+  terminationDetails?: {
+    lastWorkingDate?: Date;
+    reason?: string;
+    reasonDetails?: string;
+    exitChecklist?: {
+      laptopReturned?: boolean;
+      accessRevoked?: boolean;
+      fnfSettled?: boolean;
+      relievingLetterIssued?: boolean;
+      exitInterviewDone?: boolean;
+    };
+    noticePeriodServed?: boolean;
+    finalSalaryProcessed?: boolean;
+    terminatedBy?: Types.ObjectId;
+    terminatedAt?: Date;
+  } | null;
+  roleHistory?: Array<{
+    designation?: string;
+    departmentId?: Types.ObjectId;
+    employmentType?: string;
+    reportingManagerId?: Types.ObjectId;
+    changedAt?: Date;
+    changedBy?: Types.ObjectId;
+    reason?: string;
+  }>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -149,6 +174,33 @@ const employeeSchema = new mongoose.Schema<IEmployee>(
         reinstatedAt: { type: Date },
         expectedReinstatement: { type: Date },
         notes: { type: String, trim: true },
+      },
+    ],
+    terminationDetails: {
+      lastWorkingDate: { type: Date },
+      reason: { type: String, trim: true, enum: { values: ['RESIGNATION', 'TERMINATION', 'RETIREMENT', 'CONTRACT_END', 'OTHER'], message: '{VALUE} is not a valid termination reason' } },
+      reasonDetails: { type: String, trim: true, maxlength: [2000, 'Reason details cannot exceed 2000 characters'] },
+      exitChecklist: {
+        laptopReturned: { type: Boolean, default: false },
+        accessRevoked: { type: Boolean, default: false },
+        fnfSettled: { type: Boolean, default: false },
+        relievingLetterIssued: { type: Boolean, default: false },
+        exitInterviewDone: { type: Boolean, default: false },
+      },
+      noticePeriodServed: { type: Boolean, default: false },
+      finalSalaryProcessed: { type: Boolean, default: false },
+      terminatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      terminatedAt: { type: Date },
+    },
+    roleHistory: [
+      {
+        designation: { type: String, trim: true },
+        departmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Department' },
+        employmentType: { type: String, trim: true },
+        reportingManagerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+        changedAt: { type: Date, default: Date.now },
+        changedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        reason: { type: String, trim: true, maxlength: [2000, 'Reason cannot exceed 2000 characters'] },
       },
     ],
     joiningDate: {

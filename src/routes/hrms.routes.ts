@@ -34,6 +34,18 @@ import {
   updateEmployeeStatusSchema,
   suspendEmployeeSchema,
   reinstateEmployeeSchema,
+  getEmployeeAttendanceSchema,
+  getEmployeeLeavesSchema,
+  getEmployeePayrollSchema,
+  initiateLeaveOnBehalfSchema,
+  terminateEmployeeSchema,
+  assignEmployeeRoleSchema,
+  resetEmployeePasswordSchema,
+  createEmployeeDocumentSchema,
+  listEmployeeDocumentsSchema,
+  createEmployeeNoteSchema,
+  listEmployeeNotesSchema,
+  updateEmployeeNoteSchema,
   checkinSchema,
   checkoutSchema,
   regularizeAttendanceSchema,
@@ -53,6 +65,7 @@ import {
 } from '../validators/hrms.validator';
 import { checkPermission } from '../middleware/rbac';
 import { roleGuard } from '../middleware/roleGuard';
+import { selfOrAdmin } from '../middleware/selfOrAdmin';
 
 /**
  * @swagger
@@ -3370,6 +3383,698 @@ router.patch('/employees/:id/status', validate(updateEmployeeStatusSchema), audi
  *         $ref: '#/components/responses/InternalError'
  */
 router.get('/employees/:id/history', hrmsController.getEmployeeHistory);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/attendance:
+ *   get:
+ *     summary: Get employee attendance logs
+ *     tags: [Attendance]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *         description: Employee MongoDB ObjectId
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 12
+ *           example: 6
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *           example: 2024
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [PRESENT, ABSENT, LATE, HALF_DAY, ON_LEAVE]
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 30
+ *     responses:
+ *       200:
+ *         description: Attendance records with summary
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.get('/employees/:id/attendance', selfOrAdmin, validate(getEmployeeAttendanceSchema), hrmsController.getEmployeeAttendance);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/leaves:
+ *   get:
+ *     summary: Get employee leave requests and balance
+ *     tags: [Leave]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [PENDING, APPROVED, REJECTED, CANCELLED]
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *           example: 2024
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *     responses:
+ *       200:
+ *         description: Leave requests with balance summary
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.get('/employees/:id/leaves', selfOrAdmin, validate(getEmployeeLeavesSchema), hrmsController.getEmployeeLeaves);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/payroll:
+ *   get:
+ *     summary: Get employee payslips
+ *     tags: [Payroll]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *           example: 2024
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 12
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [DRAFT, GENERATED, PAID]
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *     responses:
+ *       200:
+ *         description: Payslip records
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.get('/employees/:id/payroll', selfOrAdmin, validate(getEmployeePayrollSchema), hrmsController.getEmployeePayroll);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/on-leave:
+ *   patch:
+ *     summary: Admin initiates leave on behalf of employee
+ *     tags: [Leave]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - leaveTypeId
+ *               - startDate
+ *               - endDate
+ *               - reason
+ *             properties:
+ *               leaveTypeId:
+ *                 type: string
+ *                 pattern: '^[0-9a-fA-F]{24}$'
+ *               startDate:
+ *                 type: string
+ *                 format: date
+ *               endDate:
+ *                 type: string
+ *                 format: date
+ *               reason:
+ *                 type: string
+ *                 minLength: 10
+ *                 maxLength: 2000
+ *               notes:
+ *                 type: string
+ *                 maxLength: 2000
+ *     responses:
+ *       200:
+ *         description: Leave created and approved
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       409:
+ *         description: Date conflict with existing approved leave
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.patch('/employees/:id/on-leave', roleGuard(['admin', 'hr_manager']), validate(initiateLeaveOnBehalfSchema), auditLog('EMPLOYEES', 'UPDATE', 'Employee'), hrmsController.initiateLeaveOnBehalf);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/terminate:
+ *   patch:
+ *     summary: Terminate an employee
+ *     tags: [Offboarding]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - lastWorkingDate
+ *               - reason
+ *             properties:
+ *               lastWorkingDate:
+ *                 type: string
+ *                 format: date
+ *               reason:
+ *                 type: string
+ *                 enum: [RESIGNATION, TERMINATION, RETIREMENT, CONTRACT_END, OTHER]
+ *               reasonDetails:
+ *                 type: string
+ *                 maxLength: 2000
+ *               exitChecklist:
+ *                 type: object
+ *                 properties:
+ *                   laptopReturned:
+ *                     type: boolean
+ *                   accessRevoked:
+ *                     type: boolean
+ *                   fnfSettled:
+ *                     type: boolean
+ *                   relievingLetterIssued:
+ *                     type: boolean
+ *                   exitInterviewDone:
+ *                     type: boolean
+ *               noticePeriodServed:
+ *                 type: boolean
+ *               finalSalaryProcessed:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Employee terminated successfully
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.patch('/employees/:id/terminate', roleGuard(['admin']), validate(terminateEmployeeSchema), auditLog('EMPLOYEES', 'UPDATE', 'Employee'), hrmsController.terminateEmployee);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/assign-role:
+ *   patch:
+ *     summary: Assign new role, department, or designation
+ *     tags: [Employee Management]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - effectiveDate
+ *               - reason
+ *             properties:
+ *               designation:
+ *                 type: string
+ *               departmentId:
+ *                 type: string
+ *                 pattern: '^[0-9a-fA-F]{24}$'
+ *               employmentType:
+ *                 type: string
+ *                 enum: [FULL_TIME, PART_TIME, CONTRACT, INTERN]
+ *               reportingManagerId:
+ *                 type: string
+ *                 pattern: '^[0-9a-fA-F]{24}$'
+ *               effectiveDate:
+ *                 type: string
+ *                 format: date
+ *               reason:
+ *                 type: string
+ *                 enum: [PROMOTION, TRANSFER, RESTRUCTURE, CORRECTION]
+ *               notes:
+ *                 type: string
+ *                 maxLength: 2000
+ *     responses:
+ *       200:
+ *         description: Role assigned and history recorded
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.patch('/employees/:id/assign-role', roleGuard(['admin', 'hr_manager']), validate(assignEmployeeRoleSchema), auditLog('EMPLOYEES', 'UPDATE', 'Employee'), hrmsController.assignEmployeeRole);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/reset-password:
+ *   post:
+ *     summary: Reset employee password or resend invite
+ *     tags: [Auth & Access]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - action
+ *             properties:
+ *               action:
+ *                 type: string
+ *                 enum: [reset_password, resend_invite]
+ *               notifyEmployee:
+ *                 type: boolean
+ *                 default: true
+ *     responses:
+ *       200:
+ *         description: Reset email sent
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.post('/employees/:id/reset-password', roleGuard(['admin', 'hr_manager']), validate(resetEmployeePasswordSchema), hrmsController.resetEmployeePassword);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/documents:
+ *   post:
+ *     summary: Upload or link employee document
+ *     tags: [Documents]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - documentType
+ *               - documentName
+ *             properties:
+ *               documentUrl:
+ *                 type: string
+ *                 format: uri
+ *               fileUrl:
+ *                 type: string
+ *                 format: uri
+ *               documentType:
+ *                 type: string
+ *                 enum: [OFFER_LETTER, ID_PROOF, CERTIFICATE, CONTRACT, NDA, PAYSLIP, OTHER]
+ *               documentName:
+ *                 type: string
+ *                 maxLength: 255
+ *               fileSize:
+ *                 type: integer
+ *               mimeType:
+ *                 type: string
+ *               expiryDate:
+ *                 type: string
+ *                 format: date
+ *               isConfidential:
+ *                 type: boolean
+ *                 default: false
+ *     responses:
+ *       201:
+ *         description: Document created
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.post('/employees/:id/documents', roleGuard(['admin', 'hr_manager']), validate(createEmployeeDocumentSchema), auditLog('EMPLOYEES', 'CREATE', 'EmployeeDocument'), hrmsController.createEmployeeDocument);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/documents:
+ *   get:
+ *     summary: List employee documents
+ *     tags: [Documents]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *     responses:
+ *       200:
+ *         description: Documents list
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.get('/employees/:id/documents', roleGuard(['admin', 'hr_manager']), validate(listEmployeeDocumentsSchema), hrmsController.listEmployeeDocuments);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/notes:
+ *   post:
+ *     summary: Create HR note on employee
+ *     tags: [HR Notes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *               - category
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 minLength: 5
+ *                 maxLength: 2000
+ *               category:
+ *                 type: string
+ *                 enum: [PERFORMANCE, DISCIPLINARY, GENERAL, APPRECIATION, COMPLAINT, OTHER]
+ *               isPinned:
+ *                 type: boolean
+ *                 default: false
+ *               visibility:
+ *                 type: string
+ *                 enum: [HR_ONLY, ADMIN_ONLY, HR_AND_ADMIN]
+ *                 default: HR_AND_ADMIN
+ *     responses:
+ *       201:
+ *         description: Note created
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.post('/employees/:id/notes', roleGuard(['admin', 'hr_manager']), validate(createEmployeeNoteSchema), auditLog('EMPLOYEES', 'CREATE', 'EmployeeNote'), hrmsController.createEmployeeNote);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/notes:
+ *   get:
+ *     summary: List HR notes for employee
+ *     tags: [HR Notes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *     responses:
+ *       200:
+ *         description: Notes list
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.get('/employees/:id/notes', roleGuard(['admin', 'hr_manager']), validate(listEmployeeNotesSchema), hrmsController.listEmployeeNotes);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/notes/{noteId}:
+ *   patch:
+ *     summary: Update an HR note
+ *     tags: [HR Notes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *       - in: path
+ *         name: noteId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             minProperties: 1
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 minLength: 5
+ *                 maxLength: 2000
+ *               category:
+ *                 type: string
+ *                 enum: [PERFORMANCE, DISCIPLINARY, GENERAL, APPRECIATION, COMPLAINT, OTHER]
+ *               isPinned:
+ *                 type: boolean
+ *               visibility:
+ *                 type: string
+ *                 enum: [HR_ONLY, ADMIN_ONLY, HR_AND_ADMIN]
+ *     responses:
+ *       200:
+ *         description: Note updated
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.patch('/employees/:id/notes/:noteId', roleGuard(['admin', 'hr_manager']), validate(updateEmployeeNoteSchema), auditLog('EMPLOYEES', 'UPDATE', 'EmployeeNote'), hrmsController.updateEmployeeNote);
+
+/**
+ * @swagger
+ * /hrms/employees/{id}/notes/{noteId}:
+ *   delete:
+ *     summary: Soft-delete an HR note
+ *     tags: [HR Notes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *       - in: path
+ *         name: noteId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           pattern: '^[0-9a-fA-F]{24}$'
+ *     responses:
+ *       200:
+ *         description: Note deleted
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
+router.delete('/employees/:id/notes/:noteId', roleGuard(['admin', 'hr_manager']), auditLog('EMPLOYEES', 'DELETE', 'EmployeeNote'), hrmsController.deleteEmployeeNote);
 
 // Departments
 /**
