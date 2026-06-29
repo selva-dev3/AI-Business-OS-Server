@@ -4965,6 +4965,7 @@ router.post('/attendance', validate(createAttendanceSchema), auditLog('hrms', 'C
  *               $ref: '#/components/schemas/ApiError'
  */
 router.patch('/attendance/:id', validate(updateAttendanceSchema), hrmsController.updateAttendance);
+router.get('/attendance/:id', hrmsController.getAttendanceById);
 /**
  * @swagger
  * /hrms/attendance/bulk:

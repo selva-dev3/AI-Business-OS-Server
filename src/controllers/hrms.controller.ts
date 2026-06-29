@@ -241,6 +241,11 @@ export const updateAttendance = catchAsync(async (req: AuthRequest, res: Respons
   ApiResponse.success(res, record);
 });
 
+export const getAttendanceById = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const record = await hrmsService.getAttendanceById(req.companyId!, req.params.id as string);
+  ApiResponse.success(res, record);
+});
+
 export const getAttendanceSummary = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
   const summary = await hrmsService.getAttendanceSummary(req.companyId!, req.query);
   ApiResponse.success(res, summary);

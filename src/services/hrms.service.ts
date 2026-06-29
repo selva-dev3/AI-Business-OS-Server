@@ -1214,6 +1214,14 @@ const updateAttendance = async (companyId: string, id: string, data: Record<stri
   return record;
 };
 
+const getAttendanceById = async (companyId: string, id: string) => {
+  const record = await Attendance.findOne({ _id: id, companyId })
+    .populate('employeeId', 'firstName lastName employeeCode departmentId')
+    .lean();
+  if (!record) throw new AppError(404, 'NOT_FOUND', 'Attendance record not found');
+  return record;
+};
+
 const getAttendanceSummary = async (companyId: string, query: QueryParams) => {
   const { fromDate, toDate, employeeId } = query;
   const match: Record<string, unknown> = { companyId };
@@ -3065,6 +3073,7 @@ export {
   listAttendance,
   createAttendance,
   updateAttendance,
+  getAttendanceById,
   getAttendanceSummary,
   bulkCreateAttendance,
   exportAttendance,
