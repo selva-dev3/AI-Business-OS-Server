@@ -257,7 +257,22 @@ const listEmployees = async (companyId: string, query: QueryParams) => {
     Object.assign(filter, buildSearchQuery(query.search, ['firstName', 'lastName', 'email', 'employeeCode']));
   }
 
-  const [employees, total] = await Promise.all([
+  // Clone filter for summary aggregation, omitting status criteria so headcount counts stay visible
+  const summaryFilter: Record<string, any> = { ...filter };
+  delete summaryFilter.status;
+
+  // Cast string IDs to Mongoose ObjectIds for aggregate match stage
+  if (summaryFilter.companyId && typeof summaryFilter.companyId === 'string') {
+    summaryFilter.companyId = new mongoose.Types.ObjectId(summaryFilter.companyId);
+  }
+  if (summaryFilter.departmentId && typeof summaryFilter.departmentId === 'string') {
+    summaryFilter.departmentId = new mongoose.Types.ObjectId(summaryFilter.departmentId);
+  }
+  if (summaryFilter.designationId && typeof summaryFilter.designationId === 'string') {
+    summaryFilter.designationId = new mongoose.Types.ObjectId(summaryFilter.designationId);
+  }
+
+  const [employees, total, summaryAgg] = await Promise.all([
     Employee.find(filter)
       .populate('departmentId', 'name code')
       .populate('designationId', 'name level')
@@ -269,9 +284,48 @@ const listEmployees = async (companyId: string, query: QueryParams) => {
       .limit(limit)
       .lean(),
     Employee.countDocuments(filter),
+    Employee.aggregate([
+      { $match: summaryFilter },
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 },
+        },
+      },
+    ]),
   ]);
 
-  return { employees: employees.map(transformEmployee), meta: buildMeta(total, page, limit) };
+  let totalHeadcount = 0;
+  let activeStaff = 0;
+  let onLeave = 0;
+  let inactive = 0;
+  let suspended = 0;
+
+  summaryAgg.forEach((item: any) => {
+    const count = item.count || 0;
+    totalHeadcount += count;
+
+    const statusKey = String(item._id || '').toUpperCase();
+    if (statusKey === 'ACTIVE') {
+      activeStaff = count;
+    } else if (statusKey === 'ON_LEAVE' || statusKey === 'ONLEAVE') {
+      onLeave = count;
+    } else if (statusKey === 'INACTIVE' || statusKey === 'TERMINATED') {
+      inactive += count;
+    } else if (statusKey === 'SUSPENDED') {
+      suspended = count;
+    }
+  });
+
+  const summary = {
+    totalHeadcount,
+    activeStaff,
+    onLeave,
+    inactive,
+    suspended,
+  };
+
+  return { employees: employees.map(transformEmployee), meta: buildMeta(total, page, limit), summary };
 };
 
 const normalizeEmployeeData = async (companyId: string, inputData: Record<string, unknown>) => {

@@ -20,8 +20,13 @@ export const getDashboard = catchAsync(async (req: AuthRequest, res: Response, _
 // ─── EMPLOYEES ────────────────────────────────────────────────────────────────────
 
 export const listEmployees = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
-  const { employees, meta } = await hrmsService.listEmployees(req.companyId!, req.query);
-  ApiResponse.paginated(res, employees, meta);
+  const { employees, meta, summary } = await hrmsService.listEmployees(req.companyId!, req.query);
+  ApiResponse.success(res, {
+    employees,
+    pagination: meta,
+    summary,
+    meta,
+  });
 });
 
 export const createEmployee = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
