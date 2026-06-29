@@ -30,6 +30,22 @@ export interface IEmployee extends Document {
   branchId?: Types.ObjectId;
   userId?: Types.ObjectId;
   reportingManagerId?: Types.ObjectId;
+  suspensionDetails?: {
+    reason: string;
+    suspendedBy: Types.ObjectId;
+    suspendedAt: Date;
+    expectedReinstatement?: Date;
+    notes?: string;
+  } | null;
+  suspensionHistory?: Array<{
+    reason: string;
+    suspendedBy: Types.ObjectId;
+    suspendedAt: Date;
+    reinstatedBy: Types.ObjectId;
+    reinstatedAt: Date;
+    expectedReinstatement?: Date;
+    notes?: string;
+  }>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -112,11 +128,29 @@ const employeeSchema = new mongoose.Schema<IEmployee>(
     status: {
       type: String,
       enum: {
-        values: ['ACTIVE', 'INACTIVE', 'TERMINATED'],
+        values: ['ACTIVE', 'INACTIVE', 'TERMINATED', 'SUSPENDED'],
         message: '{VALUE} is not a valid employee status',
       },
       default: 'ACTIVE',
     },
+    suspensionDetails: {
+      reason: { type: String, trim: true, maxlength: [2000, 'Reason cannot exceed 2000 characters'] },
+      suspendedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      suspendedAt: { type: Date },
+      expectedReinstatement: { type: Date },
+      notes: { type: String, trim: true, maxlength: [2000, 'Notes cannot exceed 2000 characters'] },
+    },
+    suspensionHistory: [
+      {
+        reason: { type: String, trim: true },
+        suspendedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        suspendedAt: { type: Date },
+        reinstatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        reinstatedAt: { type: Date },
+        expectedReinstatement: { type: Date },
+        notes: { type: String, trim: true },
+      },
+    ],
     joiningDate: {
       type: Date,
     },

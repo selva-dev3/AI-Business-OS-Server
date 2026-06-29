@@ -59,6 +59,16 @@ export const activateEmployee = catchAsync(async (req: AuthRequest, res: Respons
   ApiResponse.success(res, employee);
 });
 
+export const suspendEmployee = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const employee = await hrmsService.suspendEmployee(req.companyId!, req.params.id as string, req.user!._id.toString(), req.body);
+  ApiResponse.success(res, employee);
+});
+
+export const reinstateEmployee = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const employee = await hrmsService.reinstateEmployee(req.companyId!, req.params.id as string, req.user!._id.toString(), req.body);
+  ApiResponse.success(res, employee);
+});
+
 export const bulkImportEmployees = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
   if (!req.file) {
     throw new AppError(400, 'BAD_REQUEST', 'CSV file is required');

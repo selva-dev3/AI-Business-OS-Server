@@ -32,6 +32,8 @@ import {
   updateSalaryStructureSchema,
   updateProfileSchema,
   updateEmployeeStatusSchema,
+  suspendEmployeeSchema,
+  reinstateEmployeeSchema,
   checkinSchema,
   checkoutSchema,
   regularizeAttendanceSchema,
@@ -50,6 +52,7 @@ import {
   requestLetterSchema,
 } from '../validators/hrms.validator';
 import { checkPermission } from '../middleware/rbac';
+import { roleGuard } from '../middleware/roleGuard';
 
 /**
  * @swagger
@@ -2874,6 +2877,8 @@ router.post('/employees', validate(createEmployeeSchema), auditLog('hrms', 'CREA
  *               $ref: '#/components/schemas/ApiError'
  */
 router.post('/employees/:id/activate', checkPermission('EMPLOYEES', 'UPDATE'), auditLog('EMPLOYEES', 'UPDATE', 'Employee'), hrmsController.activateEmployee);
+router.patch('/employees/:id/suspend', roleGuard(['admin', 'hr_manager']), validate(suspendEmployeeSchema), auditLog('EMPLOYEES', 'SUSPEND', 'Employee'), hrmsController.suspendEmployee);
+router.patch('/employees/:id/reinstate', roleGuard(['admin', 'hr_manager']), validate(reinstateEmployeeSchema), auditLog('EMPLOYEES', 'REINSTATE', 'Employee'), hrmsController.reinstateEmployee);
 router.get('/employees/export', hrmsController.exportEmployees);
 /**
  * @swagger

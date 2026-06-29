@@ -355,7 +355,7 @@ const normalizeEmployeeData = async (companyId: string, inputData: Record<string
     if (data.status === 'ON_LEAVE') {
       data.status = 'ACTIVE';
     }
-    if (!['ACTIVE', 'INACTIVE', 'TERMINATED'].includes(data.status as string)) {
+    if (!['ACTIVE', 'INACTIVE', 'TERMINATED', 'SUSPENDED'].includes(data.status as string)) {
       data.status = 'ACTIVE';
     }
   }
@@ -542,6 +542,69 @@ const activateEmployee = async (companyId: string, id: string) => {
     { new: true }
   );
   if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated!.toObject() as unknown as Record<string, unknown>);
+};
+
+const suspendEmployee = async (companyId: string, id: string, userId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: id, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  if (employee.status === 'SUSPENDED') throw new AppError(400, 'BAD_REQUEST', 'Employee is already suspended');
+
+  const reason = (data.reason as string) || '';
+  if (!reason || reason.trim().length < 10) {
+    throw new AppError(400, 'BAD_REQUEST', 'Suspension reason is required and must be at least 10 characters');
+  }
+
+  employee.status = 'SUSPENDED';
+  employee.suspensionDetails = {
+    reason: reason.trim(),
+    suspendedBy: new mongoose.Types.ObjectId(userId),
+    suspendedAt: new Date(),
+    expectedReinstatement: data.expectedReinstatement ? new Date(data.expectedReinstatement as string) : undefined,
+    notes: (data.notes as string) || undefined,
+  } as any;
+
+  await employee.save();
+
+  const populated = await Employee.findById(employee._id)
+    .populate('departmentId', 'name code')
+    .populate('designationId', 'name level')
+    .populate('branchId', 'name')
+    .populate('reportingManagerId', 'firstName lastName employeeCode')
+    .populate('userId', 'email');
+  return transformEmployee(populated!.toObject() as unknown as Record<string, unknown>);
+};
+
+const reinstateEmployee = async (companyId: string, id: string, userId: string, data: Record<string, unknown>) => {
+  const employee = await Employee.findOne({ _id: id, companyId });
+  if (!employee) throw new AppError(404, 'NOT_FOUND', 'Employee not found');
+  if (employee.status !== 'SUSPENDED') throw new AppError(400, 'BAD_REQUEST', 'Employee is not suspended');
+
+  const currentDetails = employee.suspensionDetails;
+  if (currentDetails) {
+    const historyEntry = {
+      reason: currentDetails.reason,
+      suspendedBy: currentDetails.suspendedBy,
+      suspendedAt: currentDetails.suspendedAt,
+      reinstatedBy: new mongoose.Types.ObjectId(userId),
+      reinstatedAt: new Date(),
+      expectedReinstatement: currentDetails.expectedReinstatement,
+      notes: (data.notes as string) || currentDetails.notes,
+    };
+    employee.suspensionHistory = employee.suspensionHistory || [];
+    (employee.suspensionHistory as any).push(historyEntry);
+  }
+
+  employee.status = 'ACTIVE';
+  employee.suspensionDetails = null;
+  await employee.save();
+
   const populated = await Employee.findById(employee._id)
     .populate('departmentId', 'name code')
     .populate('designationId', 'name level')
@@ -2586,6 +2649,8 @@ export {
   removeEmployee,
   hardDeleteEmployee,
   activateEmployee,
+  suspendEmployee,
+  reinstateEmployee,
   bulkImportEmployees,
   exportEmployees,
   listDepartments,

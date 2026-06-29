@@ -378,6 +378,16 @@ export const updateEmployeeStatusSchema: Joi.ObjectSchema = Joi.object({
   exitReason: Joi.string().trim().max(1000).allow('', null),
 });
 
+export const suspendEmployeeSchema: Joi.ObjectSchema = Joi.object({
+  reason: Joi.string().trim().min(10).max(2000).required(),
+  expectedReinstatement: Joi.date().iso().allow(null),
+  notes: Joi.string().trim().max(2000).allow('', null),
+});
+
+export const reinstateEmployeeSchema: Joi.ObjectSchema = Joi.object({
+  notes: Joi.string().trim().max(2000).allow('', null),
+});
+
 // ─── ATTENDANCE CHECKIN / CHECKOUT / REGULARIZE ─────────────────────────────
 
 export const checkinSchema: Joi.ObjectSchema = Joi.object({
