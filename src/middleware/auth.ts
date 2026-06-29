@@ -7,13 +7,19 @@ import { AuthRequest, JwtPayload } from '../types';
 
 const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
+    let token = '';
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.replace(/^Bearer\s+/i, '').trim();
+    } else if (req.query.token) {
+      token = req.query.token as string;
+    }
+
+    if (!token) {
       ApiResponse.error(res, 401, 'UNAUTHORIZED', 'Access token required');
       return;
     }
 
-    const token = authHeader.replace(/^Bearer\s+/i, '').trim();
     const decoded = jwt.verify(token, env.jwt.secret) as JwtPayload;
 
     const user = await User.findById(decoded.userId)

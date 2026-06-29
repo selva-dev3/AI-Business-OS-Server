@@ -3,7 +3,7 @@ const router = express.Router();
 import { authenticate } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import auditLog from '../middleware/auditLogger';
-import { csvUpload, handleUploadError } from '../middleware/upload';
+import { csvUpload, handleUploadError, documentUpload } from '../middleware/upload';
 import * as hrmsController from '../controllers/hrms.controller';
 import {
   createEmployeeSchema,
@@ -3841,7 +3841,26 @@ router.post('/employees/:id/reset-password', roleGuard(['admin', 'hr_manager']),
  *       500:
  *         $ref: '#/components/responses/InternalError'
  */
-router.post('/employees/:id/documents', roleGuard(['admin', 'hr_manager']), validate(createEmployeeDocumentSchema), auditLog('EMPLOYEES', 'CREATE', 'EmployeeDocument'), hrmsController.createEmployeeDocument);
+router.post(
+  '/employees/:id/documents',
+  roleGuard(['admin', 'hr_manager']),
+  documentUpload,
+  handleUploadError,
+  (req: express.Request, _res: express.Response, next: express.NextFunction) => {
+    if (req.file) {
+      req.body.fileUrl = `/uploads/documents/${req.file.filename}`;
+      req.body.fileSize = req.file.size;
+      req.body.mimeType = req.file.mimetype;
+      if (!req.body.documentName) {
+        req.body.documentName = req.file.originalname;
+      }
+    }
+    next();
+  },
+  validate(createEmployeeDocumentSchema),
+  auditLog('EMPLOYEES', 'CREATE', 'EmployeeDocument'),
+  hrmsController.createEmployeeDocument
+);
 
 /**
  * @swagger
@@ -3885,6 +3904,7 @@ router.post('/employees/:id/documents', roleGuard(['admin', 'hr_manager']), vali
  *         $ref: '#/components/responses/InternalError'
  */
 router.get('/employees/:id/documents', roleGuard(['admin', 'hr_manager']), validate(listEmployeeDocumentsSchema), hrmsController.listEmployeeDocuments);
+router.get('/employees/:id/documents/:documentId/download', roleGuard(['admin', 'hr_manager', 'employee']), hrmsController.downloadEmployeeDocument);
 
 /**
  * @swagger

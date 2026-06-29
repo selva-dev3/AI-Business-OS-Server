@@ -628,8 +628,8 @@ export const resetEmployeePasswordSchema: Joi.ObjectSchema = Joi.object({
 // ─── EMPLOYEE DOCUMENT ───────────────────────────────────────────────────────
 
 export const createEmployeeDocumentSchema: Joi.ObjectSchema = Joi.object({
-  fileUrl: Joi.string().uri().allow('', null).optional(),
-  documentUrl: Joi.string().uri().allow('', null).optional(),
+  fileUrl: Joi.string().allow('', null).optional(),
+  documentUrl: Joi.string().allow('', null).optional(),
   documentType: Joi.string().valid('OFFER_LETTER', 'ID_PROOF', 'CERTIFICATE', 'CONTRACT', 'NDA', 'PAYSLIP', 'OTHER', 'offer_letter', 'id_proof', 'certificate', 'contract', 'nda', 'payslip', 'other').required(),
   documentName: Joi.string().trim().max(255).required(),
   fileSize: Joi.number().min(0),

@@ -654,3 +654,8 @@ CastError: Cast to ObjectId failed for value "emp-3" (type string) at path "_id"
     at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
     at async Object.getEmployeeById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:473:20)
+2026-06-29 18:30:30 [ERROR]: User account not found for this employee
+Error: User account not found for this employee
+    at Object.resetEmployeePassword (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:2797:20)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/selva/Downloads/projects/AI Business Os/server/src/controllers/hrms.controller.ts:704:18

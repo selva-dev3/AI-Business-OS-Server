@@ -1,7 +1,9 @@
 import { Response, NextFunction } from 'express';
 import fs from 'fs';
+import path from 'path';
 import { parse } from 'csv-parse/sync';
 import { AuthRequest } from '../types';
+import env from '../config/env';
 import catchAsync from '../utils/catchAsync';
 import * as hrmsService from '../services/hrms.service';
 import ApiResponse from '../utils/apiResponse';
@@ -737,4 +739,39 @@ export const updateEmployeeNote = catchAsync(async (req: AuthRequest, res: Respo
 export const deleteEmployeeNote = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
   const result = await hrmsService.deleteEmployeeNote(req.companyId!, req.params.id as string, req.params.noteId as string, req.user!._id.toString());
   ApiResponse.success(res, result);
+});
+
+export const downloadEmployeeDocument = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const document = await hrmsService.getEmployeeDocument(req.companyId!, req.params.id as string, req.params.documentId as string);
+  
+  if (!document.fileUrl) {
+    throw new AppError(400, 'BAD_REQUEST', 'Document does not have an uploaded file');
+  }
+
+  if (document.fileUrl.startsWith('http://') || document.fileUrl.startsWith('https://')) {
+    return res.redirect(document.fileUrl);
+  }
+
+  let relativePath = document.fileUrl;
+  if (relativePath.startsWith('/uploads/')) {
+    relativePath = relativePath.substring(9);
+  } else if (relativePath.startsWith('uploads/')) {
+    relativePath = relativePath.substring(8);
+  } else if (relativePath.startsWith('/')) {
+    relativePath = relativePath.substring(1);
+  }
+
+  const absolutePath = path.resolve(env.upload.dir, relativePath);
+
+  if (!fs.existsSync(absolutePath)) {
+    throw new AppError(404, 'NOT_FOUND', 'File not found on server');
+  }
+
+  const ext = path.extname(absolutePath);
+  let cleanName = document.documentName;
+  if (!cleanName.endsWith(ext)) {
+    cleanName = `${cleanName}${ext}`;
+  }
+
+  res.download(absolutePath, cleanName);
 });

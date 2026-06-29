@@ -2864,6 +2864,12 @@ const listEmployeeDocuments = async (companyId: string, employeeId: string, quer
   return { records, meta: buildMeta(total, page, limit) };
 };
 
+const getEmployeeDocument = async (companyId: string, employeeId: string, documentId: string) => {
+  const document = await EmployeeDocument.findOne({ _id: documentId, employeeId, companyId });
+  if (!document) throw new AppError(404, 'NOT_FOUND', 'Document not found');
+  return document;
+};
+
 // ─── EMPLOYEE NOTES ──────────────────────────────────────────────────────────
 
 import EmployeeNote from '../models/EmployeeNote';
@@ -3138,6 +3144,7 @@ export {
   resetEmployeePassword,
   createEmployeeDocument,
   listEmployeeDocuments,
+  getEmployeeDocument,
   createEmployeeNote,
   listEmployeeNotes,
   updateEmployeeNote,
