@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.getAttendanceById = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.exportDesignationsExcel = exports.exportDesignationsCSV = exports.changeDesignationStatus = exports.bulkRestoreDesignations = exports.bulkDeleteDesignations = exports.restoreDesignation = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.getDesignationById = exports.listAllDesignations = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.reinstateEmployee = exports.suspendEmployee = exports.activateEmployee = exports.hardDeleteEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
-exports.createPromotion = exports.approveRejectTransfer = exports.createTransferRequest = exports.getTrainingCertifications = exports.getTrainingHistory = exports.completeCourse = exports.enrollCourse = exports.listTrainingCourses = exports.submitFeedback = exports.getAppraisalHistory = exports.submitAppraisal = exports.updatePerformanceGoal = exports.createPerformanceGoal = exports.listPerformanceGoals = exports.requestLetter = exports.getEmployeeDeductions = exports.getEmployeeTaxDetails = exports.getPayslipByMonthYear = exports.getEmployeePayslips = exports.listRegularizations = exports.approveRejectRegularization = exports.createRegularization = exports.checkout = exports.checkin = exports.getEmployeeHistory = exports.updateEmployeeStatus = exports.updateEmployeeProfile = exports.getEmployeeProfile = exports.fullUpdateEmployee = exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = exports.createAsset = exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = void 0;
-exports.deleteEmployeeNote = exports.updateEmployeeNote = exports.listEmployeeNotes = exports.createEmployeeNote = exports.getEmployeeDocument = exports.listEmployeeDocuments = exports.createEmployeeDocument = exports.resetEmployeePassword = exports.assignEmployeeRole = exports.terminateEmployee = exports.initiateLeaveOnBehalf = exports.getEmployeePayroll = exports.getEmployeeLeaves = exports.getEmployeeAttendance = exports.getFnF = exports.updateClearance = exports.getExitChecklist = exports.submitResignation = void 0;
+exports.approveRejectTransfer = exports.createTransferRequest = exports.getTrainingCertifications = exports.getTrainingHistory = exports.completeCourse = exports.enrollCourse = exports.listTrainingCourses = exports.submitFeedback = exports.getAppraisalHistory = exports.submitAppraisal = exports.updatePerformanceGoal = exports.createPerformanceGoal = exports.listPerformanceGoals = exports.requestLetter = exports.getEmployeeDeductions = exports.getEmployeeTaxDetails = exports.getPayslipByMonthYear = exports.getEmployeePayslips = exports.getRegularization = exports.listRegularizations = exports.approveRejectRegularization = exports.createRegularization = exports.checkout = exports.checkin = exports.getEmployeeHistory = exports.updateEmployeeStatus = exports.updateEmployeeProfile = exports.getEmployeeProfile = exports.fullUpdateEmployee = exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = exports.createAsset = exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = void 0;
+exports.deleteEmployeeNote = exports.updateEmployeeNote = exports.listEmployeeNotes = exports.createEmployeeNote = exports.getEmployeeDocument = exports.listEmployeeDocuments = exports.createEmployeeDocument = exports.resetEmployeePassword = exports.assignEmployeeRole = exports.terminateEmployee = exports.initiateLeaveOnBehalf = exports.getEmployeePayroll = exports.getEmployeeLeaves = exports.getEmployeeAttendance = exports.getFnF = exports.updateClearance = exports.getExitChecklist = exports.submitResignation = exports.createPromotion = void 0;
 const Employee_1 = __importDefault(require("../models/Employee"));
 const Department_1 = __importDefault(require("../models/Department"));
 const Designation_1 = __importDefault(require("../models/Designation"));
@@ -2089,6 +2089,26 @@ const listRegularizations = async (companyId, query) => {
     return { records, meta: (0, helpers_1.buildMeta)(total, page, limit) };
 };
 exports.listRegularizations = listRegularizations;
+const getRegularization = async (companyId, id) => {
+    const record = await RegularizationRequest_1.default.findOne({ _id: id, companyId })
+        .populate('employeeId', 'firstName lastName employeeCode departmentId email designation')
+        .populate('approvedBy', 'firstName lastName')
+        .lean();
+    if (!record) {
+        throw new appError_1.default(404, 'NOT_FOUND', 'Regularization request not found');
+    }
+    // Fetch original attendance log if it exists
+    const attendance = await Attendance_1.default.findOne({
+        employeeId: record.employeeId,
+        date: record.date
+    }).lean();
+    return {
+        ...record,
+        originalCheckIn: attendance?.checkIn || null,
+        originalCheckOut: attendance?.checkOut || null,
+    };
+};
+exports.getRegularization = getRegularization;
 // ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
 const getEmployeePayslips = async (companyId, employeeId) => {
     return Payslip_1.default.find({ employeeId, companyId })

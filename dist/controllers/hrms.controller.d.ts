@@ -80,6 +80,7 @@ export declare const checkout: (req: import("express").Request, res: Response, n
 export declare const createRegularization: (req: import("express").Request, res: Response, next: NextFunction) => void;
 export declare const approveRejectRegularization: (req: import("express").Request, res: Response, next: NextFunction) => void;
 export declare const listRegularizations: (req: import("express").Request, res: Response, next: NextFunction) => void;
+export declare const getRegularization: (req: import("express").Request, res: Response, next: NextFunction) => void;
 export declare const getEmployeePayslips: (req: import("express").Request, res: Response, next: NextFunction) => void;
 export declare const getPayslipByMonthYear: (req: import("express").Request, res: Response, next: NextFunction) => void;
 export declare const getEmployeeTaxDetails: (req: import("express").Request, res: Response, next: NextFunction) => void;

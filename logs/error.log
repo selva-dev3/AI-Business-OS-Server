@@ -1103,3 +1103,9 @@ CastError: Cast to ObjectId failed for value "regularization" (type string) at p
     at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
     at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:56:06 [ERROR]: Attendance validation failed: workingHours: Working hours cannot be negative
+ValidationError: Attendance validation failed: workingHours: Working hours cannot be negative
+    at model.Document.invalidate (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3387:32)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3148:17
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1443:9
+    at processTicksAndRejections (node:internal/process/task_queues:77:11)

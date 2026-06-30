@@ -513,6 +513,11 @@ export const listRegularizations = catchAsync(async (req: AuthRequest, res: Resp
   ApiResponse.paginated(res, records, meta);
 });
 
+export const getRegularization = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const result = await hrmsService.getRegularization(req.companyId!, req.params.id as string);
+  ApiResponse.success(res, result);
+});
+
 // ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
 
 export const getEmployeePayslips = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {

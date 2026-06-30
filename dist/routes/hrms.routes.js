@@ -5170,6 +5170,7 @@ router.post('/attendance/checkout', (0, validate_1.validate)(hrms_validator_1.ch
  *         $ref: '#/components/responses/InternalError'
  */
 router.get('/attendance/regularization', hrmsController.listRegularizations);
+router.get('/attendance/regularization/:id', hrmsController.getRegularization);
 router.get('/attendance/regularize', hrmsController.listRegularizations);
 router.post('/attendance/regularize', (0, validate_1.validate)(hrms_validator_1.regularizeAttendanceSchema), (0, auditLogger_1.default)('attendance', 'REGULARIZE', 'attendance'), hrmsController.createRegularization);
 /**

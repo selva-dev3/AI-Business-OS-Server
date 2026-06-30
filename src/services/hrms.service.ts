@@ -2247,6 +2247,28 @@ const listRegularizations = async (companyId: string, query: QueryParams) => {
   return { records, meta: buildMeta(total, page, limit) };
 };
 
+const getRegularization = async (companyId: string, id: string): Promise<any> => {
+  const record = await RegularizationRequest.findOne({ _id: id, companyId })
+    .populate('employeeId', 'firstName lastName employeeCode departmentId email designation')
+    .populate('approvedBy', 'firstName lastName')
+    .lean();
+  if (!record) {
+    throw new AppError(404, 'NOT_FOUND', 'Regularization request not found');
+  }
+
+  // Fetch original attendance log if it exists
+  const attendance = await Attendance.findOne({
+    employeeId: record.employeeId,
+    date: record.date
+  }).lean();
+
+  return {
+    ...record,
+    originalCheckIn: attendance?.checkIn || null,
+    originalCheckOut: attendance?.checkOut || null,
+  };
+};
+
 // ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
 
 const getEmployeePayslips = async (companyId: string, employeeId: string) => {
@@ -3152,6 +3174,7 @@ export {
   createRegularization,
   approveRejectRegularization,
   listRegularizations,
+  getRegularization,
   getEmployeePayslips,
   getPayslipByMonthYear,
   getEmployeeTaxDetails,
