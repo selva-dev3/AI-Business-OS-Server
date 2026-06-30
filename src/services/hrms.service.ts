@@ -1297,26 +1297,51 @@ const exportAttendance = async (companyId: string, query: QueryParams) => {
 };
 
 const listLeaveTypes = async (companyId: string) => {
-  return LeaveType.find({ companyId }).lean();
+  const leaveTypes = await LeaveType.find({ companyId, isActive: { $ne: false } }).lean();
+  return leaveTypes.map((lt: any) => ({
+    ...lt,
+    maxDays: lt.annualAllowance,
+    daysPerYear: lt.annualAllowance,
+  }));
 };
 
-const createLeaveType = async (companyId: string, data: Record<string, unknown>) => {
+const createLeaveType = async (companyId: string, data: Record<string, unknown>): Promise<any> => {
   const existing = await LeaveType.findOne({ code: data.code as string, companyId });
   if (existing) throw new AppError(409, 'CONFLICT', 'Leave type code already exists');
-  return LeaveType.create({ ...data, companyId });
+  
+  const annualAllowance = data.annualAllowance ?? data.maxDays ?? data.daysPerYear ?? 0;
+  const leaveType = await LeaveType.create({ ...data, annualAllowance, companyId });
+  const doc = leaveType.toJSON();
+  return {
+    ...doc,
+    maxDays: doc.annualAllowance,
+    daysPerYear: doc.annualAllowance,
+  };
 };
 
-const updateLeaveType = async (companyId: string, id: string, data: Record<string, unknown>) => {
+const updateLeaveType = async (companyId: string, id: string, data: Record<string, unknown>): Promise<any> => {
   if (data.code) {
     const existing = await LeaveType.findOne({ code: data.code as string, companyId, _id: { $ne: id } });
     if (existing) throw new AppError(409, 'CONFLICT', 'Leave type code already in use');
   }
-  const leaveType = await LeaveType.findOneAndUpdate({ _id: id, companyId }, data, {
+
+  const updateData = { ...data };
+  if (data.maxDays !== undefined || data.daysPerYear !== undefined || data.annualAllowance !== undefined) {
+    updateData.annualAllowance = data.annualAllowance ?? data.maxDays ?? data.daysPerYear;
+  }
+
+  const leaveType = await LeaveType.findOneAndUpdate({ _id: id, companyId }, updateData, {
     new: true,
     runValidators: true,
   });
   if (!leaveType) throw new AppError(404, 'NOT_FOUND', 'Leave type not found');
-  return leaveType;
+  
+  const doc = leaveType.toJSON();
+  return {
+    ...doc,
+    maxDays: doc.annualAllowance,
+    daysPerYear: doc.annualAllowance,
+  };
 };
 
 const removeLeaveType = async (companyId: string, id: string) => {
