@@ -81,11 +81,56 @@ const employeeSchema = new mongoose_1.default.Schema({
     status: {
         type: String,
         enum: {
-            values: ['ACTIVE', 'INACTIVE', 'TERMINATED'],
+            values: ['ACTIVE', 'INACTIVE', 'TERMINATED', 'SUSPENDED'],
             message: '{VALUE} is not a valid employee status',
         },
         default: 'ACTIVE',
     },
+    suspensionDetails: {
+        reason: { type: String, trim: true, maxlength: [2000, 'Reason cannot exceed 2000 characters'] },
+        suspendedBy: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User' },
+        suspendedAt: { type: Date },
+        expectedReinstatement: { type: Date },
+        notes: { type: String, trim: true, maxlength: [2000, 'Notes cannot exceed 2000 characters'] },
+    },
+    suspensionHistory: [
+        {
+            reason: { type: String, trim: true },
+            suspendedBy: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User' },
+            suspendedAt: { type: Date },
+            reinstatedBy: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User' },
+            reinstatedAt: { type: Date },
+            expectedReinstatement: { type: Date },
+            notes: { type: String, trim: true },
+        },
+    ],
+    terminationDetails: {
+        lastWorkingDate: { type: Date },
+        reason: { type: String, trim: true, enum: { values: ['RESIGNATION', 'TERMINATION', 'RETIREMENT', 'CONTRACT_END', 'OTHER'], message: '{VALUE} is not a valid termination reason' } },
+        reasonDetails: { type: String, trim: true, maxlength: [2000, 'Reason details cannot exceed 2000 characters'] },
+        exitChecklist: {
+            laptopReturned: { type: Boolean, default: false },
+            accessRevoked: { type: Boolean, default: false },
+            fnfSettled: { type: Boolean, default: false },
+            relievingLetterIssued: { type: Boolean, default: false },
+            exitInterviewDone: { type: Boolean, default: false },
+        },
+        noticePeriodServed: { type: Boolean, default: false },
+        finalSalaryProcessed: { type: Boolean, default: false },
+        terminatedBy: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User' },
+        terminatedAt: { type: Date },
+    },
+    roleHistory: [
+        {
+            designation: { type: String, trim: true },
+            departmentId: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Department' },
+            employmentType: { type: String, trim: true },
+            reportingManagerId: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Employee' },
+            changedAt: { type: Date, default: Date.now },
+            changedBy: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User' },
+            reason: { type: String, trim: true, maxlength: [2000, 'Reason cannot exceed 2000 characters'] },
+        },
+    ],
     joiningDate: {
         type: Date,
     },

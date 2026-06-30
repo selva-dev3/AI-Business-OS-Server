@@ -4964,8 +4964,8 @@ router.post('/attendance', validate(createAttendanceSchema), auditLog('hrms', 'C
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
-router.patch('/attendance/:id', validate(updateAttendanceSchema), hrmsController.updateAttendance);
-router.get('/attendance/:id', hrmsController.getAttendanceById);
+
+
 /**
  * @swagger
  * /hrms/attendance/bulk:
@@ -5236,6 +5236,8 @@ router.post('/attendance/checkout', validate(checkoutSchema), auditLog('attendan
  *       500:
  *         $ref: '#/components/responses/InternalError'
  */
+router.get('/attendance/regularization', hrmsController.listRegularizations);
+router.get('/attendance/regularize', hrmsController.listRegularizations);
 router.post('/attendance/regularize', validate(regularizeAttendanceSchema), auditLog('attendance', 'REGULARIZE', 'attendance'), hrmsController.createRegularization);
 /**
  * @swagger
@@ -5282,7 +5284,14 @@ router.post('/attendance/regularize', validate(regularizeAttendanceSchema), audi
  *       500:
  *         $ref: '#/components/responses/InternalError'
  */
+
+
+
 router.patch('/attendance/regularize/:id', validate(approveRejectRegularizationSchema), auditLog('attendance', 'APPROVE', 'regularization'), hrmsController.approveRejectRegularization);
+
+// Dynamic routes placed after static routes to prevent greedy matching
+router.patch('/attendance/:id', validate(updateAttendanceSchema), hrmsController.updateAttendance);
+router.get('/attendance/:id', hrmsController.getAttendanceById);
 
 // Leave Types
 /**

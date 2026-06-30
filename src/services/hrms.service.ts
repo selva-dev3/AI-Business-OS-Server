@@ -2217,6 +2217,36 @@ const approveRejectRegularization = async (companyId: string, id: string, data: 
   return req;
 };
 
+const listRegularizations = async (companyId: string, query: QueryParams) => {
+  const { page, limit, skip } = paginateQuery(query.page, Number(query.limit));
+  const filter: Record<string, unknown> = { companyId };
+
+  if (query.employeeId) filter.employeeId = query.employeeId;
+  if (query.status) filter.status = query.status;
+  if (query.date) {
+    const d = new Date(query.date as string);
+    filter.date = { $gte: new Date(d.setHours(0, 0, 0, 0)), $lte: new Date(d.setHours(23, 59, 59, 999)) };
+  }
+  if (query.fromDate || query.toDate) {
+    filter.date = {};
+    if (query.fromDate) (filter.date as Record<string, unknown>).$gte = new Date(query.fromDate as string);
+    if (query.toDate) (filter.date as Record<string, unknown>).$lte = new Date(query.toDate as string);
+  }
+
+  const [records, total] = await Promise.all([
+    RegularizationRequest.find(filter)
+      .populate('employeeId', 'firstName lastName employeeCode departmentId')
+      .populate('approvedBy', 'firstName lastName')
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    RegularizationRequest.countDocuments(filter),
+  ]);
+
+  return { records, meta: buildMeta(total, page, limit) };
+};
+
 // ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
 
 const getEmployeePayslips = async (companyId: string, employeeId: string) => {
@@ -3121,6 +3151,7 @@ export {
   checkout,
   createRegularization,
   approveRejectRegularization,
+  listRegularizations,
   getEmployeePayslips,
   getPayslipByMonthYear,
   getEmployeeTaxDetails,

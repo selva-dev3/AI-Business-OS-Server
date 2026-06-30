@@ -10,12 +10,18 @@ const apiResponse_1 = __importDefault(require("../utils/apiResponse"));
 const User_1 = __importDefault(require("../models/User"));
 const authenticate = async (req, res, next) => {
     try {
+        let token = '';
         const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader.replace(/^Bearer\s+/i, '').trim();
+        }
+        else if (req.query.token) {
+            token = req.query.token;
+        }
+        if (!token) {
             apiResponse_1.default.error(res, 401, 'UNAUTHORIZED', 'Access token required');
             return;
         }
-        const token = authHeader.replace(/^Bearer\s+/i, '').trim();
         const decoded = jsonwebtoken_1.default.verify(token, env_1.default.jwt.secret);
         const user = await User_1.default.findById(decoded.userId)
             .populate('roleId', 'name permissions')

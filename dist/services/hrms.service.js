@@ -3,8 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.activateEmployee = exports.hardDeleteEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
-exports.getFnF = exports.updateClearance = exports.getExitChecklist = exports.submitResignation = exports.createPromotion = exports.approveRejectTransfer = exports.createTransferRequest = exports.getTrainingCertifications = exports.getTrainingHistory = exports.completeCourse = exports.enrollCourse = exports.listTrainingCourses = exports.submitFeedback = exports.getAppraisalHistory = exports.submitAppraisal = exports.updatePerformanceGoal = exports.createPerformanceGoal = exports.listPerformanceGoals = exports.requestLetter = exports.getEmployeeDeductions = exports.getEmployeeTaxDetails = exports.getPayslipByMonthYear = exports.getEmployeePayslips = exports.approveRejectRegularization = exports.createRegularization = exports.checkout = exports.checkin = exports.getEmployeeHistory = exports.updateEmployeeStatus = exports.updateEmployeeProfile = exports.getEmployeeProfile = exports.fullUpdateEmployee = exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = exports.createAsset = void 0;
+exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.getAttendanceById = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.exportDesignationsExcel = exports.exportDesignationsCSV = exports.changeDesignationStatus = exports.bulkRestoreDesignations = exports.bulkDeleteDesignations = exports.restoreDesignation = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.getDesignationById = exports.listAllDesignations = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.reinstateEmployee = exports.suspendEmployee = exports.activateEmployee = exports.hardDeleteEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
+exports.createPromotion = exports.approveRejectTransfer = exports.createTransferRequest = exports.getTrainingCertifications = exports.getTrainingHistory = exports.completeCourse = exports.enrollCourse = exports.listTrainingCourses = exports.submitFeedback = exports.getAppraisalHistory = exports.submitAppraisal = exports.updatePerformanceGoal = exports.createPerformanceGoal = exports.listPerformanceGoals = exports.requestLetter = exports.getEmployeeDeductions = exports.getEmployeeTaxDetails = exports.getPayslipByMonthYear = exports.getEmployeePayslips = exports.listRegularizations = exports.approveRejectRegularization = exports.createRegularization = exports.checkout = exports.checkin = exports.getEmployeeHistory = exports.updateEmployeeStatus = exports.updateEmployeeProfile = exports.getEmployeeProfile = exports.fullUpdateEmployee = exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = exports.createAsset = exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = void 0;
+exports.deleteEmployeeNote = exports.updateEmployeeNote = exports.listEmployeeNotes = exports.createEmployeeNote = exports.getEmployeeDocument = exports.listEmployeeDocuments = exports.createEmployeeDocument = exports.resetEmployeePassword = exports.assignEmployeeRole = exports.terminateEmployee = exports.initiateLeaveOnBehalf = exports.getEmployeePayroll = exports.getEmployeeLeaves = exports.getEmployeeAttendance = exports.getFnF = exports.updateClearance = exports.getExitChecklist = exports.submitResignation = void 0;
 const Employee_1 = __importDefault(require("../models/Employee"));
 const Department_1 = __importDefault(require("../models/Department"));
 const Designation_1 = __importDefault(require("../models/Designation"));
@@ -32,6 +33,8 @@ const ExitResignation_1 = __importDefault(require("../models/ExitResignation"));
 const ExitChecklist_1 = __importDefault(require("../models/ExitChecklist"));
 const ExitClearance_1 = __importDefault(require("../models/ExitClearance"));
 const ExitSettlement_1 = __importDefault(require("../models/ExitSettlement"));
+const crypto_1 = __importDefault(require("crypto"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const appError_1 = __importDefault(require("../utils/appError"));
 const helpers_1 = require("../utils/helpers");
 const transformEmployee = (emp) => {
@@ -210,7 +213,20 @@ const listEmployees = async (companyId, query) => {
     if (query.search) {
         Object.assign(filter, (0, helpers_1.buildSearchQuery)(query.search, ['firstName', 'lastName', 'email', 'employeeCode']));
     }
-    const [employees, total] = await Promise.all([
+    // Clone filter for summary aggregation, omitting status criteria so headcount counts stay visible
+    const summaryFilter = { ...filter };
+    delete summaryFilter.status;
+    // Cast string IDs to Mongoose ObjectIds for aggregate match stage
+    if (summaryFilter.companyId && typeof summaryFilter.companyId === 'string') {
+        summaryFilter.companyId = new mongoose_1.default.Types.ObjectId(summaryFilter.companyId);
+    }
+    if (summaryFilter.departmentId && typeof summaryFilter.departmentId === 'string') {
+        summaryFilter.departmentId = new mongoose_1.default.Types.ObjectId(summaryFilter.departmentId);
+    }
+    if (summaryFilter.designationId && typeof summaryFilter.designationId === 'string') {
+        summaryFilter.designationId = new mongoose_1.default.Types.ObjectId(summaryFilter.designationId);
+    }
+    const [employees, total, summaryAgg] = await Promise.all([
         Employee_1.default.find(filter)
             .populate('departmentId', 'name code')
             .populate('designationId', 'name level')
@@ -222,8 +238,46 @@ const listEmployees = async (companyId, query) => {
             .limit(limit)
             .lean(),
         Employee_1.default.countDocuments(filter),
+        Employee_1.default.aggregate([
+            { $match: summaryFilter },
+            {
+                $group: {
+                    _id: '$status',
+                    count: { $sum: 1 },
+                },
+            },
+        ]),
     ]);
-    return { employees: employees.map(transformEmployee), meta: (0, helpers_1.buildMeta)(total, page, limit) };
+    let totalHeadcount = 0;
+    let activeStaff = 0;
+    let onLeave = 0;
+    let inactive = 0;
+    let suspended = 0;
+    summaryAgg.forEach((item) => {
+        const count = item.count || 0;
+        totalHeadcount += count;
+        const statusKey = String(item._id || '').toUpperCase();
+        if (statusKey === 'ACTIVE') {
+            activeStaff = count;
+        }
+        else if (statusKey === 'ON_LEAVE' || statusKey === 'ONLEAVE') {
+            onLeave = count;
+        }
+        else if (statusKey === 'INACTIVE' || statusKey === 'TERMINATED') {
+            inactive += count;
+        }
+        else if (statusKey === 'SUSPENDED') {
+            suspended = count;
+        }
+    });
+    const summary = {
+        totalHeadcount,
+        activeStaff,
+        onLeave,
+        inactive,
+        suspended,
+    };
+    return { employees: employees.map(transformEmployee), meta: (0, helpers_1.buildMeta)(total, page, limit), summary };
 };
 exports.listEmployees = listEmployees;
 const normalizeEmployeeData = async (companyId, inputData) => {
@@ -249,7 +303,7 @@ const normalizeEmployeeData = async (companyId, inputData) => {
         if (data.status === 'ON_LEAVE') {
             data.status = 'ACTIVE';
         }
-        if (!['ACTIVE', 'INACTIVE', 'TERMINATED'].includes(data.status)) {
+        if (!['ACTIVE', 'INACTIVE', 'TERMINATED', 'SUSPENDED'].includes(data.status)) {
             data.status = 'ACTIVE';
         }
     }
@@ -431,50 +485,279 @@ const activateEmployee = async (companyId, id) => {
     return transformEmployee(populated.toObject());
 };
 exports.activateEmployee = activateEmployee;
+const suspendEmployee = async (companyId, id, userId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: id, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    if (employee.status === 'SUSPENDED')
+        throw new appError_1.default(400, 'BAD_REQUEST', 'Employee is already suspended');
+    const reason = data.reason || '';
+    if (!reason || reason.trim().length < 10) {
+        throw new appError_1.default(400, 'BAD_REQUEST', 'Suspension reason is required and must be at least 10 characters');
+    }
+    employee.status = 'SUSPENDED';
+    employee.suspensionDetails = {
+        reason: reason.trim(),
+        suspendedBy: new mongoose_1.default.Types.ObjectId(userId),
+        suspendedAt: new Date(),
+        expectedReinstatement: data.expectedReinstatement ? new Date(data.expectedReinstatement) : undefined,
+        notes: data.notes || undefined,
+    };
+    await employee.save();
+    const populated = await Employee_1.default.findById(employee._id)
+        .populate('departmentId', 'name code')
+        .populate('designationId', 'name level')
+        .populate('branchId', 'name')
+        .populate('reportingManagerId', 'firstName lastName employeeCode')
+        .populate('userId', 'email');
+    return transformEmployee(populated.toObject());
+};
+exports.suspendEmployee = suspendEmployee;
+const reinstateEmployee = async (companyId, id, userId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: id, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    if (employee.status !== 'SUSPENDED')
+        throw new appError_1.default(400, 'BAD_REQUEST', 'Employee is not suspended');
+    const currentDetails = employee.suspensionDetails;
+    if (currentDetails) {
+        const historyEntry = {
+            reason: currentDetails.reason,
+            suspendedBy: currentDetails.suspendedBy,
+            suspendedAt: currentDetails.suspendedAt,
+            reinstatedBy: new mongoose_1.default.Types.ObjectId(userId),
+            reinstatedAt: new Date(),
+            expectedReinstatement: currentDetails.expectedReinstatement,
+            notes: data.notes || currentDetails.notes,
+        };
+        employee.suspensionHistory = employee.suspensionHistory || [];
+        employee.suspensionHistory.push(historyEntry);
+    }
+    employee.status = 'ACTIVE';
+    employee.suspensionDetails = null;
+    await employee.save();
+    const populated = await Employee_1.default.findById(employee._id)
+        .populate('departmentId', 'name code')
+        .populate('designationId', 'name level')
+        .populate('branchId', 'name')
+        .populate('reportingManagerId', 'firstName lastName employeeCode')
+        .populate('userId', 'email');
+    return transformEmployee(populated.toObject());
+};
+exports.reinstateEmployee = reinstateEmployee;
 const bulkImportEmployees = async (companyId, employeesData) => {
     const errors = [];
     const valid = [];
+    // Helper function to normalize keys
+    const normalizeKey = (key) => {
+        return key.toLowerCase().replace(/[^a-z0-9]/g, '');
+    };
+    // Fetch existing departments and designations for lookup
+    const departments = await Department_1.default.find({ companyId }).lean();
+    const departmentMap = new Map();
+    departments.forEach(dept => {
+        departmentMap.set(dept.name.toLowerCase(), dept);
+        if (dept.code) {
+            departmentMap.set(dept.code.toLowerCase(), dept);
+        }
+        departmentMap.set(dept._id.toString(), dept);
+    });
+    const designations = await Designation_1.default.find({ companyId, deletedAt: null }).lean();
+    const designationMap = new Map();
+    designations.forEach(desig => {
+        designationMap.set(desig.name.toLowerCase(), desig);
+        if (desig.designationCode) {
+            designationMap.set(desig.designationCode.toLowerCase(), desig);
+        }
+        designationMap.set(desig._id.toString(), desig);
+    });
+    // Fetch existing employees to verify email & employee code uniqueness
+    const existingEmployees = await Employee_1.default.find({ companyId }, '_id employeeCode email').lean();
+    const existingCodes = new Set(existingEmployees.map(emp => emp.employeeCode.toLowerCase()));
+    const existingEmails = new Set(existingEmployees.map(emp => emp.email.toLowerCase()));
+    // Map existing employees for manager lookup
+    const employeeMap = new Map();
+    existingEmployees.forEach(emp => {
+        employeeMap.set(emp._id.toString(), emp);
+        if (emp.employeeCode) {
+            employeeMap.set(emp.employeeCode.toLowerCase(), emp);
+        }
+        if (emp.email) {
+            employeeMap.set(emp.email.toLowerCase(), emp);
+        }
+    });
+    // Tracking unique values in the current CSV
+    const csvCodes = new Set();
+    const csvEmails = new Set();
     for (let i = 0; i < employeesData.length; i++) {
         const row = employeesData[i];
+        const rowNum = i + 1;
         try {
-            if (!row.email)
-                throw new appError_1.default(400, 'BAD_REQUEST', 'Email is required');
-            if (!row.employeeCode)
-                throw new appError_1.default(400, 'BAD_REQUEST', 'Employee code is required');
-            if (row.departmentCode) {
-                const dept = await Department_1.default.findOne({ code: row.departmentCode, companyId });
-                if (!dept)
-                    throw new appError_1.default(400, 'BAD_REQUEST', `Department ${row.departmentCode} not found`);
-                row.departmentId = dept._id;
+            // Map row keys to standard keys
+            const mappedRow = {};
+            for (const [key, val] of Object.entries(row)) {
+                const normKey = normalizeKey(key);
+                const strVal = typeof val === 'string' ? val.trim() : (val !== null && val !== undefined ? String(val).trim() : '');
+                if (normKey === 'employeecode' || normKey === 'code') {
+                    mappedRow.employeeCode = strVal;
+                }
+                else if (normKey === 'firstname' || normKey === 'fname') {
+                    mappedRow.firstName = strVal;
+                }
+                else if (normKey === 'lastname' || normKey === 'lname') {
+                    mappedRow.lastName = strVal;
+                }
+                else if (normKey === 'email') {
+                    mappedRow.email = strVal;
+                }
+                else if (normKey === 'designation' || normKey === 'designationname' || normKey === 'designationcode') {
+                    mappedRow.designation = strVal;
+                }
+                else if (normKey === 'employmenttype' || normKey === 'type') {
+                    mappedRow.employmentType = strVal;
+                }
+                else if (normKey === 'phone' || normKey === 'phonenumber') {
+                    mappedRow.phone = strVal;
+                }
+                else if (normKey === 'department' || normKey === 'departmentname' || normKey === 'departmentcode' || normKey === 'departmentid') {
+                    mappedRow.department = strVal;
+                }
+                else if (normKey === 'manager' || normKey === 'managerid' || normKey === 'reportingmanager' || normKey === 'reportingmanagerid') {
+                    mappedRow.manager = strVal;
+                }
+                else if (normKey === 'dateofjoining' || normKey === 'joiningdate' || normKey === 'date') {
+                    mappedRow.joiningDate = strVal;
+                }
+                else {
+                    mappedRow[normKey] = strVal;
+                }
             }
-            if (row.designationName) {
-                const desig = await Designation_1.default.findOne({ name: row.designationName, companyId });
-                if (!desig)
-                    throw new appError_1.default(400, 'BAD_REQUEST', `Designation ${row.designationName} not found`);
-                row.designationId = desig._id;
+            // 1. Validate employeeCode (required, unique)
+            if (!mappedRow.employeeCode) {
+                throw new Error('Employee Code is required');
+            }
+            const codeLower = mappedRow.employeeCode.toLowerCase();
+            if (csvCodes.has(codeLower)) {
+                throw new Error(`Duplicate Employee Code "${mappedRow.employeeCode}" in CSV`);
+            }
+            if (existingCodes.has(codeLower)) {
+                throw new Error(`Employee Code "${mappedRow.employeeCode}" already exists in database`);
+            }
+            csvCodes.add(codeLower);
+            // 2. Validate firstName (required, non-empty)
+            if (!mappedRow.firstName) {
+                throw new Error('First Name is required');
+            }
+            // 3. Validate lastName (required, non-empty)
+            if (!mappedRow.lastName) {
+                throw new Error('Last Name is required');
+            }
+            // 4. Validate email (required, valid format, unique)
+            if (!mappedRow.email) {
+                throw new Error('Email is required');
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(mappedRow.email)) {
+                throw new Error(`Invalid email format: "${mappedRow.email}"`);
+            }
+            const emailLower = mappedRow.email.toLowerCase();
+            if (csvEmails.has(emailLower)) {
+                throw new Error(`Duplicate email "${mappedRow.email}" in CSV`);
+            }
+            if (existingEmails.has(emailLower)) {
+                throw new Error(`Email "${mappedRow.email}" already exists in database`);
+            }
+            csvEmails.add(emailLower);
+            // 5. Validate designation (required, must exist in DB)
+            if (!mappedRow.designation) {
+                throw new Error('Designation is required');
+            }
+            const desigMatch = designationMap.get(mappedRow.designation.toLowerCase());
+            if (!desigMatch) {
+                throw new Error(`Designation "${mappedRow.designation}" not found`);
+            }
+            const designationId = desigMatch._id;
+            // 6. Validate employmentType (required, must map to valid enum)
+            if (!mappedRow.employmentType) {
+                throw new Error('Employment Type is required');
+            }
+            const typeLower = mappedRow.employmentType.toLowerCase().replace(/[^a-z]/g, '');
+            let employmentType;
+            if (typeLower === 'fulltime' || typeLower === 'full') {
+                employmentType = 'FULL_TIME';
+            }
+            else if (typeLower === 'parttime' || typeLower === 'part') {
+                employmentType = 'PART_TIME';
+            }
+            else if (typeLower === 'contract') {
+                employmentType = 'CONTRACT';
+            }
+            else if (typeLower === 'intern') {
+                employmentType = 'INTERN';
+            }
+            else {
+                throw new Error(`Invalid Employment Type: "${mappedRow.employmentType}". Allowed: Full-Time, Part-Time, Contract`);
+            }
+            // 7. Resolve optional departmentId
+            let departmentId = null;
+            if (mappedRow.department) {
+                const deptMatch = departmentMap.get(mappedRow.department.toLowerCase());
+                if (!deptMatch) {
+                    throw new Error(`Department "${mappedRow.department}" not found`);
+                }
+                departmentId = deptMatch._id;
+            }
+            // 8. Resolve optional managerId
+            let reportingManagerId = null;
+            if (mappedRow.manager) {
+                const managerMatch = employeeMap.get(mappedRow.manager.toLowerCase());
+                if (!managerMatch) {
+                    throw new Error(`Reporting Manager "${mappedRow.manager}" not found`);
+                }
+                reportingManagerId = managerMatch._id;
+            }
+            // 9. Resolve optional dateOfJoining
+            let joiningDate = new Date();
+            if (mappedRow.joiningDate) {
+                const parsedDate = new Date(mappedRow.joiningDate);
+                if (isNaN(parsedDate.getTime())) {
+                    throw new Error(`Invalid Joining Date format: "${mappedRow.joiningDate}"`);
+                }
+                joiningDate = parsedDate;
             }
             valid.push({
-                firstName: row.firstName,
-                lastName: row.lastName || '',
-                email: row.email,
-                employeeCode: row.employeeCode,
-                departmentId: row.departmentId,
-                designationId: row.designationId,
-                employmentType: row.employmentType || 'FULL_TIME',
-                joiningDate: row.joiningDate ? new Date(row.joiningDate) : new Date(),
-                phone: row.phone,
+                employeeCode: mappedRow.employeeCode,
+                firstName: mappedRow.firstName,
+                lastName: mappedRow.lastName,
+                email: mappedRow.email,
+                designationId,
+                employmentType,
+                phone: mappedRow.phone || undefined,
+                departmentId,
+                reportingManagerId,
+                joiningDate,
                 companyId,
+                status: 'ACTIVE',
             });
         }
         catch (err) {
-            errors.push({ row: i + 1, message: err.message });
+            errors.push({ row: rowNum, message: err.message });
         }
     }
-    let created = [];
-    if (valid.length > 0) {
-        created = await Employee_1.default.insertMany(valid, { ordered: false });
+    if (errors.length > 0) {
+        console.error('HRMS Bulk Import Validation Errors:');
+        errors.forEach(err => {
+            console.error(`Row ${err.row}: ${err.message}`);
+        });
+        return { inserted: 0, failed: errors.length, errors };
     }
-    return { created: created.length, errors };
+    let createdCount = 0;
+    if (valid.length > 0) {
+        const created = await Employee_1.default.insertMany(valid, { ordered: true });
+        createdCount = created.length;
+        console.log(`Successfully bulk imported ${createdCount} employees`);
+    }
+    return { inserted: createdCount, failed: 0, errors: [] };
 };
 exports.bulkImportEmployees = bulkImportEmployees;
 const exportEmployees = async (companyId, query) => {
@@ -572,43 +855,202 @@ const listDepartmentEmployees = async (companyId, id, query) => {
     return { employees, meta: (0, helpers_1.buildMeta)(total, page, limit) };
 };
 exports.listDepartmentEmployees = listDepartmentEmployees;
-const listDesignations = async (companyId) => {
-    return Designation_1.default.find({ companyId }).sort({ level: 1 }).lean();
+const listDesignations = async (companyId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { companyId, deletedAt: null };
+    if (query.search) {
+        const searchRegex = new RegExp(String(query.search), 'i');
+        filter.$or = [
+            { name: searchRegex },
+            { designationCode: searchRegex },
+        ];
+    }
+    if (query.departmentId)
+        filter.departmentId = query.departmentId;
+    if (query.status)
+        filter.status = query.status;
+    if (query.isActive !== undefined)
+        filter.isActive = query.isActive === 'true' || query.isActive === true;
+    const sortField = query.sortBy || 'hierarchyOrder';
+    const sortOrder = query.sortOrder === 'desc' ? -1 : 1;
+    const [designations, total] = await Promise.all([
+        Designation_1.default.find(filter)
+            .sort({ [sortField]: sortOrder })
+            .skip(skip)
+            .limit(limit)
+            .populate('departmentId', 'name')
+            .populate('createdBy', 'firstName lastName')
+            .populate('updatedBy', 'firstName lastName')
+            .lean(),
+        Designation_1.default.countDocuments(filter),
+    ]);
+    const meta = (0, helpers_1.buildMeta)(total, page, limit);
+    return { data: designations, meta };
 };
 exports.listDesignations = listDesignations;
-const createDesignation = async (companyId, data) => {
-    const existing = await Designation_1.default.findOne({ name: data.name, companyId });
+const listAllDesignations = async (companyId) => {
+    return Designation_1.default.find({ companyId, deletedAt: null })
+        .sort({ hierarchyOrder: 1, level: 1 })
+        .populate('departmentId', 'name')
+        .lean();
+};
+exports.listAllDesignations = listAllDesignations;
+const getDesignationById = async (companyId, id) => {
+    const designation = await Designation_1.default.findOne({ _id: id, companyId, deletedAt: null })
+        .populate('departmentId', 'name')
+        .populate('createdBy', 'firstName lastName')
+        .populate('updatedBy', 'firstName lastName')
+        .lean();
+    if (!designation)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Designation not found');
+    return designation;
+};
+exports.getDesignationById = getDesignationById;
+const createDesignation = async (companyId, data, userId) => {
+    const existing = await Designation_1.default.findOne({
+        name: data.name,
+        companyId,
+        deletedAt: null,
+    });
     if (existing)
-        throw new appError_1.default(409, 'CONFLICT', 'Designation already exists');
-    const designation = await Designation_1.default.create({ ...data, companyId });
+        throw new appError_1.default(409, 'CONFLICT', 'Designation name already exists in this company');
+    if (data.departmentId) {
+        const dept = await Department_1.default.findById(data.departmentId);
+        if (!dept)
+            throw new appError_1.default(404, 'NOT_FOUND', 'Department not found');
+    }
+    if (data.designationCode) {
+        const codeExists = await Designation_1.default.findOne({
+            designationCode: data.designationCode,
+            companyId,
+            deletedAt: null,
+        });
+        if (codeExists)
+            throw new appError_1.default(409, 'CONFLICT', 'Designation code already exists');
+    }
+    const designation = await Designation_1.default.create({
+        ...data,
+        companyId,
+        createdBy: userId,
+        updatedBy: userId,
+    });
     return designation;
 };
 exports.createDesignation = createDesignation;
-const updateDesignation = async (companyId, id, data) => {
+const updateDesignation = async (companyId, id, data, userId) => {
+    const existing = await Designation_1.default.findOne({ _id: id, companyId, deletedAt: null });
+    if (!existing)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Designation not found');
     if (data.name) {
-        const existing = await Designation_1.default.findOne({ name: data.name, companyId, _id: { $ne: id } });
-        if (existing)
+        const nameExists = await Designation_1.default.findOne({
+            name: data.name,
+            companyId,
+            _id: { $ne: id },
+            deletedAt: null,
+        });
+        if (nameExists)
             throw new appError_1.default(409, 'CONFLICT', 'Designation name already in use');
     }
-    const designation = await Designation_1.default.findOneAndUpdate({ _id: id, companyId }, data, {
-        new: true,
-        runValidators: true,
-    });
+    if (data.designationCode) {
+        const codeExists = await Designation_1.default.findOne({
+            designationCode: data.designationCode,
+            companyId,
+            _id: { $ne: id },
+            deletedAt: null,
+        });
+        if (codeExists)
+            throw new appError_1.default(409, 'CONFLICT', 'Designation code already in use');
+    }
+    if (data.departmentId) {
+        const dept = await Department_1.default.findById(data.departmentId);
+        if (!dept)
+            throw new appError_1.default(404, 'NOT_FOUND', 'Department not found');
+    }
+    const designation = await Designation_1.default.findOneAndUpdate({ _id: id, companyId, deletedAt: null }, { ...data, updatedBy: userId }, { new: true, runValidators: true });
     if (!designation)
         throw new appError_1.default(404, 'NOT_FOUND', 'Designation not found');
     return designation;
 };
 exports.updateDesignation = updateDesignation;
-const removeDesignation = async (companyId, id) => {
-    const activeCount = await Employee_1.default.countDocuments({ designationId: id, companyId, status: 'ACTIVE' });
-    if (activeCount > 0)
-        throw new appError_1.default(400, 'BAD_REQUEST', 'Cannot delete designation with active employees');
-    const designation = await Designation_1.default.findOneAndUpdate({ _id: id, companyId }, { isActive: false }, { new: true });
+const removeDesignation = async (companyId, id, force) => {
+    const activeCount = await Employee_1.default.countDocuments({ designationId: id, companyId, status: { $in: ['ACTIVE', 'active'] } });
+    if (activeCount > 0 && !force) {
+        throw new appError_1.default(400, 'BAD_REQUEST', `Cannot delete designation with ${activeCount} active employee(s). Use force=true to override.`);
+    }
+    const designation = await Designation_1.default.findOneAndUpdate({ _id: id, companyId, deletedAt: null }, { deletedAt: new Date(), isActive: false }, { new: true });
     if (!designation)
         throw new appError_1.default(404, 'NOT_FOUND', 'Designation not found');
     return designation;
 };
 exports.removeDesignation = removeDesignation;
+const restoreDesignation = async (companyId, id) => {
+    const designation = await Designation_1.default.findOneAndUpdate({ _id: id, companyId, deletedAt: { $ne: null } }, { deletedAt: null, isActive: true }, { new: true });
+    if (!designation)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Designation not found or not deleted');
+    return designation;
+};
+exports.restoreDesignation = restoreDesignation;
+const bulkDeleteDesignations = async (companyId, ids, force) => {
+    const activeEmployees = await Employee_1.default.countDocuments({
+        designationId: { $in: ids },
+        companyId,
+        status: { $in: ['ACTIVE', 'active'] },
+    });
+    if (activeEmployees > 0 && !force) {
+        throw new appError_1.default(400, 'BAD_REQUEST', `${activeEmployees} active employee(s) have these designations. Use force=true to override.`);
+    }
+    const result = await Designation_1.default.updateMany({ _id: { $in: ids }, companyId, deletedAt: null }, { $set: { deletedAt: new Date(), isActive: false } });
+    return { modifiedCount: result.modifiedCount };
+};
+exports.bulkDeleteDesignations = bulkDeleteDesignations;
+const bulkRestoreDesignations = async (companyId, ids) => {
+    const result = await Designation_1.default.updateMany({ _id: { $in: ids }, companyId, deletedAt: { $ne: null } }, { $set: { deletedAt: null, isActive: true } });
+    return { modifiedCount: result.modifiedCount };
+};
+exports.bulkRestoreDesignations = bulkRestoreDesignations;
+const changeDesignationStatus = async (companyId, id, status, userId) => {
+    const designation = await Designation_1.default.findOneAndUpdate({ _id: id, companyId, deletedAt: null }, { status, updatedBy: userId }, { new: true });
+    if (!designation)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Designation not found');
+    return designation;
+};
+exports.changeDesignationStatus = changeDesignationStatus;
+const exportDesignationsCSV = async (companyId, filter) => {
+    const query = { companyId, deletedAt: null };
+    if (filter.departmentId)
+        query.departmentId = filter.departmentId;
+    if (filter.status)
+        query.status = filter.status;
+    const designations = await Designation_1.default.find(query)
+        .populate('departmentId', 'name')
+        .sort({ hierarchyOrder: 1 })
+        .lean();
+    const header = 'Name,Code,Department,Level,Status,Hierarchy Order,Employment Types\n';
+    const rows = designations.map((d) => `"${d.name || ''}","${d.designationCode || ''}","${d.departmentId?.name || ''}",${d.level ?? ''},${d.status || 'ACTIVE'},${d.hierarchyOrder ?? ''},"${Array.isArray(d.employmentTypes) ? d.employmentTypes.join('; ') : ''}"`).join('\n');
+    return header + rows;
+};
+exports.exportDesignationsCSV = exportDesignationsCSV;
+const exportDesignationsExcel = async (companyId, filter) => {
+    const query = { companyId, deletedAt: null };
+    if (filter.departmentId)
+        query.departmentId = filter.departmentId;
+    if (filter.status)
+        query.status = filter.status;
+    const designations = await Designation_1.default.find(query)
+        .populate('departmentId', 'name')
+        .sort({ hierarchyOrder: 1 })
+        .lean();
+    return designations.map((d) => ({
+        Name: d.name || '',
+        Code: d.designationCode || '',
+        Department: d.departmentId?.name || '',
+        Level: d.level ?? '',
+        Status: d.status || 'ACTIVE',
+        'Hierarchy Order': d.hierarchyOrder ?? '',
+        'Employment Types': Array.isArray(d.employmentTypes) ? d.employmentTypes.join('; ') : '',
+    }));
+};
+exports.exportDesignationsExcel = exportDesignationsExcel;
 const listAttendance = async (companyId, query) => {
     const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
     const filter = { companyId };
@@ -666,6 +1108,15 @@ const updateAttendance = async (companyId, id, data) => {
     return record;
 };
 exports.updateAttendance = updateAttendance;
+const getAttendanceById = async (companyId, id) => {
+    const record = await Attendance_1.default.findOne({ _id: id, companyId })
+        .populate('employeeId', 'firstName lastName employeeCode departmentId')
+        .lean();
+    if (!record)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Attendance record not found');
+    return record;
+};
+exports.getAttendanceById = getAttendanceById;
 const getAttendanceSummary = async (companyId, query) => {
     const { fromDate, toDate, employeeId } = query;
     const match = { companyId };
@@ -1607,6 +2058,37 @@ const approveRejectRegularization = async (companyId, id, data) => {
     return req;
 };
 exports.approveRejectRegularization = approveRejectRegularization;
+const listRegularizations = async (companyId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { companyId };
+    if (query.employeeId)
+        filter.employeeId = query.employeeId;
+    if (query.status)
+        filter.status = query.status;
+    if (query.date) {
+        const d = new Date(query.date);
+        filter.date = { $gte: new Date(d.setHours(0, 0, 0, 0)), $lte: new Date(d.setHours(23, 59, 59, 999)) };
+    }
+    if (query.fromDate || query.toDate) {
+        filter.date = {};
+        if (query.fromDate)
+            filter.date.$gte = new Date(query.fromDate);
+        if (query.toDate)
+            filter.date.$lte = new Date(query.toDate);
+    }
+    const [records, total] = await Promise.all([
+        RegularizationRequest_1.default.find(filter)
+            .populate('employeeId', 'firstName lastName employeeCode departmentId')
+            .populate('approvedBy', 'firstName lastName')
+            .sort({ date: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        RegularizationRequest_1.default.countDocuments(filter),
+    ]);
+    return { records, meta: (0, helpers_1.buildMeta)(total, page, limit) };
+};
+exports.listRegularizations = listRegularizations;
 // ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
 const getEmployeePayslips = async (companyId, employeeId) => {
     return Payslip_1.default.find({ employeeId, companyId })
@@ -1926,6 +2408,367 @@ const createPromotion = async (companyId, data, userId) => {
     return promotion;
 };
 exports.createPromotion = createPromotion;
+// ─── EMPLOYEE ATTENDANCE ─────────────────────────────────────────────────────
+const getEmployeeAttendance = async (companyId, employeeId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { companyId, employeeId };
+    const year = query.year ? parseInt(query.year) : new Date().getFullYear();
+    const month = query.month ? parseInt(query.month) : undefined;
+    if (month) {
+        const start = new Date(year, month - 1, 1);
+        const end = new Date(year, month, 0, 23, 59, 59, 999);
+        filter.date = { $gte: start, $lte: end };
+    }
+    else {
+        const start = new Date(year, 0, 1);
+        const end = new Date(year, 11, 31, 23, 59, 59, 999);
+        filter.date = { $gte: start, $lte: end };
+    }
+    if (query.status)
+        filter.status = query.status.toUpperCase();
+    const [records, total] = await Promise.all([
+        Attendance_1.default.find(filter).sort({ date: -1 }).skip(skip).limit(limit).lean(),
+        Attendance_1.default.countDocuments(filter),
+    ]);
+    const summaryAgg = await Attendance_1.default.aggregate([
+        { $match: { companyId: new mongoose_1.default.Types.ObjectId(companyId), employeeId: new mongoose_1.default.Types.ObjectId(employeeId) } },
+        {
+            $group: {
+                _id: null,
+                totalPresent: { $sum: { $cond: [{ $eq: ['$status', 'PRESENT'] }, 1, 0] } },
+                totalAbsent: { $sum: { $cond: [{ $eq: ['$status', 'ABSENT'] }, 1, 0] } },
+                totalLate: { $sum: { $cond: [{ $eq: ['$status', 'LATE'] }, 1, 0] } },
+                totalHalfDay: { $sum: { $cond: [{ $eq: ['$status', 'HALF_DAY'] }, 1, 0] } },
+            },
+        },
+    ]);
+    const summary = summaryAgg[0] || { totalPresent: 0, totalAbsent: 0, totalLate: 0, totalHalfDay: 0 };
+    return { records, summary, meta: (0, helpers_1.buildMeta)(total, page, limit) };
+};
+exports.getEmployeeAttendance = getEmployeeAttendance;
+// ─── EMPLOYEE LEAVES ─────────────────────────────────────────────────────────
+const getEmployeeLeaves = async (companyId, employeeId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { companyId, employeeId };
+    if (query.status)
+        filter.status = query.status.toUpperCase();
+    if (query.year) {
+        const y = parseInt(query.year);
+        filter.$or = [
+            { fromDate: { $gte: new Date(y, 0, 1), $lte: new Date(y, 11, 31, 23, 59, 59, 999) } },
+            { toDate: { $gte: new Date(y, 0, 1), $lte: new Date(y, 11, 31, 23, 59, 59, 999) } },
+        ];
+    }
+    const [requests, total] = await Promise.all([
+        LeaveRequest_1.default.find(filter)
+            .populate('leaveTypeId', 'name code')
+            .populate('approvedBy', 'firstName lastName email')
+            .populate('rejectedBy', 'firstName lastName email')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        LeaveRequest_1.default.countDocuments(filter),
+    ]);
+    const year = query.year ? parseInt(query.year) : new Date().getFullYear();
+    const leaveBalances = await LeaveBalance_1.default.find({ employeeId, companyId, year })
+        .populate('leaveTypeId', 'name code')
+        .lean();
+    const balanceMap = {};
+    leaveBalances.forEach((lb) => {
+        const name = lb.leaveTypeId?.name || 'Unknown';
+        balanceMap[name] = {
+            total: lb.allocated || 0,
+            used: lb.taken || 0,
+            remaining: lb.balance || 0,
+        };
+    });
+    return { requests, leaveBalance: balanceMap, meta: (0, helpers_1.buildMeta)(total, page, limit) };
+};
+exports.getEmployeeLeaves = getEmployeeLeaves;
+// ─── EMPLOYEE PAYROLL ────────────────────────────────────────────────────────
+const getEmployeePayroll = async (companyId, employeeId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { companyId, employeeId };
+    if (query.year)
+        filter.year = parseInt(query.year);
+    if (query.month)
+        filter.month = parseInt(query.month);
+    if (query.status)
+        filter.status = query.status.toUpperCase();
+    const [records, total] = await Promise.all([
+        Payslip_1.default.find(filter)
+            .populate('payrollId', 'month year status')
+            .sort({ year: -1, month: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        Payslip_1.default.countDocuments(filter),
+    ]);
+    return { records, meta: (0, helpers_1.buildMeta)(total, page, limit) };
+};
+exports.getEmployeePayroll = getEmployeePayroll;
+// ─── INITIATE LEAVE ON BEHALF ────────────────────────────────────────────────
+const initiateLeaveOnBehalf = async (companyId, employeeId, userId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    if (employee.status !== 'ACTIVE')
+        throw new appError_1.default(400, 'BAD_REQUEST', 'Employee must be Active to initiate leave');
+    const fromDate = new Date(data.startDate);
+    const toDate = new Date(data.endDate);
+    const days = (0, helpers_1.calculateDaysBetween)(fromDate, toDate);
+    const conflict = await LeaveRequest_1.default.findOne({
+        employeeId,
+        companyId,
+        status: 'APPROVED',
+        $or: [
+            { fromDate: { $lte: toDate }, toDate: { $gte: fromDate } },
+        ],
+    });
+    if (conflict)
+        throw new appError_1.default(409, 'CONFLICT', 'Date conflicts with an existing approved leave');
+    const leaveRequest = await LeaveRequest_1.default.create({
+        employeeId,
+        companyId,
+        leaveTypeId: data.leaveTypeId,
+        fromDate,
+        toDate,
+        days,
+        reason: data.reason,
+        notes: data.notes || '',
+        status: 'APPROVED',
+        approvedBy: userId,
+        approvedAt: new Date(),
+    });
+    employee.status = 'ACTIVE';
+    await employee.save();
+    return { employee: transformEmployee(employee.toObject()), leaveRequest };
+};
+exports.initiateLeaveOnBehalf = initiateLeaveOnBehalf;
+// ─── TERMINATE EMPLOYEE ──────────────────────────────────────────────────────
+const terminateEmployee = async (companyId, employeeId, userId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    if (employee.status === 'TERMINATED')
+        throw new appError_1.default(400, 'BAD_REQUEST', 'Employee is already terminated');
+    const lastWorkingDate = new Date(data.lastWorkingDate);
+    if (isNaN(lastWorkingDate.getTime())) {
+        throw new appError_1.default(400, 'BAD_REQUEST', 'Invalid last working date');
+    }
+    employee.status = 'TERMINATED';
+    employee.exitDate = lastWorkingDate;
+    employee.terminationDetails = {
+        lastWorkingDate,
+        reason: data.reason?.toUpperCase(),
+        reasonDetails: data.reasonDetails || '',
+        exitChecklist: {
+            laptopReturned: data.exitChecklist?.laptopReturned ?? false,
+            accessRevoked: data.exitChecklist?.accessRevoked ?? false,
+            fnfSettled: data.exitChecklist?.fnfSettled ?? false,
+            relievingLetterIssued: data.exitChecklist?.relievingLetterIssued ?? false,
+            exitInterviewDone: data.exitChecklist?.exitInterviewDone ?? false,
+        },
+        noticePeriodServed: data.noticePeriodServed ?? false,
+        finalSalaryProcessed: data.finalSalaryProcessed ?? false,
+        terminatedBy: new mongoose_1.default.Types.ObjectId(userId),
+        terminatedAt: new Date(),
+    };
+    await employee.save();
+    const populated = await Employee_1.default.findById(employee._id)
+        .populate('departmentId', 'name code')
+        .populate('designationId', 'name level')
+        .populate('branchId', 'name')
+        .populate('reportingManagerId', 'firstName lastName employeeCode')
+        .populate('userId', 'email');
+    return transformEmployee(populated.toObject());
+};
+exports.terminateEmployee = terminateEmployee;
+// ─── ASSIGN EMPLOYEE ROLE ────────────────────────────────────────────────────
+const assignEmployeeRole = async (companyId, employeeId, userId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const hasChanges = data.designation || data.departmentId || data.employmentType || data.reportingManagerId;
+    if (!hasChanges)
+        throw new appError_1.default(400, 'BAD_REQUEST', 'At least one field (designation, department, employmentType, reportingManager) must be provided');
+    const currentDesig = employee.designationId
+        ? (await mongoose_1.default.model('Designation').findById(employee.designationId).select('name').lean())
+        : null;
+    const historyEntry = {
+        designation: currentDesig?.name,
+        departmentId: employee.departmentId,
+        employmentType: employee.employmentType,
+        reportingManagerId: employee.reportingManagerId,
+        changedAt: new Date(),
+        changedBy: new mongoose_1.default.Types.ObjectId(userId),
+        reason: data.reason,
+    };
+    employee.roleHistory = employee.roleHistory || [];
+    employee.roleHistory.push(historyEntry);
+    if (data.designation) {
+        const desig = (await mongoose_1.default.model('Designation').findOne({ name: data.designation, companyId }).lean());
+        if (desig)
+            employee.designationId = desig._id;
+    }
+    if (data.departmentId)
+        employee.departmentId = new mongoose_1.default.Types.ObjectId(data.departmentId);
+    if (data.employmentType)
+        employee.employmentType = data.employmentType.toUpperCase();
+    if (data.reportingManagerId)
+        employee.reportingManagerId = new mongoose_1.default.Types.ObjectId(data.reportingManagerId);
+    await employee.save();
+    const populated = await Employee_1.default.findById(employee._id)
+        .populate('departmentId', 'name code')
+        .populate('designationId', 'name level')
+        .populate('branchId', 'name')
+        .populate('reportingManagerId', 'firstName lastName employeeCode')
+        .populate('userId', 'email');
+    return transformEmployee(populated.toObject());
+};
+exports.assignEmployeeRole = assignEmployeeRole;
+// ─── RESET EMPLOYEE PASSWORD ─────────────────────────────────────────────────
+const resetEmployeePassword = async (companyId, employeeId, _userId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const user = await mongoose_1.default.model('User').findById(employee.userId);
+    if (!user)
+        throw new appError_1.default(404, 'NOT_FOUND', 'User account not found for this employee');
+    const action = data.action;
+    if (action === 'reset_password') {
+        const resetToken = crypto_1.default.randomBytes(32).toString('hex');
+        const hashedToken = crypto_1.default.createHash('sha256').update(resetToken).digest('hex');
+        const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+        user.passwordResetToken = hashedToken;
+        user.passwordResetExpires = expiresAt;
+        await user.save();
+        return {
+            message: 'Password reset email sent',
+            sentTo: user.email,
+            expiresAt,
+        };
+    }
+    if (action === 'resend_invite') {
+        const tempPassword = crypto_1.default.randomBytes(8).toString('hex');
+        user.password = tempPassword;
+        await user.save();
+        return {
+            message: 'Invite email resent with new temporary password',
+            sentTo: user.email,
+        };
+    }
+    throw new appError_1.default(400, 'BAD_REQUEST', "Invalid action. Must be 'reset_password' or 'resend_invite'");
+};
+exports.resetEmployeePassword = resetEmployeePassword;
+// ─── EMPLOYEE DOCUMENTS ──────────────────────────────────────────────────────
+const EmployeeDocument_1 = __importDefault(require("../models/EmployeeDocument"));
+const createEmployeeDocument = async (companyId, employeeId, userId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const document = await EmployeeDocument_1.default.create({
+        employeeId,
+        companyId,
+        documentType: data.documentType?.toUpperCase(),
+        documentName: data.documentName,
+        fileUrl: data.fileUrl || data.documentUrl,
+        fileSize: data.fileSize || 0,
+        mimeType: data.mimeType,
+        isConfidential: data.isConfidential ?? false,
+        expiryDate: data.expiryDate ? new Date(data.expiryDate) : undefined,
+        uploadedBy: userId,
+    });
+    return document;
+};
+exports.createEmployeeDocument = createEmployeeDocument;
+const listEmployeeDocuments = async (companyId, employeeId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { companyId, employeeId };
+    if (query.type)
+        filter.documentType = query.type.toUpperCase();
+    const [records, total] = await Promise.all([
+        EmployeeDocument_1.default.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+        EmployeeDocument_1.default.countDocuments(filter),
+    ]);
+    return { records, meta: (0, helpers_1.buildMeta)(total, page, limit) };
+};
+exports.listEmployeeDocuments = listEmployeeDocuments;
+const getEmployeeDocument = async (companyId, employeeId, documentId) => {
+    const document = await EmployeeDocument_1.default.findOne({ _id: documentId, employeeId, companyId });
+    if (!document)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Document not found');
+    return document;
+};
+exports.getEmployeeDocument = getEmployeeDocument;
+// ─── EMPLOYEE NOTES ──────────────────────────────────────────────────────────
+const EmployeeNote_1 = __importDefault(require("../models/EmployeeNote"));
+const createEmployeeNote = async (companyId, employeeId, userId, data) => {
+    const employee = await Employee_1.default.findOne({ _id: employeeId, companyId });
+    if (!employee)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Employee not found');
+    const note = await EmployeeNote_1.default.create({
+        employeeId,
+        companyId,
+        content: data.content,
+        category: data.category?.toUpperCase(),
+        isPinned: data.isPinned ?? false,
+        visibility: data.visibility?.toUpperCase() || 'HR_AND_ADMIN',
+        createdBy: userId,
+    });
+    return note;
+};
+exports.createEmployeeNote = createEmployeeNote;
+const listEmployeeNotes = async (companyId, employeeId, query) => {
+    const { page, limit, skip } = (0, helpers_1.paginateQuery)(query.page, Number(query.limit));
+    const filter = { companyId, employeeId, isDeleted: false };
+    if (query.category)
+        filter.category = query.category.toUpperCase();
+    const [records, total] = await Promise.all([
+        EmployeeNote_1.default.find(filter)
+            .populate('createdBy', 'firstName lastName email')
+            .sort({ isPinned: -1, createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        EmployeeNote_1.default.countDocuments(filter),
+    ]);
+    return { records, meta: (0, helpers_1.buildMeta)(total, page, limit) };
+};
+exports.listEmployeeNotes = listEmployeeNotes;
+const updateEmployeeNote = async (companyId, _employeeId, noteId, userId, data) => {
+    const note = await EmployeeNote_1.default.findOne({ _id: noteId, companyId, isDeleted: false });
+    if (!note)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Note not found');
+    if (note.createdBy.toString() !== userId) {
+        throw new appError_1.default(403, 'FORBIDDEN', 'Only the original author can edit this note');
+    }
+    if (data.content)
+        note.content = data.content;
+    if (data.category)
+        note.category = data.category.toUpperCase();
+    if (data.isPinned !== undefined)
+        note.isPinned = data.isPinned;
+    if (data.visibility)
+        note.visibility = data.visibility.toUpperCase();
+    note.updatedBy = new mongoose_1.default.Types.ObjectId(userId);
+    await note.save();
+    return note;
+};
+exports.updateEmployeeNote = updateEmployeeNote;
+const deleteEmployeeNote = async (companyId, _employeeId, noteId, userId) => {
+    const note = await EmployeeNote_1.default.findOne({ _id: noteId, companyId, isDeleted: false });
+    if (!note)
+        throw new appError_1.default(404, 'NOT_FOUND', 'Note not found');
+    if (note.createdBy.toString() !== userId) {
+        throw new appError_1.default(403, 'FORBIDDEN', 'Only the original author can delete this note');
+    }
+    note.isDeleted = true;
+    await note.save();
+    return { message: 'Note deleted successfully', noteId };
+};
+exports.deleteEmployeeNote = deleteEmployeeNote;
 // ─── EXIT RESIGNATION ────────────────────────────────────────────────────────
 const submitResignation = async (companyId, employeeId, data) => {
     const existing = await ExitResignation_1.default.findOne({ employeeId, companyId, status: 'PENDING' });

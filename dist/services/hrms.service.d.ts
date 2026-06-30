@@ -57,6 +57,13 @@ declare const getDashboard: (companyId: string, from: string | undefined, to: st
 declare const listEmployees: (companyId: string, query: QueryParams) => Promise<{
     employees: (TransformResult | null)[];
     meta: import("../types").BuildMetaResult;
+    summary: {
+        totalHeadcount: number;
+        activeStaff: number;
+        onLeave: number;
+        inactive: number;
+        suspended: number;
+    };
 }>;
 declare const createEmployee: (companyId: string, rawData: Record<string, unknown>) => Promise<TransformResult | null>;
 declare const getEmployeeById: (companyId: string, id: string) => Promise<TransformResult | null>;
@@ -67,8 +74,11 @@ declare const hardDeleteEmployee: (companyId: string, id: string) => Promise<{
     employeeId: string;
 }>;
 declare const activateEmployee: (companyId: string, id: string) => Promise<TransformResult | null>;
+declare const suspendEmployee: (companyId: string, id: string, userId: string, data: Record<string, unknown>) => Promise<TransformResult | null>;
+declare const reinstateEmployee: (companyId: string, id: string, userId: string, data: Record<string, unknown>) => Promise<TransformResult | null>;
 declare const bulkImportEmployees: (companyId: string, employeesData: Record<string, unknown>[]) => Promise<{
-    created: number;
+    inserted: number;
+    failed: number;
     errors: {
         row: number;
         message: string;
@@ -103,26 +113,65 @@ declare const listDepartmentEmployees: (companyId: string, id: string, query: Qu
     })[];
     meta: import("../types").BuildMetaResult;
 }>;
-declare const listDesignations: (companyId: string) => Promise<(mongoose.FlattenMaps<import("../models/Designation").IDesignation> & Required<{
+declare const listDesignations: (companyId: string, query: Record<string, unknown>) => Promise<{
+    data: (mongoose.FlattenMaps<import("../models/Designation").IDesignation> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    meta: import("../types").BuildMetaResult;
+}>;
+declare const listAllDesignations: (companyId: string) => Promise<(mongoose.FlattenMaps<import("../models/Designation").IDesignation> & Required<{
     _id: mongoose.Types.ObjectId;
 }> & {
     __v: number;
 })[]>;
-declare const createDesignation: (companyId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/Designation").IDesignation, {}, {}> & import("../models/Designation").IDesignation & Required<{
+declare const getDesignationById: (companyId: string, id: string) => Promise<mongoose.FlattenMaps<import("../models/Designation").IDesignation> & Required<{
     _id: mongoose.Types.ObjectId;
 }> & {
     __v: number;
 }>;
-declare const updateDesignation: (companyId: string, id: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/Designation").IDesignation, {}, {}> & import("../models/Designation").IDesignation & Required<{
+declare const createDesignation: (companyId: string, data: Record<string, unknown>, userId?: string) => Promise<mongoose.Document<unknown, {}, import("../models/Designation").IDesignation, {}, {}> & import("../models/Designation").IDesignation & Required<{
     _id: mongoose.Types.ObjectId;
 }> & {
     __v: number;
 }>;
-declare const removeDesignation: (companyId: string, id: string) => Promise<mongoose.Document<unknown, {}, import("../models/Designation").IDesignation, {}, {}> & import("../models/Designation").IDesignation & Required<{
+declare const updateDesignation: (companyId: string, id: string, data: Record<string, unknown>, userId?: string) => Promise<mongoose.Document<unknown, {}, import("../models/Designation").IDesignation, {}, {}> & import("../models/Designation").IDesignation & Required<{
     _id: mongoose.Types.ObjectId;
 }> & {
     __v: number;
 }>;
+declare const removeDesignation: (companyId: string, id: string, force?: boolean) => Promise<mongoose.Document<unknown, {}, import("../models/Designation").IDesignation, {}, {}> & import("../models/Designation").IDesignation & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const restoreDesignation: (companyId: string, id: string) => Promise<mongoose.Document<unknown, {}, import("../models/Designation").IDesignation, {}, {}> & import("../models/Designation").IDesignation & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const bulkDeleteDesignations: (companyId: string, ids: string[], force?: boolean) => Promise<{
+    modifiedCount: number;
+}>;
+declare const bulkRestoreDesignations: (companyId: string, ids: string[]) => Promise<{
+    modifiedCount: number;
+}>;
+declare const changeDesignationStatus: (companyId: string, id: string, status: string, userId?: string) => Promise<mongoose.Document<unknown, {}, import("../models/Designation").IDesignation, {}, {}> & import("../models/Designation").IDesignation & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const exportDesignationsCSV: (companyId: string, filter: Record<string, unknown>) => Promise<string>;
+declare const exportDesignationsExcel: (companyId: string, filter: Record<string, unknown>) => Promise<{
+    Name: {};
+    Code: {};
+    Department: {};
+    Level: {};
+    Status: {};
+    'Hierarchy Order': {};
+    'Employment Types': string;
+}[]>;
 declare const listAttendance: (companyId: string, query: QueryParams) => Promise<{
     records: (mongoose.FlattenMaps<import("../models/Attendance").IAttendance> & Required<{
         _id: mongoose.Types.ObjectId;
@@ -137,6 +186,11 @@ declare const createAttendance: (companyId: string, data: Record<string, unknown
     __v: number;
 }>;
 declare const updateAttendance: (companyId: string, id: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/Attendance").IAttendance, {}, {}> & import("../models/Attendance").IAttendance & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const getAttendanceById: (companyId: string, id: string) => Promise<mongoose.FlattenMaps<import("../models/Attendance").IAttendance> & Required<{
     _id: mongoose.Types.ObjectId;
 }> & {
     __v: number;
@@ -370,6 +424,14 @@ declare const approveRejectRegularization: (companyId: string, id: string, data:
 }> & {
     __v: number;
 }>;
+declare const listRegularizations: (companyId: string, query: QueryParams) => Promise<{
+    records: (mongoose.FlattenMaps<import("../models/RegularizationRequest").IRegularizationRequest> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    meta: import("../types").BuildMetaResult;
+}>;
 declare const getEmployeePayslips: (companyId: string, employeeId: string) => Promise<(mongoose.FlattenMaps<import("../models/Payslip").IPayslip> & Required<{
     _id: mongoose.Types.ObjectId;
 }> & {
@@ -512,6 +574,95 @@ declare const createPromotion: (companyId: string, data: Record<string, unknown>
 }> & {
     __v: number;
 }>;
+declare const getEmployeeAttendance: (companyId: string, employeeId: string, query: QueryParams) => Promise<{
+    records: (mongoose.FlattenMaps<import("../models/Attendance").IAttendance> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    summary: Record<string, unknown>;
+    meta: import("../types").BuildMetaResult;
+}>;
+declare const getEmployeeLeaves: (companyId: string, employeeId: string, query: QueryParams) => Promise<{
+    requests: (mongoose.FlattenMaps<import("../models/LeaveRequest").ILeaveRequest> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    leaveBalance: Record<string, {
+        total: number;
+        used: number;
+        remaining: number;
+    }>;
+    meta: import("../types").BuildMetaResult;
+}>;
+declare const getEmployeePayroll: (companyId: string, employeeId: string, query: QueryParams) => Promise<{
+    records: (mongoose.FlattenMaps<import("../models/Payslip").IPayslip> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    meta: import("../types").BuildMetaResult;
+}>;
+declare const initiateLeaveOnBehalf: (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => Promise<{
+    employee: TransformResult | null;
+    leaveRequest: mongoose.Document<unknown, {}, import("../models/LeaveRequest").ILeaveRequest, {}, {}> & import("../models/LeaveRequest").ILeaveRequest & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    };
+}>;
+declare const terminateEmployee: (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => Promise<TransformResult | null>;
+declare const assignEmployeeRole: (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => Promise<TransformResult | null>;
+declare const resetEmployeePassword: (companyId: string, employeeId: string, _userId: string, data: Record<string, unknown>) => Promise<{
+    message: string;
+    sentTo: any;
+    expiresAt: Date;
+} | {
+    message: string;
+    sentTo: any;
+    expiresAt?: undefined;
+}>;
+declare const createEmployeeDocument: (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/EmployeeDocument").IEmployeeDocument, {}, {}> & import("../models/EmployeeDocument").IEmployeeDocument & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const listEmployeeDocuments: (companyId: string, employeeId: string, query: QueryParams) => Promise<{
+    records: (mongoose.FlattenMaps<import("../models/EmployeeDocument").IEmployeeDocument> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    meta: import("../types").BuildMetaResult;
+}>;
+declare const getEmployeeDocument: (companyId: string, employeeId: string, documentId: string) => Promise<mongoose.Document<unknown, {}, import("../models/EmployeeDocument").IEmployeeDocument, {}, {}> & import("../models/EmployeeDocument").IEmployeeDocument & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const createEmployeeNote: (companyId: string, employeeId: string, userId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/EmployeeNote").IEmployeeNote, {}, {}> & import("../models/EmployeeNote").IEmployeeNote & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const listEmployeeNotes: (companyId: string, employeeId: string, query: QueryParams) => Promise<{
+    records: (mongoose.FlattenMaps<import("../models/EmployeeNote").IEmployeeNote> & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    })[];
+    meta: import("../types").BuildMetaResult;
+}>;
+declare const updateEmployeeNote: (companyId: string, _employeeId: string, noteId: string, userId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/EmployeeNote").IEmployeeNote, {}, {}> & import("../models/EmployeeNote").IEmployeeNote & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}>;
+declare const deleteEmployeeNote: (companyId: string, _employeeId: string, noteId: string, userId: string) => Promise<{
+    message: string;
+    noteId: string;
+}>;
 declare const submitResignation: (companyId: string, employeeId: string, data: Record<string, unknown>) => Promise<mongoose.Document<unknown, {}, import("../models/ExitResignation").IExitResignation, {}, {}> & import("../models/ExitResignation").IExitResignation & Required<{
     _id: mongoose.Types.ObjectId;
 }> & {
@@ -532,5 +683,5 @@ declare const getFnF: (companyId: string, employeeId: string) => Promise<(mongoo
 }> & {
     __v: number;
 }) | null>;
-export { getDashboard, listEmployees, createEmployee, getEmployeeById, updateEmployee, removeEmployee, hardDeleteEmployee, activateEmployee, bulkImportEmployees, exportEmployees, listDepartments, createDepartment, updateDepartment, removeDepartment, listDepartmentEmployees, listDesignations, createDesignation, updateDesignation, removeDesignation, listAttendance, createAttendance, updateAttendance, getAttendanceSummary, bulkCreateAttendance, exportAttendance, listLeaveTypes, createLeaveType, updateLeaveType, removeLeaveType, listLeaveRequests, createLeaveRequest, getLeaveRequestById, approveLeaveRequest, rejectLeaveRequest, removeLeaveRequest, getLeaveBalance, getLeaveCalendar, listHolidays, createHoliday, updateHoliday, removeHoliday, listPayroll, runPayroll, getPayrollById, getPayslip, exportPayslips, getSalaryStructure, createSalaryStructure, updateSalaryStructure, listAssets, createAsset, updateAsset, removeAsset, assignAsset, returnAsset, getAttendanceReport, getLeaveReport, getPayrollReport, getHeadcountReport, getAttritionReport, fullUpdateEmployee, getEmployeeProfile, updateEmployeeProfile, updateEmployeeStatus, getEmployeeHistory, checkin, checkout, createRegularization, approveRejectRegularization, getEmployeePayslips, getPayslipByMonthYear, getEmployeeTaxDetails, getEmployeeDeductions, requestLetter, listPerformanceGoals, createPerformanceGoal, updatePerformanceGoal, submitAppraisal, getAppraisalHistory, submitFeedback, listTrainingCourses, enrollCourse, completeCourse, getTrainingHistory, getTrainingCertifications, createTransferRequest, approveRejectTransfer, createPromotion, submitResignation, getExitChecklist, updateClearance, getFnF, };
+export { getDashboard, listEmployees, createEmployee, getEmployeeById, updateEmployee, removeEmployee, hardDeleteEmployee, activateEmployee, suspendEmployee, reinstateEmployee, bulkImportEmployees, exportEmployees, listDepartments, createDepartment, updateDepartment, removeDepartment, listDepartmentEmployees, listDesignations, listAllDesignations, getDesignationById, createDesignation, updateDesignation, removeDesignation, restoreDesignation, bulkDeleteDesignations, bulkRestoreDesignations, changeDesignationStatus, exportDesignationsCSV, exportDesignationsExcel, listAttendance, createAttendance, updateAttendance, getAttendanceById, getAttendanceSummary, bulkCreateAttendance, exportAttendance, listLeaveTypes, createLeaveType, updateLeaveType, removeLeaveType, listLeaveRequests, createLeaveRequest, getLeaveRequestById, approveLeaveRequest, rejectLeaveRequest, removeLeaveRequest, getLeaveBalance, getLeaveCalendar, listHolidays, createHoliday, updateHoliday, removeHoliday, listPayroll, runPayroll, getPayrollById, getPayslip, exportPayslips, getSalaryStructure, createSalaryStructure, updateSalaryStructure, listAssets, createAsset, updateAsset, removeAsset, assignAsset, returnAsset, getAttendanceReport, getLeaveReport, getPayrollReport, getHeadcountReport, getAttritionReport, fullUpdateEmployee, getEmployeeProfile, updateEmployeeProfile, updateEmployeeStatus, getEmployeeHistory, checkin, checkout, createRegularization, approveRejectRegularization, listRegularizations, getEmployeePayslips, getPayslipByMonthYear, getEmployeeTaxDetails, getEmployeeDeductions, requestLetter, listPerformanceGoals, createPerformanceGoal, updatePerformanceGoal, submitAppraisal, getAppraisalHistory, submitFeedback, listTrainingCourses, enrollCourse, completeCourse, getTrainingHistory, getTrainingCertifications, createTransferRequest, approveRejectTransfer, createPromotion, submitResignation, getExitChecklist, updateClearance, getFnF, getEmployeeAttendance, getEmployeeLeaves, getEmployeePayroll, initiateLeaveOnBehalf, terminateEmployee, assignEmployeeRole, resetEmployeePassword, createEmployeeDocument, listEmployeeDocuments, getEmployeeDocument, createEmployeeNote, listEmployeeNotes, updateEmployeeNote, deleteEmployeeNote, };
 //# sourceMappingURL=hrms.service.d.ts.map

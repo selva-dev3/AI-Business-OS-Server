@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requestLetterSchema = exports.updateClearanceSchema = exports.resignSchema = exports.createPromotionSchema = exports.approveRejectTransferSchema = exports.createTransferSchema = exports.completeCourseSchema = exports.enrollCourseSchema = exports.createTrainingCourseSchema = exports.submitFeedbackSchema = exports.submitAppraisalSchema = exports.updatePerformanceGoalSchema = exports.createPerformanceGoalSchema = exports.approveRejectRegularizationSchema = exports.regularizeAttendanceSchema = exports.checkoutSchema = exports.checkinSchema = exports.updateEmployeeStatusSchema = exports.updateProfileSchema = exports.updateSalaryStructureSchema = exports.createSalaryStructureSchema = exports.runPayrollSchema = exports.returnAssetSchema = exports.assignAssetSchema = exports.updateAssetSchema = exports.createAssetSchema = exports.updateHolidaySchema = exports.createHolidaySchema = exports.approveRejectLeaveSchema = exports.createLeaveRequestSchema = exports.updateLeaveTypeSchema = exports.createLeaveTypeSchema = exports.bulkAttendanceSchema = exports.updateAttendanceSchema = exports.createAttendanceSchema = exports.updateDesignationSchema = exports.createDesignationSchema = exports.updateDepartmentSchema = exports.createDepartmentSchema = exports.updateEmployeeSchema = exports.createEmployeeSchema = void 0;
+exports.terminateEmployeeSchema = exports.initiateLeaveOnBehalfSchema = exports.getEmployeePayrollSchema = exports.getEmployeeLeavesSchema = exports.getEmployeeAttendanceSchema = exports.requestLetterSchema = exports.updateClearanceSchema = exports.resignSchema = exports.createPromotionSchema = exports.approveRejectTransferSchema = exports.createTransferSchema = exports.completeCourseSchema = exports.enrollCourseSchema = exports.createTrainingCourseSchema = exports.submitFeedbackSchema = exports.submitAppraisalSchema = exports.updatePerformanceGoalSchema = exports.createPerformanceGoalSchema = exports.approveRejectRegularizationSchema = exports.regularizeAttendanceSchema = exports.checkoutSchema = exports.checkinSchema = exports.reinstateEmployeeSchema = exports.suspendEmployeeSchema = exports.updateEmployeeStatusSchema = exports.updateProfileSchema = exports.updateSalaryStructureSchema = exports.createSalaryStructureSchema = exports.runPayrollSchema = exports.returnAssetSchema = exports.assignAssetSchema = exports.updateAssetSchema = exports.createAssetSchema = exports.updateHolidaySchema = exports.createHolidaySchema = exports.approveRejectLeaveSchema = exports.createLeaveRequestSchema = exports.updateLeaveTypeSchema = exports.createLeaveTypeSchema = exports.bulkAttendanceSchema = exports.updateAttendanceSchema = exports.createAttendanceSchema = exports.changeDesignationStatusSchema = exports.bulkDesignationsSchema = exports.updateDesignationSchema = exports.createDesignationSchema = exports.updateDepartmentSchema = exports.createDepartmentSchema = exports.updateEmployeeSchema = exports.createEmployeeSchema = void 0;
+exports.updateEmployeeNoteSchema = exports.listEmployeeNotesSchema = exports.createEmployeeNoteSchema = exports.listEmployeeDocumentsSchema = exports.createEmployeeDocumentSchema = exports.resetEmployeePasswordSchema = exports.assignEmployeeRoleSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 const objectId = joi_1.default.string().regex(/^[0-9a-fA-F]{24}$/).message('Invalid ID format');
 exports.createEmployeeSchema = joi_1.default.object({
@@ -127,15 +128,35 @@ exports.updateDepartmentSchema = joi_1.default.object({
 }).min(1);
 exports.createDesignationSchema = joi_1.default.object({
     name: joi_1.default.string().trim().max(200).required(),
-    level: joi_1.default.number().integer().min(0).allow(null),
+    designationCode: joi_1.default.string().trim().max(50).allow('', null),
     description: joi_1.default.string().trim().max(1000).allow('', null),
+    level: joi_1.default.number().integer().min(0).allow(null),
+    hierarchyOrder: joi_1.default.number().integer().min(0).allow(null),
+    employmentTypes: joi_1.default.array().items(joi_1.default.string().valid('FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN', 'FREELANCE')).allow(null),
+    color: joi_1.default.string().trim().max(7).regex(/^#[0-9a-fA-F]{6}$/).allow('', null).message('Color must be a valid hex code'),
+    isDefault: joi_1.default.boolean().default(false),
+    departmentId: objectId.allow(null),
+    status: joi_1.default.string().valid('ACTIVE', 'INACTIVE').default('ACTIVE'),
 });
 exports.updateDesignationSchema = joi_1.default.object({
     name: joi_1.default.string().trim().max(200),
-    level: joi_1.default.number().integer().min(0).allow(null),
+    designationCode: joi_1.default.string().trim().max(50).allow('', null),
     description: joi_1.default.string().trim().max(1000).allow('', null),
+    level: joi_1.default.number().integer().min(0).allow(null),
+    hierarchyOrder: joi_1.default.number().integer().min(0).allow(null),
+    employmentTypes: joi_1.default.array().items(joi_1.default.string().valid('FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN', 'FREELANCE')).allow(null),
+    color: joi_1.default.string().trim().max(7).regex(/^#[0-9a-fA-F]{6}$/).allow('', null).message('Color must be a valid hex code'),
+    isDefault: joi_1.default.boolean(),
+    departmentId: objectId.allow(null),
+    status: joi_1.default.string().valid('ACTIVE', 'INACTIVE'),
     isActive: joi_1.default.boolean(),
 }).min(1);
+exports.bulkDesignationsSchema = joi_1.default.object({
+    ids: joi_1.default.array().items(objectId.required()).min(1).required(),
+});
+exports.changeDesignationStatusSchema = joi_1.default.object({
+    status: joi_1.default.string().valid('ACTIVE', 'INACTIVE').required(),
+});
 exports.createAttendanceSchema = joi_1.default.object({
     employeeId: objectId.required(),
     date: joi_1.default.date().iso().required(),
@@ -316,6 +337,14 @@ exports.updateEmployeeStatusSchema = joi_1.default.object({
     exitDate: joi_1.default.date().iso().allow(null, ''),
     exitReason: joi_1.default.string().trim().max(1000).allow('', null),
 });
+exports.suspendEmployeeSchema = joi_1.default.object({
+    reason: joi_1.default.string().trim().min(10).max(2000).required(),
+    expectedReinstatement: joi_1.default.date().iso().allow(null),
+    notes: joi_1.default.string().trim().max(2000).allow('', null),
+});
+exports.reinstateEmployeeSchema = joi_1.default.object({
+    notes: joi_1.default.string().trim().max(2000).allow('', null),
+});
 // ─── ATTENDANCE CHECKIN / CHECKOUT / REGULARIZE ─────────────────────────────
 exports.checkinSchema = joi_1.default.object({
     employeeId: objectId.required(),
@@ -452,4 +481,105 @@ exports.requestLetterSchema = joi_1.default.object({
     notes: joi_1.default.string().trim().max(1000).allow('', null),
     employeeId: objectId.allow(null).optional(),
 });
+// ─── EMPLOYEE ATTENDANCE ─────────────────────────────────────────────────────
+exports.getEmployeeAttendanceSchema = joi_1.default.object({
+    month: joi_1.default.number().integer().min(1).max(12),
+    year: joi_1.default.number().integer().min(1900).max(2100),
+    status: joi_1.default.string().valid('PRESENT', 'ABSENT', 'LATE', 'HALF_DAY', 'ON_LEAVE', 'present', 'absent', 'late', 'half_day', 'on_leave'),
+    page: joi_1.default.number().integer().min(1),
+    limit: joi_1.default.number().integer().min(1).max(100),
+});
+// ─── EMPLOYEE LEAVES ─────────────────────────────────────────────────────────
+exports.getEmployeeLeavesSchema = joi_1.default.object({
+    status: joi_1.default.string().valid('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED', 'pending', 'approved', 'rejected', 'cancelled'),
+    leaveType: joi_1.default.string(),
+    year: joi_1.default.number().integer().min(1900).max(2100),
+    page: joi_1.default.number().integer().min(1),
+    limit: joi_1.default.number().integer().min(1).max(100),
+});
+// ─── EMPLOYEE PAYROLL ────────────────────────────────────────────────────────
+exports.getEmployeePayrollSchema = joi_1.default.object({
+    year: joi_1.default.number().integer().min(1900).max(2100),
+    month: joi_1.default.number().integer().min(1).max(12),
+    status: joi_1.default.string().valid('DRAFT', 'GENERATED', 'PAID'),
+    page: joi_1.default.number().integer().min(1),
+    limit: joi_1.default.number().integer().min(1).max(100),
+});
+// ─── INITIATE LEAVE ON BEHALF ────────────────────────────────────────────────
+exports.initiateLeaveOnBehalfSchema = joi_1.default.object({
+    leaveTypeId: objectId.required(),
+    startDate: joi_1.default.date().iso().required(),
+    endDate: joi_1.default.date().iso().required(),
+    reason: joi_1.default.string().trim().min(10).max(2000).required(),
+    notes: joi_1.default.string().trim().max(2000).allow('', null),
+});
+// ─── TERMINATE EMPLOYEE ──────────────────────────────────────────────────────
+exports.terminateEmployeeSchema = joi_1.default.object({
+    lastWorkingDate: joi_1.default.date().iso().required(),
+    reason: joi_1.default.string().valid('RESIGNATION', 'TERMINATION', 'RETIREMENT', 'CONTRACT_END', 'OTHER', 'resignation', 'termination', 'retirement', 'contract_end', 'other').required(),
+    reasonDetails: joi_1.default.string().trim().max(2000).allow('', null),
+    exitChecklist: joi_1.default.object({
+        laptopReturned: joi_1.default.boolean(),
+        accessRevoked: joi_1.default.boolean(),
+        fnfSettled: joi_1.default.boolean(),
+        relievingLetterIssued: joi_1.default.boolean(),
+        exitInterviewDone: joi_1.default.boolean(),
+    }),
+    noticePeriodServed: joi_1.default.boolean(),
+    finalSalaryProcessed: joi_1.default.boolean(),
+});
+// ─── ASSIGN EMPLOYEE ROLE ────────────────────────────────────────────────────
+exports.assignEmployeeRoleSchema = joi_1.default.object({
+    designation: joi_1.default.string().trim().max(200),
+    departmentId: objectId.allow(null),
+    employmentType: joi_1.default.string().valid('FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN', 'full_time', 'part_time', 'contract', 'intern'),
+    reportingManagerId: objectId.allow(null),
+    effectiveDate: joi_1.default.date().iso().required(),
+    reason: joi_1.default.string().valid('PROMOTION', 'TRANSFER', 'RESTRUCTURE', 'CORRECTION', 'promotion', 'transfer', 'restructure', 'correction').required(),
+    notes: joi_1.default.string().trim().max(2000).allow('', null),
+}).min(2);
+// ─── RESET EMPLOYEE PASSWORD ─────────────────────────────────────────────────
+exports.resetEmployeePasswordSchema = joi_1.default.object({
+    action: joi_1.default.string().valid('reset_password', 'resend_invite').required(),
+    notifyEmployee: joi_1.default.boolean(),
+});
+// ─── EMPLOYEE DOCUMENT ───────────────────────────────────────────────────────
+exports.createEmployeeDocumentSchema = joi_1.default.object({
+    fileUrl: joi_1.default.string().allow('', null).optional(),
+    documentUrl: joi_1.default.string().allow('', null).optional(),
+    documentType: joi_1.default.string().valid('OFFER_LETTER', 'ID_PROOF', 'CERTIFICATE', 'CONTRACT', 'NDA', 'PAYSLIP', 'OTHER', 'offer_letter', 'id_proof', 'certificate', 'contract', 'nda', 'payslip', 'other').required(),
+    documentName: joi_1.default.string().trim().max(255).required(),
+    fileSize: joi_1.default.number().min(0),
+    mimeType: joi_1.default.string().trim(),
+    expiryDate: joi_1.default.date().iso().allow(null),
+    isConfidential: joi_1.default.boolean(),
+}).custom((value, helpers) => {
+    if (!value.fileUrl && !value.documentUrl) {
+        return helpers.error('any.required', { message: 'Either fileUrl or documentUrl is required' });
+    }
+    return value;
+});
+exports.listEmployeeDocumentsSchema = joi_1.default.object({
+    type: joi_1.default.string(),
+    page: joi_1.default.number().integer().min(1),
+    limit: joi_1.default.number().integer().min(1).max(100),
+});
+// ─── EMPLOYEE NOTE ───────────────────────────────────────────────────────────
+exports.createEmployeeNoteSchema = joi_1.default.object({
+    content: joi_1.default.string().trim().min(5).max(2000).required(),
+    category: joi_1.default.string().valid('PERFORMANCE', 'DISCIPLINARY', 'GENERAL', 'APPRECIATION', 'COMPLAINT', 'OTHER').required(),
+    isPinned: joi_1.default.boolean(),
+    visibility: joi_1.default.string().valid('HR_ONLY', 'ADMIN_ONLY', 'HR_AND_ADMIN'),
+});
+exports.listEmployeeNotesSchema = joi_1.default.object({
+    category: joi_1.default.string(),
+    page: joi_1.default.number().integer().min(1),
+    limit: joi_1.default.number().integer().min(1).max(100),
+});
+exports.updateEmployeeNoteSchema = joi_1.default.object({
+    content: joi_1.default.string().trim().min(5).max(2000),
+    category: joi_1.default.string().valid('PERFORMANCE', 'DISCIPLINARY', 'GENERAL', 'APPRECIATION', 'COMPLAINT', 'OTHER'),
+    isPinned: joi_1.default.boolean(),
+    visibility: joi_1.default.string().valid('HR_ONLY', 'ADMIN_ONLY', 'HR_AND_ADMIN'),
+}).min(1);
 //# sourceMappingURL=hrms.validator.js.map

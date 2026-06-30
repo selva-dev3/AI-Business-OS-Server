@@ -19,7 +19,7 @@ const auditLogSchema = new mongoose_1.default.Schema({
         type: String,
         required: [true, 'Action is required'],
         enum: {
-            values: ['CREATE', 'UPDATE', 'DELETE', 'LOGIN'],
+            values: ['CREATE', 'UPDATE', 'DELETE', 'LOGIN', 'SUSPEND', 'REINSTATE'],
             message: '{VALUE} is not a valid action',
         },
         uppercase: true,

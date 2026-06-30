@@ -1,0 +1,1 @@
+{"version":3,"file":"roleGuard.d.ts","sourceRoot":"","sources":["../../src/middleware/roleGuard.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAEjD,OAAO,EAAE,WAAW,EAAE,MAAM,UAAU,CAAC;AAEvC;;;GAGG;AACH,QAAA,MAAM,SAAS,GAAI,cAAc,MAAM,EAAE,MAC/B,KAAK,WAAW,EAAE,KAAK,QAAQ,EAAE,MAAM,YAAY,KAAG,IAuB/D,CAAC;AAEF,OAAO,EAAE,SAAS,EAAE,CAAC"}

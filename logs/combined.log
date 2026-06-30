@@ -2463,3 +2463,679 @@ Error: User account not found for this employee
 2026-06-29 20:08:10 [INFO]: ::1 - - [29/Jun/2026:14:38:10 +0000] "GET /api/v1/hrms/attendance/6a427edab0eac40a3e5e0995 HTTP/1.1" 200 601 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-29 20:08:11 [INFO]: ::1 - - [29/Jun/2026:14:38:11 +0000] "GET /api/v1/hrms/attendance/6a427edab0eac40a3e5e0995 HTTP/1.1" 200 601 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
 2026-06-29 20:08:14 [INFO]: ::1 - - [29/Jun/2026:14:38:14 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:10:31 [INFO]: ::1 - - [29/Jun/2026:14:40:31 +0000] "POST /api/v1/hrms/attendance HTTP/1.1" 201 469 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:10:31 [INFO]: ::1 - - [29/Jun/2026:14:40:31 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1158 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:10:31 [INFO]: ::1 - - [29/Jun/2026:14:40:31 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1158 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:13:20 [INFO]: ::1 - - [29/Jun/2026:14:43:20 +0000] "POST /api/v1/hrms/attendance/checkin HTTP/1.1" 400 226 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:14:05 [INFO]: ::1 - - [29/Jun/2026:14:44:05 +0000] "POST /api/v1/hrms/attendance/checkout HTTP/1.1" 400 227 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:14:12 [INFO]: ::1 - - [29/Jun/2026:14:44:12 +0000] "POST /api/v1/hrms/attendance/checkin HTTP/1.1" 400 226 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:14:16 [INFO]: ::1 - - [29/Jun/2026:14:44:16 +0000] "POST /api/v1/hrms/attendance/checkout HTTP/1.1" 400 227 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:28 [INFO]: ::1 - - [29/Jun/2026:14:53:28 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 401 229 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:29 [INFO]: ::1 - - [29/Jun/2026:14:53:29 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 401 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:29 [INFO]: ::1 - - [29/Jun/2026:14:53:29 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:29 [INFO]: ::1 - - [29/Jun/2026:14:53:29 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:29 [INFO]: ::1 - - [29/Jun/2026:14:53:29 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1158 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:29 [INFO]: ::1 - - [29/Jun/2026:14:53:29 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:29 [INFO]: ::1 - - [29/Jun/2026:14:53:29 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:30 [INFO]: ::1 - - [29/Jun/2026:14:53:30 +0000] "POST /api/v1/hrms/attendance/checkin HTTP/1.1" 400 226 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:32 [INFO]: ::1 - - [29/Jun/2026:14:53:32 +0000] "POST /api/v1/hrms/attendance/checkout HTTP/1.1" 400 227 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:47 [INFO]: ::1 - - [29/Jun/2026:14:53:47 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:47 [INFO]: ::1 - - [29/Jun/2026:14:53:47 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1158 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:47 [INFO]: ::1 - - [29/Jun/2026:14:53:47 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:47 [INFO]: ::1 - - [29/Jun/2026:14:53:47 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:52 [INFO]: ::1 - - [29/Jun/2026:14:53:52 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:52 [INFO]: ::1 - - [29/Jun/2026:14:53:52 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1158 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:52 [INFO]: ::1 - - [29/Jun/2026:14:53:52 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:23:52 [INFO]: ::1 - - [29/Jun/2026:14:53:52 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:26:17 [INFO]: ::1 - - [29/Jun/2026:14:56:17 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:26:17 [INFO]: ::1 - - [29/Jun/2026:14:56:17 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1158 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:26:17 [INFO]: ::1 - - [29/Jun/2026:14:56:17 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:26:17 [INFO]: ::1 - - [29/Jun/2026:14:56:17 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:26:22 [INFO]: ::1 - - [29/Jun/2026:14:56:22 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:26:22 [INFO]: ::1 - - [29/Jun/2026:14:56:22 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1158 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:26:22 [INFO]: ::1 - - [29/Jun/2026:14:56:22 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:26:22 [INFO]: ::1 - - [29/Jun/2026:14:56:22 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:28:08 [INFO]: ::1 - - [29/Jun/2026:14:58:08 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:28:08 [INFO]: ::1 - - [29/Jun/2026:14:58:08 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1158 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:28:08 [INFO]: ::1 - - [29/Jun/2026:14:58:08 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:28:08 [INFO]: ::1 - - [29/Jun/2026:14:58:08 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:28:11 [INFO]: ::1 - - [29/Jun/2026:14:58:11 +0000] "GET /api/v1/hrms/attendance/6a4283deab8a75c46af7a157 HTTP/1.1" 200 570 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:30:41 [INFO]: ::1 - - [29/Jun/2026:15:00:41 +0000] "POST /api/v1/hrms/attendance HTTP/1.1" 201 502 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:30:42 [INFO]: ::1 - - [29/Jun/2026:15:00:42 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1648 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:30:42 [INFO]: ::1 - - [29/Jun/2026:15:00:42 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1648 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:30:57 [INFO]: ::1 - - [29/Jun/2026:15:00:57 +0000] "GET /api/v1/hrms/attendance/6a428899ab8a75c46af7a205 HTTP/1.1" 200 603 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:32:44 [INFO]: ::1 - - [29/Jun/2026:15:02:44 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:32:44 [INFO]: ::1 - - [29/Jun/2026:15:02:44 +0000] "GET /api/v1/hrms/attendance/6a428899ab8a75c46af7a205 HTTP/1.1" 200 603 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:32:44 [INFO]: ::1 - - [29/Jun/2026:15:02:44 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:32:44 [INFO]: ::1 - - [29/Jun/2026:15:02:44 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:36:03 [INFO]: ::1 - - [29/Jun/2026:15:06:03 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:36:03 [INFO]: ::1 - - [29/Jun/2026:15:06:03 +0000] "GET /api/v1/hrms/attendance/6a428899ab8a75c46af7a205 HTTP/1.1" 200 603 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:36:03 [INFO]: ::1 - - [29/Jun/2026:15:06:03 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:36:03 [INFO]: ::1 - - [29/Jun/2026:15:06:03 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:36:07 [INFO]: ::1 - - [29/Jun/2026:15:06:07 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1648 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:37:39 [INFO]: ::1 - - [29/Jun/2026:15:07:39 +0000] "PATCH /api/v1/hrms/attendance/6a428899ab8a75c46af7a205 HTTP/1.1" 200 527 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:37:40 [INFO]: ::1 - - [29/Jun/2026:15:07:40 +0000] "GET /api/v1/hrms/attendance/6a428899ab8a75c46af7a205 HTTP/1.1" 200 628 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:37:40 [INFO]: ::1 - - [29/Jun/2026:15:07:40 +0000] "GET /api/v1/hrms/attendance/6a428899ab8a75c46af7a205 HTTP/1.1" 200 628 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:38:01 [INFO]: ::1 - - [29/Jun/2026:15:08:01 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1673 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:38:12 [INFO]: ::1 - - [29/Jun/2026:15:08:12 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30 HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:19 [INFO]: ::1 - - [29/Jun/2026:15:09:19 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 401 213 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:19 [INFO]: ::1 - - [29/Jun/2026:15:09:19 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:19 [INFO]: ::1 - - [29/Jun/2026:15:09:19 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 401 219 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:19 [INFO]: ::1 - - [29/Jun/2026:15:09:19 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 401 213 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:19 [INFO]: ::1 - - [29/Jun/2026:15:09:19 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:19 [INFO]: ::1 - - [29/Jun/2026:15:09:19 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 200 931 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:19 [INFO]: ::1 - - [29/Jun/2026:15:09:19 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:19 [INFO]: ::1 - - [29/Jun/2026:15:09:19 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:20 [INFO]: ::1 - - [29/Jun/2026:15:09:20 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:23 [INFO]: ::1 - - [29/Jun/2026:15:09:23 +0000] "GET /api/v1/hrms/employees/6a40c6f58c45b4acd836c46a HTTP/1.1" 200 942 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:24 [INFO]: ::1 - - [29/Jun/2026:15:09:24 +0000] "GET /api/v1/hrms/leave-types HTTP/1.1" 200 430 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:27 [INFO]: ::1 - - [29/Jun/2026:15:09:27 +0000] "GET /api/v1/hrms/employees/6a40c6f58c45b4acd836c46a/attendance?month=6&year=2026&page=1&limit=15 HTTP/1.1" 200 665 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:41 [INFO]: ::1 - - [29/Jun/2026:15:09:41 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:39:42 [INFO]: ::1 - - [29/Jun/2026:15:09:42 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:40:54 [INFO]: ::1 - - [29/Jun/2026:15:10:54 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:40:54 [INFO]: ::1 - - [29/Jun/2026:15:10:54 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1673 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:40:54 [INFO]: ::1 - - [29/Jun/2026:15:10:54 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:40:54 [INFO]: ::1 - - [29/Jun/2026:15:10:54 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:49:15 [INFO]: ::1 - - [29/Jun/2026:15:19:15 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:49:15 [INFO]: ::1 - - [29/Jun/2026:15:19:15 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29 HTTP/1.1" 200 1673 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:49:15 [INFO]: ::1 - - [29/Jun/2026:15:19:15 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:53:23 [INFO]: ::1 - - [29/Jun/2026:15:23:23 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29&page=1&limit=15 HTTP/1.1" 200 1670 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:53:27 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:53:27 [INFO]: ::1 - - [29/Jun/2026:15:23:27 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:53:31 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:53:31 [INFO]: ::1 - - [29/Jun/2026:15:23:31 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:53:35 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:53:35 [INFO]: ::1 - - [29/Jun/2026:15:23:35 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:53:40 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:53:40 [INFO]: ::1 - - [29/Jun/2026:15:23:40 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:53:48 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:53:48 [INFO]: ::1 - - [29/Jun/2026:15:23:48 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:53:53 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:53:53 [INFO]: ::1 - - [29/Jun/2026:15:23:53 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:53:57 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:53:57 [INFO]: ::1 - - [29/Jun/2026:15:23:57 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:27 [INFO]: ::1 - - [29/Jun/2026:15:26:27 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 401 237 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:27 [INFO]: ::1 - - [29/Jun/2026:15:26:27 +0000] "GET /api/v1/auth/me HTTP/1.1" 401 205 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:27 [INFO]: ::1 - - [29/Jun/2026:15:26:27 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:27 [INFO]: ::1 - - [29/Jun/2026:15:26:27 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29&page=1&limit=15 HTTP/1.1" 401 245 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:27 [INFO]: ::1 - - [29/Jun/2026:15:26:27 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 401 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:27 [INFO]: ::1 - - [29/Jun/2026:15:26:27 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:27 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:56:27 [INFO]: ::1 - - [29/Jun/2026:15:26:27 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:27 [INFO]: ::1 - - [29/Jun/2026:15:26:27 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:28 [INFO]: ::1 - - [29/Jun/2026:15:26:28 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:28 [INFO]: ::1 - - [29/Jun/2026:15:26:28 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29&page=1&limit=15 HTTP/1.1" 200 1670 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:56:28 [INFO]: ::1 - - [29/Jun/2026:15:26:28 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 20:59:22 [ERROR]: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "summary" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 20:59:22 [INFO]: ::1 - - [29/Jun/2026:15:29:22 +0000] "GET /api/v1/hrms/attendance/summary?date=2026-06-29 HTTP/1.1" 400 236 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:02:06 [INFO]: ::1 - - [29/Jun/2026:15:32:06 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:02:06 [INFO]: ::1 - - [29/Jun/2026:15:32:06 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:02:06 [INFO]: ::1 - - [29/Jun/2026:15:32:06 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29&page=1&limit=15 HTTP/1.1" 200 1670 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:02:06 [INFO]: ::1 - - [29/Jun/2026:15:32:06 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:02:34 [INFO]: ::1 - - [29/Jun/2026:15:32:34 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:02:40 [INFO]: ::1 - - [29/Jun/2026:15:32:40 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29&page=1&limit=15 HTTP/1.1" 200 1670 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:02:40 [INFO]: ::1 - - [29/Jun/2026:15:32:40 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:02:41 [INFO]: ::1 - - [29/Jun/2026:15:32:41 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:03:46 [ERROR]: Cast to ObjectId failed for value "export" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "export" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-29 21:03:46 [INFO]: ::1 - - [29/Jun/2026:15:33:46 +0000] "GET /api/v1/hrms/attendance/export?fromDate=2026-06-29&toDate=2026-06-29 HTTP/1.1" 400 256 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:05:21 [INFO]: ::1 - - [29/Jun/2026:15:35:21 +0000] "GET /api/v1/hrms/attendance/6a428899ab8a75c46af7a205 HTTP/1.1" 200 628 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:06:42 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-29 21:06:42 [INFO]: Server running on http://localhost:5000
+2026-06-29 21:06:42 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-29 21:06:42 [INFO]: Health: http://localhost:5000/health
+2026-06-29 21:06:51 [INFO]: ::1 - - [29/Jun/2026:15:36:51 +0000] "POST /api/v1/hrms/attendance/regularize HTTP/1.1" 201 436 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:06:51 [INFO]: ::1 - - [29/Jun/2026:15:36:51 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29&page=1&limit=15 HTTP/1.1" 200 1670 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:06:52 [INFO]: ::1 - - [29/Jun/2026:15:36:52 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29&page=1&limit=15 HTTP/1.1" 200 1670 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:07:47 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-29 21:07:47 [INFO]: Server running on http://localhost:5000
+2026-06-29 21:07:47 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-29 21:07:47 [INFO]: Health: http://localhost:5000/health
+2026-06-29 21:07:51 [ERROR]: Attendance validation failed: workingHours: Working hours cannot be negative
+ValidationError: Attendance validation failed: workingHours: Working hours cannot be negative
+    at model.Document.invalidate (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3387:32)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3148:17
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1443:9
+    at processTicksAndRejections (node:internal/process/task_queues:77:11)
+2026-06-29 21:07:51 [INFO]: ::1 - - [29/Jun/2026:15:37:51 +0000] "POST /api/v1/hrms/attendance/checkout HTTP/1.1" 400 233 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:08:23 [ERROR]: Attendance validation failed: workingHours: Working hours cannot be negative
+ValidationError: Attendance validation failed: workingHours: Working hours cannot be negative
+    at model.Document.invalidate (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3387:32)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3148:17
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1443:9
+    at processTicksAndRejections (node:internal/process/task_queues:77:11)
+2026-06-29 21:08:23 [INFO]: ::1 - - [29/Jun/2026:15:38:23 +0000] "POST /api/v1/hrms/attendance/checkout HTTP/1.1" 400 233 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:08:36 [ERROR]: Attendance validation failed: workingHours: Working hours cannot be negative
+ValidationError: Attendance validation failed: workingHours: Working hours cannot be negative
+    at model.Document.invalidate (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3387:32)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3148:17
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1443:9
+    at processTicksAndRejections (node:internal/process/task_queues:77:11)
+2026-06-29 21:08:36 [INFO]: ::1 - - [29/Jun/2026:15:38:36 +0000] "POST /api/v1/hrms/attendance/checkout HTTP/1.1" 400 233 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:08:45 [INFO]: ::1 - - [29/Jun/2026:15:38:45 +0000] "POST /api/v1/hrms/attendance/checkout HTTP/1.1" 400 227 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:08:55 [ERROR]: Attendance validation failed: workingHours: Working hours cannot be negative
+ValidationError: Attendance validation failed: workingHours: Working hours cannot be negative
+    at model.Document.invalidate (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3387:32)
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/document.js:3148:17
+    at /home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1443:9
+    at processTicksAndRejections (node:internal/process/task_queues:77:11)
+2026-06-29 21:08:55 [INFO]: ::1 - - [29/Jun/2026:15:38:55 +0000] "POST /api/v1/hrms/attendance/checkout HTTP/1.1" 400 233 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:11 [INFO]: ::1 - - [29/Jun/2026:15:44:11 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 401 213 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:11 [INFO]: ::1 - - [29/Jun/2026:15:44:11 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:11 [INFO]: ::1 - - [29/Jun/2026:15:44:11 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 401 219 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:11 [INFO]: ::1 - - [29/Jun/2026:15:44:11 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 401 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:11 [INFO]: ::1 - - [29/Jun/2026:15:44:11 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 401 213 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:11 [INFO]: ::1 - - [29/Jun/2026:15:44:11 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:11 [INFO]: ::1 - - [29/Jun/2026:15:44:11 +0000] "GET /api/v1/hrms/designations/all HTTP/1.1" 200 931 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:12 [INFO]: ::1 - - [29/Jun/2026:15:44:12 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:12 [INFO]: ::1 - - [29/Jun/2026:15:44:12 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:12 [INFO]: ::1 - - [29/Jun/2026:15:44:12 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:12 [INFO]: ::1 - - [29/Jun/2026:15:44:12 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:15 [INFO]: ::1 - - [29/Jun/2026:15:44:15 +0000] "GET /api/v1/hrms/employees/6a40c6f58c45b4acd836c46a HTTP/1.1" 200 942 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:16 [INFO]: ::1 - - [29/Jun/2026:15:44:16 +0000] "GET /api/v1/hrms/leave-types HTTP/1.1" 200 430 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:22 [INFO]: ::1 - - [29/Jun/2026:15:44:22 +0000] "GET /api/v1/hrms/employees/6a40c6f58c45b4acd836c46a/documents HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:25 [INFO]: ::1 - - [29/Jun/2026:15:44:25 +0000] "GET /api/v1/hrms/employees/6a40c6f58c45b4acd836c46a/notes HTTP/1.1" 200 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:27 [INFO]: ::1 - - [29/Jun/2026:15:44:27 +0000] "GET /api/v1/hrms/employees/6a40c6f58c45b4acd836c46a/history HTTP/1.1" 200 116 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:31 [INFO]: ::1 - - [29/Jun/2026:15:44:31 +0000] "GET /api/v1/hrms/employees/6a40c6f58c45b4acd836c46a/leaves?year=2026&page=1&limit=15 HTTP/1.1" 200 233 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:44 [INFO]: ::1 - - [29/Jun/2026:15:44:44 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:14:44 [INFO]: ::1 - - [29/Jun/2026:15:44:44 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:15:45 [INFO]: ::1 - - [29/Jun/2026:15:45:45 +0000] "GET /api/v1/hrms/employees? HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:17:06 [INFO]: ::1 - - [29/Jun/2026:15:47:06 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-29 21:17:06 [INFO]: ::1 - - [29/Jun/2026:15:47:06 +0000] "GET /api/v1/hrms/attendance?date=2026-06-29&page=1&limit=15 HTTP/1.1" 200 1670 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:42 [INFO]: MongoDB connected: ac-jyefah8-shard-00-00.5rs7mwd.mongodb.net
+2026-06-30 10:18:42 [INFO]: Server running on http://localhost:5000
+2026-06-30 10:18:42 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-30 10:18:42 [INFO]: Health: http://localhost:5000/health
+2026-06-30 10:18:50 [INFO]: ::1 - - [30/Jun/2026:04:48:50 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 401 245 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:50 [INFO]: ::1 - - [30/Jun/2026:04:48:50 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:50 [INFO]: ::1 - - [30/Jun/2026:04:48:50 +0000] "GET /api/v1/auth/me HTTP/1.1" 401 205 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:50 [INFO]: ::1 - - [30/Jun/2026:04:48:50 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 401 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:50 [INFO]: ::1 - - [30/Jun/2026:04:48:50 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:51 [INFO]: ::1 - - [30/Jun/2026:04:48:51 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:51 [INFO]: ::1 - - [30/Jun/2026:04:48:51 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 211 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:51 [INFO]: ::1 - - [30/Jun/2026:04:48:51 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:18:51 [INFO]: ::1 - - [30/Jun/2026:04:48:51 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:19:29 [INFO]: ::1 - - [30/Jun/2026:04:49:29 +0000] "POST /api/v1/hrms/attendance HTTP/1.1" 201 502 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:19:29 [INFO]: ::1 - - [30/Jun/2026:04:49:29 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:19:29 [INFO]: ::1 - - [30/Jun/2026:04:49:29 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:28:12 [INFO]: ::1 - - [30/Jun/2026:04:58:12 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:28:12 [INFO]: ::1 - - [30/Jun/2026:04:58:12 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:28:12 [INFO]: ::1 - - [30/Jun/2026:04:58:12 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:30:43 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:30:44 [INFO]: ::1 - - [30/Jun/2026:05:00:44 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:30:51 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:30:51 [INFO]: ::1 - - [30/Jun/2026:05:00:51 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:30:59 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:30:59 [INFO]: ::1 - - [30/Jun/2026:05:00:59 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:31:13 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:31:13 [INFO]: ::1 - - [30/Jun/2026:05:01:13 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:31:35 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:31:35 [INFO]: ::1 - - [30/Jun/2026:05:01:35 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:31:44 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:31:44 [INFO]: ::1 - - [30/Jun/2026:05:01:44 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:24 [INFO]: ::1 - - [30/Jun/2026:05:04:24 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 401 245 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:24 [INFO]: ::1 - - [30/Jun/2026:05:04:24 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 401 212 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:24 [INFO]: ::1 - - [30/Jun/2026:05:04:24 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 401 214 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:24 [INFO]: ::1 - - [30/Jun/2026:05:04:24 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 401 244 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:24 [INFO]: ::1 - - [30/Jun/2026:05:04:24 +0000] "POST /api/v1/auth/refresh HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:25 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:34:25 [INFO]: ::1 - - [30/Jun/2026:05:04:25 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:25 [INFO]: ::1 - - [30/Jun/2026:05:04:25 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:25 [INFO]: ::1 - - [30/Jun/2026:05:04:25 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:34:25 [INFO]: ::1 - - [30/Jun/2026:05:04:25 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:37:36 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:37:36 [INFO]: ::1 - - [30/Jun/2026:05:07:36 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:37:53 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:37:53 [INFO]: ::1 - - [30/Jun/2026:05:07:53 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:37:55 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:37:55 [INFO]: ::1 - - [30/Jun/2026:05:07:55 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:26 [INFO]: ::1 - - [30/Jun/2026:05:08:26 +0000] "POST /api/v1/hrms/attendance/regularize HTTP/1.1" 201 437 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:26 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:26 [INFO]: ::1 - - [30/Jun/2026:05:08:26 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:26 [INFO]: ::1 - - [30/Jun/2026:05:08:26 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:27 [INFO]: ::1 - - [30/Jun/2026:05:08:27 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:28 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:28 [INFO]: ::1 - - [30/Jun/2026:05:08:28 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:30 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:30 [INFO]: ::1 - - [30/Jun/2026:05:08:30 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:39 [INFO]: ::1 - - [30/Jun/2026:05:08:39 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:39 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:39 [INFO]: ::1 - - [30/Jun/2026:05:08:39 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:40 [INFO]: ::1 - - [30/Jun/2026:05:08:40 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:40 [INFO]: ::1 - - [30/Jun/2026:05:08:40 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:40 [INFO]: ::1 - - [30/Jun/2026:05:08:40 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:41 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:41 [INFO]: ::1 - - [30/Jun/2026:05:08:41 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:43 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:43 [INFO]: ::1 - - [30/Jun/2026:05:08:43 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:52 [INFO]: ::1 - - [30/Jun/2026:05:08:52 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:52 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:52 [INFO]: ::1 - - [30/Jun/2026:05:08:52 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:52 [INFO]: ::1 - - [30/Jun/2026:05:08:52 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:52 [INFO]: ::1 - - [30/Jun/2026:05:08:52 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:53 [INFO]: ::1 - - [30/Jun/2026:05:08:53 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:54 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:54 [INFO]: ::1 - - [30/Jun/2026:05:08:54 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:38:56 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:38:56 [INFO]: ::1 - - [30/Jun/2026:05:08:56 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:40:23 [INFO]: ::1 - - [30/Jun/2026:05:10:23 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:40:23 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:40:23 [INFO]: ::1 - - [30/Jun/2026:05:10:23 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:40:24 [INFO]: ::1 - - [30/Jun/2026:05:10:24 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:40:24 [INFO]: ::1 - - [30/Jun/2026:05:10:24 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:40:24 [INFO]: ::1 - - [30/Jun/2026:05:10:24 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:40:25 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:40:25 [INFO]: ::1 - - [30/Jun/2026:05:10:25 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:40:27 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:40:27 [INFO]: ::1 - - [30/Jun/2026:05:10:27 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:41:28 [INFO]: ::1 - - [30/Jun/2026:05:11:28 +0000] "GET /api/v1/hrms/attendance/6a434ad998de9c8388d49dfc HTTP/1.1" 200 604 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:42:19 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:42:19 [INFO]: ::1 - - [30/Jun/2026:05:12:19 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:42:20 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:42:20 [INFO]: ::1 - - [30/Jun/2026:05:12:20 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:42:22 [ERROR]: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+CastError: Cast to ObjectId failed for value "regularization" (type string) at path "_id" for model "Attendance"
+    at SchemaObjectId.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schema/objectId.js:253:11)
+    at SchemaObjectId.SchemaType.applySetters (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1288:12)
+    at SchemaObjectId.SchemaType.castForQuery (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/schemaType.js:1718:17)
+    at cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/cast.js:390:32)
+    at model.Query.Query.cast (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:5060:12)
+    at model.Query.Query._castConditions (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2374:10)
+    at model.Query._findOne (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:2697:8)
+    at model.Query.exec (/home/selva/Downloads/projects/AI Business Os/server/node_modules/mongoose/lib/query.js:4627:80)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.getAttendanceById (/home/selva/Downloads/projects/AI Business Os/server/src/services/hrms.service.ts:1218:18)
+2026-06-30 10:42:22 [INFO]: ::1 - - [30/Jun/2026:05:12:22 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 400 250 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:44:28 [INFO]: MongoDB connected: ac-jyefah8-shard-00-02.5rs7mwd.mongodb.net
+2026-06-30 10:44:28 [INFO]: Server running on http://localhost:5000
+2026-06-30 10:44:28 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-30 10:44:28 [INFO]: Health: http://localhost:5000/health
+2026-06-30 10:45:01 [INFO]: ::1 - - [30/Jun/2026:05:15:01 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 401 245 "-" "curl/8.5.0"
+2026-06-30 10:45:07 [INFO]: ::1 - - [30/Jun/2026:05:15:07 +0000] "GET /api/v1/hrms/attendance/summary HTTP/1.1" 401 222 "-" "curl/8.5.0"
+2026-06-30 10:45:37 [INFO]: ::1 - - [30/Jun/2026:05:15:37 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:45:37 [INFO]: ::1 - - [30/Jun/2026:05:15:37 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:45:37 [INFO]: ::1 - - [30/Jun/2026:05:15:37 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:45:37 [INFO]: ::1 - - [30/Jun/2026:05:15:37 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 200 1063 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:45:37 [INFO]: ::1 - - [30/Jun/2026:05:15:37 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:47:47 [INFO]: MongoDB connected: ac-jyefah8-shard-00-02.5rs7mwd.mongodb.net
+2026-06-30 10:47:47 [INFO]: Server running on http://localhost:5000
+2026-06-30 10:47:47 [INFO]: Swagger: http://localhost:5000/api-docs
+2026-06-30 10:47:47 [INFO]: Health: http://localhost:5000/health
+2026-06-30 10:48:18 [INFO]: ::1 - - [30/Jun/2026:05:18:18 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 7182 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:48:19 [INFO]: ::1 - - [30/Jun/2026:05:18:19 +0000] "GET /api/v1/hrms/attendance?date=2026-06-30&page=1&limit=15 HTTP/1.1" 200 701 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:48:19 [INFO]: ::1 - - [30/Jun/2026:05:18:19 +0000] "GET /api/v1/hrms/employees HTTP/1.1" 200 7692 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:48:19 [INFO]: ::1 - - [30/Jun/2026:05:18:19 +0000] "GET /api/v1/hrms/attendance/regularization?page=1&limit=10 HTTP/1.1" 200 1060 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+2026-06-30 10:48:19 [INFO]: ::1 - - [30/Jun/2026:05:18:19 +0000] "GET /api/v1/hrms/departments HTTP/1.1" 200 1019 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"

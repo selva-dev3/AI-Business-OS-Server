@@ -36,8 +36,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.activateEmployee = exports.hardRemoveEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
-exports.getFnF = exports.updateClearance = exports.getExitChecklist = exports.submitResignation = exports.createPromotion = exports.approveRejectTransfer = exports.createTransferRequest = exports.getTrainingCertifications = exports.getTrainingHistory = exports.completeCourse = exports.enrollCourse = exports.listTrainingCourses = exports.submitFeedback = exports.getAppraisalHistory = exports.submitAppraisal = exports.updatePerformanceGoal = exports.createPerformanceGoal = exports.listPerformanceGoals = exports.requestLetter = exports.getEmployeeDeductions = exports.getEmployeeTaxDetails = exports.getPayslipByMonthYear = exports.getEmployeePayslips = exports.approveRejectRegularization = exports.createRegularization = exports.checkout = exports.checkin = exports.getEmployeeHistory = exports.updateEmployeeStatus = exports.updateEmployeeProfile = exports.getEmployeeProfile = exports.fullUpdateEmployee = exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = exports.createAsset = void 0;
+exports.createHoliday = exports.listHolidays = exports.getLeaveCalendar = exports.getLeaveBalance = exports.removeLeaveRequest = exports.rejectLeaveRequest = exports.approveLeaveRequest = exports.getLeaveRequestById = exports.createLeaveRequest = exports.listLeaveRequests = exports.removeLeaveType = exports.updateLeaveType = exports.createLeaveType = exports.listLeaveTypes = exports.exportAttendance = exports.bulkCreateAttendance = exports.getAttendanceSummary = exports.getAttendanceById = exports.updateAttendance = exports.createAttendance = exports.listAttendance = exports.exportDesignationsExcel = exports.exportDesignationsCSV = exports.changeDesignationStatus = exports.bulkRestoreDesignations = exports.bulkDeleteDesignations = exports.restoreDesignation = exports.removeDesignation = exports.updateDesignation = exports.createDesignation = exports.getDesignationById = exports.listAllDesignations = exports.listDesignations = exports.listDepartmentEmployees = exports.removeDepartment = exports.updateDepartment = exports.createDepartment = exports.listDepartments = exports.exportEmployees = exports.bulkImportEmployees = exports.reinstateEmployee = exports.suspendEmployee = exports.activateEmployee = exports.hardRemoveEmployee = exports.removeEmployee = exports.updateEmployee = exports.getEmployeeById = exports.createEmployee = exports.listEmployees = exports.getDashboard = void 0;
+exports.createPromotion = exports.approveRejectTransfer = exports.createTransferRequest = exports.getTrainingCertifications = exports.getTrainingHistory = exports.completeCourse = exports.enrollCourse = exports.listTrainingCourses = exports.submitFeedback = exports.getAppraisalHistory = exports.submitAppraisal = exports.updatePerformanceGoal = exports.createPerformanceGoal = exports.listPerformanceGoals = exports.requestLetter = exports.getEmployeeDeductions = exports.getEmployeeTaxDetails = exports.getPayslipByMonthYear = exports.getEmployeePayslips = exports.listRegularizations = exports.approveRejectRegularization = exports.createRegularization = exports.checkout = exports.checkin = exports.getEmployeeHistory = exports.updateEmployeeStatus = exports.updateEmployeeProfile = exports.getEmployeeProfile = exports.fullUpdateEmployee = exports.getAttritionReport = exports.getHeadcountReport = exports.getPayrollReport = exports.getLeaveReport = exports.getAttendanceReport = exports.returnAsset = exports.assignAsset = exports.removeAsset = exports.updateAsset = exports.createAsset = exports.listAssets = exports.updateSalaryStructure = exports.createSalaryStructure = exports.getSalaryStructure = exports.exportPayslips = exports.getPayslip = exports.getPayrollById = exports.runPayroll = exports.listPayroll = exports.removeHoliday = exports.updateHoliday = void 0;
+exports.downloadEmployeeDocument = exports.deleteEmployeeNote = exports.updateEmployeeNote = exports.listEmployeeNotes = exports.createEmployeeNote = exports.listEmployeeDocuments = exports.createEmployeeDocument = exports.resetEmployeePassword = exports.assignEmployeeRole = exports.terminateEmployee = exports.initiateLeaveOnBehalf = exports.getEmployeePayroll = exports.getEmployeeLeaves = exports.getEmployeeAttendance = exports.getFnF = exports.updateClearance = exports.getExitChecklist = exports.submitResignation = void 0;
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
+const sync_1 = require("csv-parse/sync");
+const env_1 = __importDefault(require("../config/env"));
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const hrmsService = __importStar(require("../services/hrms.service"));
 const apiResponse_1 = __importDefault(require("../utils/apiResponse"));
@@ -52,8 +57,13 @@ exports.getDashboard = (0, catchAsync_1.default)(async (req, res, _next) => {
 });
 // ─── EMPLOYEES ────────────────────────────────────────────────────────────────────
 exports.listEmployees = (0, catchAsync_1.default)(async (req, res, _next) => {
-    const { employees, meta } = await hrmsService.listEmployees(req.companyId, req.query);
-    apiResponse_1.default.paginated(res, employees, meta);
+    const { employees, meta, summary } = await hrmsService.listEmployees(req.companyId, req.query);
+    apiResponse_1.default.success(res, {
+        employees,
+        pagination: meta,
+        summary,
+        meta,
+    });
 });
 exports.createEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
     const employee = await hrmsService.createEmployee(req.companyId, req.body);
@@ -79,9 +89,57 @@ exports.activateEmployee = (0, catchAsync_1.default)(async (req, res, _next) => 
     const employee = await hrmsService.activateEmployee(req.companyId, req.params.id);
     apiResponse_1.default.success(res, employee);
 });
+exports.suspendEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const employee = await hrmsService.suspendEmployee(req.companyId, req.params.id, req.user._id.toString(), req.body);
+    apiResponse_1.default.success(res, employee);
+});
+exports.reinstateEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const employee = await hrmsService.reinstateEmployee(req.companyId, req.params.id, req.user._id.toString(), req.body);
+    apiResponse_1.default.success(res, employee);
+});
 exports.bulkImportEmployees = (0, catchAsync_1.default)(async (req, res, _next) => {
-    const result = await hrmsService.bulkImportEmployees(req.companyId, req.body.employees || []);
-    apiResponse_1.default.success(res, result);
+    if (!req.file) {
+        throw new appError_1.default(400, 'BAD_REQUEST', 'CSV file is required');
+    }
+    let records = [];
+    try {
+        const fileContent = fs_1.default.readFileSync(req.file.path, 'utf8');
+        records = (0, sync_1.parse)(fileContent, {
+            columns: true,
+            skip_empty_lines: true,
+            trim: true,
+        });
+    }
+    catch (err) {
+        throw new appError_1.default(400, 'BAD_REQUEST', `Failed to parse CSV file: ${err.message}`);
+    }
+    finally {
+        try {
+            fs_1.default.unlinkSync(req.file.path);
+        }
+        catch (_) { }
+    }
+    const result = await hrmsService.bulkImportEmployees(req.companyId, records);
+    if (result.errors && result.errors.length > 0) {
+        return res.status(400).json({
+            success: false,
+            message: 'Bulk import validation failed',
+            data: {
+                inserted: result.inserted,
+                failed: result.failed,
+                errors: result.errors,
+            },
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: `${result.inserted} employees imported successfully`,
+        data: {
+            inserted: result.inserted,
+            failed: result.failed,
+            errors: [],
+        },
+    });
 });
 exports.exportEmployees = (0, catchAsync_1.default)(async (req, res, _next) => {
     const employees = await hrmsService.exportEmployees(req.companyId, req.query);
@@ -110,20 +168,65 @@ exports.listDepartmentEmployees = (0, catchAsync_1.default)(async (req, res, _ne
 });
 // ─── DESIGNATIONS ─────────────────────────────────────────────────────────────────
 exports.listDesignations = (0, catchAsync_1.default)(async (req, res, _next) => {
-    const data = await hrmsService.listDesignations(req.companyId);
+    const result = await hrmsService.listDesignations(req.companyId, req.query);
+    apiResponse_1.default.paginated(res, result.data, result.meta);
+});
+exports.listAllDesignations = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const data = await hrmsService.listAllDesignations(req.companyId);
+    apiResponse_1.default.success(res, data);
+});
+exports.getDesignationById = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const data = await hrmsService.getDesignationById(req.companyId, req.params.id);
     apiResponse_1.default.success(res, data);
 });
 exports.createDesignation = (0, catchAsync_1.default)(async (req, res, _next) => {
-    const designation = await hrmsService.createDesignation(req.companyId, req.body);
+    const designation = await hrmsService.createDesignation(req.companyId, req.body, req.user?._id?.toString());
     apiResponse_1.default.created(res, designation);
 });
 exports.updateDesignation = (0, catchAsync_1.default)(async (req, res, _next) => {
-    const designation = await hrmsService.updateDesignation(req.companyId, req.params.id, req.body);
+    const designation = await hrmsService.updateDesignation(req.companyId, req.params.id, req.body, req.user?._id?.toString());
     apiResponse_1.default.success(res, designation);
 });
 exports.removeDesignation = (0, catchAsync_1.default)(async (req, res, _next) => {
-    const designation = await hrmsService.removeDesignation(req.companyId, req.params.id);
+    const force = req.query.force === 'true';
+    const designation = await hrmsService.removeDesignation(req.companyId, req.params.id, force);
     apiResponse_1.default.success(res, designation);
+});
+exports.restoreDesignation = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const designation = await hrmsService.restoreDesignation(req.companyId, req.params.id);
+    apiResponse_1.default.success(res, designation);
+});
+exports.bulkDeleteDesignations = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { ids, force } = req.body;
+    const result = await hrmsService.bulkDeleteDesignations(req.companyId, ids, force);
+    apiResponse_1.default.success(res, result);
+});
+exports.bulkRestoreDesignations = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { ids } = req.body;
+    const result = await hrmsService.bulkRestoreDesignations(req.companyId, ids);
+    apiResponse_1.default.success(res, result);
+});
+exports.changeDesignationStatus = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { status } = req.body;
+    const designation = await hrmsService.changeDesignationStatus(req.companyId, req.params.id, status, req.user?._id?.toString());
+    apiResponse_1.default.success(res, designation);
+});
+exports.exportDesignationsCSV = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const csv = await hrmsService.exportDesignationsCSV(req.companyId, req.query);
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="designations.csv"');
+    res.send(csv);
+});
+exports.exportDesignationsExcel = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const data = await hrmsService.exportDesignationsExcel(req.companyId, req.query);
+    const XLSX = require('xlsx');
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(wb, ws, 'Designations');
+    const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename="designations.xlsx"');
+    res.send(buffer);
 });
 // ─── ATTENDANCE ───────────────────────────────────────────────────────────────────
 exports.listAttendance = (0, catchAsync_1.default)(async (req, res, _next) => {
@@ -136,6 +239,10 @@ exports.createAttendance = (0, catchAsync_1.default)(async (req, res, _next) => 
 });
 exports.updateAttendance = (0, catchAsync_1.default)(async (req, res, _next) => {
     const record = await hrmsService.updateAttendance(req.companyId, req.params.id, req.body);
+    apiResponse_1.default.success(res, record);
+});
+exports.getAttendanceById = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const record = await hrmsService.getAttendanceById(req.companyId, req.params.id);
     apiResponse_1.default.success(res, record);
 });
 exports.getAttendanceSummary = (0, catchAsync_1.default)(async (req, res, _next) => {
@@ -340,6 +447,10 @@ exports.approveRejectRegularization = (0, catchAsync_1.default)(async (req, res,
     const result = await hrmsService.approveRejectRegularization(req.companyId, req.params.id, req.body);
     apiResponse_1.default.success(res, result);
 });
+exports.listRegularizations = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const result = await hrmsService.listRegularizations(req.companyId, req.query);
+    apiResponse_1.default.success(res, result);
+});
 // ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
 exports.getEmployeePayslips = (0, catchAsync_1.default)(async (req, res, _next) => {
     const payslips = await hrmsService.getEmployeePayslips(req.companyId, req.params.employeeId);
@@ -459,5 +570,95 @@ exports.updateClearance = (0, catchAsync_1.default)(async (req, res, _next) => {
 exports.getFnF = (0, catchAsync_1.default)(async (req, res, _next) => {
     const settlement = await hrmsService.getFnF(req.companyId, req.params.employeeId);
     apiResponse_1.default.success(res, settlement);
+});
+// ─── EMPLOYEE ATTENDANCE ─────────────────────────────────────────────────────
+exports.getEmployeeAttendance = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { records, summary, meta } = await hrmsService.getEmployeeAttendance(req.companyId, req.params.id, req.query);
+    apiResponse_1.default.success(res, { records, summary, meta });
+});
+// ─── EMPLOYEE LEAVES ─────────────────────────────────────────────────────────
+exports.getEmployeeLeaves = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { requests, leaveBalance, meta } = await hrmsService.getEmployeeLeaves(req.companyId, req.params.id, req.query);
+    apiResponse_1.default.success(res, { requests, leaveBalance, meta });
+});
+// ─── EMPLOYEE PAYROLL ────────────────────────────────────────────────────────
+exports.getEmployeePayroll = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { records, meta } = await hrmsService.getEmployeePayroll(req.companyId, req.params.id, req.query);
+    apiResponse_1.default.success(res, { records, meta });
+});
+// ─── INITIATE LEAVE ON BEHALF ────────────────────────────────────────────────
+exports.initiateLeaveOnBehalf = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const result = await hrmsService.initiateLeaveOnBehalf(req.companyId, req.params.id, req.user._id.toString(), req.body);
+    apiResponse_1.default.success(res, result);
+});
+// ─── TERMINATE EMPLOYEE ──────────────────────────────────────────────────────
+exports.terminateEmployee = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const employee = await hrmsService.terminateEmployee(req.companyId, req.params.id, req.user._id.toString(), req.body);
+    apiResponse_1.default.success(res, employee);
+});
+// ─── ASSIGN EMPLOYEE ROLE ────────────────────────────────────────────────────
+exports.assignEmployeeRole = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const employee = await hrmsService.assignEmployeeRole(req.companyId, req.params.id, req.user._id.toString(), req.body);
+    apiResponse_1.default.success(res, employee);
+});
+// ─── RESET EMPLOYEE PASSWORD ─────────────────────────────────────────────────
+exports.resetEmployeePassword = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const result = await hrmsService.resetEmployeePassword(req.companyId, req.params.id, req.user._id.toString(), req.body);
+    apiResponse_1.default.success(res, result);
+});
+// ─── EMPLOYEE DOCUMENTS ──────────────────────────────────────────────────────
+exports.createEmployeeDocument = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const document = await hrmsService.createEmployeeDocument(req.companyId, req.params.id, req.user._id.toString(), req.body);
+    apiResponse_1.default.created(res, document);
+});
+exports.listEmployeeDocuments = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { records, meta } = await hrmsService.listEmployeeDocuments(req.companyId, req.params.id, req.query);
+    apiResponse_1.default.paginated(res, records, meta);
+});
+// ─── EMPLOYEE NOTES ──────────────────────────────────────────────────────────
+exports.createEmployeeNote = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const note = await hrmsService.createEmployeeNote(req.companyId, req.params.id, req.user._id.toString(), req.body);
+    apiResponse_1.default.created(res, note);
+});
+exports.listEmployeeNotes = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const { records, meta } = await hrmsService.listEmployeeNotes(req.companyId, req.params.id, req.query);
+    apiResponse_1.default.paginated(res, records, meta);
+});
+exports.updateEmployeeNote = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const note = await hrmsService.updateEmployeeNote(req.companyId, req.params.id, req.params.noteId, req.user._id.toString(), req.body);
+    apiResponse_1.default.success(res, note);
+});
+exports.deleteEmployeeNote = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const result = await hrmsService.deleteEmployeeNote(req.companyId, req.params.id, req.params.noteId, req.user._id.toString());
+    apiResponse_1.default.success(res, result);
+});
+exports.downloadEmployeeDocument = (0, catchAsync_1.default)(async (req, res, _next) => {
+    const document = await hrmsService.getEmployeeDocument(req.companyId, req.params.id, req.params.documentId);
+    if (!document.fileUrl) {
+        throw new appError_1.default(400, 'BAD_REQUEST', 'Document does not have an uploaded file');
+    }
+    if (document.fileUrl.startsWith('http://') || document.fileUrl.startsWith('https://')) {
+        return res.redirect(document.fileUrl);
+    }
+    let relativePath = document.fileUrl;
+    if (relativePath.startsWith('/uploads/')) {
+        relativePath = relativePath.substring(9);
+    }
+    else if (relativePath.startsWith('uploads/')) {
+        relativePath = relativePath.substring(8);
+    }
+    else if (relativePath.startsWith('/')) {
+        relativePath = relativePath.substring(1);
+    }
+    const absolutePath = path_1.default.resolve(env_1.default.upload.dir, relativePath);
+    if (!fs_1.default.existsSync(absolutePath)) {
+        throw new appError_1.default(404, 'NOT_FOUND', 'File not found on server');
+    }
+    const ext = path_1.default.extname(absolutePath);
+    let cleanName = document.documentName;
+    if (!cleanName.endsWith(ext)) {
+        cleanName = `${cleanName}${ext}`;
+    }
+    res.download(absolutePath, cleanName);
 });
 //# sourceMappingURL=hrms.controller.js.map

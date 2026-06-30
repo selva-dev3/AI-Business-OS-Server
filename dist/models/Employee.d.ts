@@ -29,6 +29,47 @@ export interface IEmployee extends Document {
     branchId?: Types.ObjectId;
     userId?: Types.ObjectId;
     reportingManagerId?: Types.ObjectId;
+    suspensionDetails?: {
+        reason: string;
+        suspendedBy: Types.ObjectId;
+        suspendedAt: Date;
+        expectedReinstatement?: Date;
+        notes?: string;
+    } | null;
+    suspensionHistory?: Array<{
+        reason: string;
+        suspendedBy: Types.ObjectId;
+        suspendedAt: Date;
+        reinstatedBy: Types.ObjectId;
+        reinstatedAt: Date;
+        expectedReinstatement?: Date;
+        notes?: string;
+    }>;
+    terminationDetails?: {
+        lastWorkingDate?: Date;
+        reason?: string;
+        reasonDetails?: string;
+        exitChecklist?: {
+            laptopReturned?: boolean;
+            accessRevoked?: boolean;
+            fnfSettled?: boolean;
+            relievingLetterIssued?: boolean;
+            exitInterviewDone?: boolean;
+        };
+        noticePeriodServed?: boolean;
+        finalSalaryProcessed?: boolean;
+        terminatedBy?: Types.ObjectId;
+        terminatedAt?: Date;
+    } | null;
+    roleHistory?: Array<{
+        designation?: string;
+        departmentId?: Types.ObjectId;
+        employmentType?: string;
+        reportingManagerId?: Types.ObjectId;
+        changedAt?: Date;
+        changedBy?: Types.ObjectId;
+        reason?: string;
+    }>;
     createdAt: Date;
     updatedAt: Date;
 }

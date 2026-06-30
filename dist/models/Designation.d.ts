@@ -1,9 +1,19 @@
 import mongoose, { Document, Types } from 'mongoose';
 export interface IDesignation extends Document {
     name: string;
-    level?: number;
+    designationCode: string;
     description?: string;
+    level?: number;
+    hierarchyOrder?: number;
+    employmentTypes?: string[];
+    color?: string;
+    isDefault?: boolean;
     companyId: Types.ObjectId;
+    departmentId?: Types.ObjectId;
+    status?: 'ACTIVE' | 'INACTIVE';
+    createdBy?: Types.ObjectId;
+    updatedBy?: Types.ObjectId;
+    deletedAt?: Date;
     isActive?: boolean;
     createdAt: Date;
     updatedAt: Date;

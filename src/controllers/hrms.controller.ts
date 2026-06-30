@@ -508,6 +508,11 @@ export const approveRejectRegularization = catchAsync(async (req: AuthRequest, r
   ApiResponse.success(res, result);
 });
 
+export const listRegularizations = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
+  const { records, meta } = await hrmsService.listRegularizations(req.companyId!, req.query);
+  ApiResponse.paginated(res, records, meta);
+});
+
 // ─── PAYROLL — EMPLOYEE PAYSLIPS ─────────────────────────────────────────────
 
 export const getEmployeePayslips = catchAsync(async (req: AuthRequest, res: Response, _next: NextFunction) => {
